@@ -83,7 +83,7 @@ multi_app_msg_item_list|多图文
 item是列表，每一项均是具体信息字典
 
 字段|含义
--|-
+---|---
 title|标题
 digest|描述
 cover|封面图片地址
