@@ -11,11 +11,11 @@
 # 项目使用
 
 ## 引用
-    import wechatsogou as wechats
+    from WechatSogou import wechatsogou as wechats
 
 ## 搜索公众号 - search_gzh_info
 
-    infos = search_gzh_info(name, page)
+    infos = wechats.search_gzh_info(name, page)
     for info in infos:
         name = info['name']
 返回结果是列表，每一项均是公众号具体信息字典，具体如下
@@ -33,16 +33,17 @@ url|最近文章地址
 ## 获取公众号
 对于一个已知`wechatid`的公众号，如果需要获取其最近文章，可以通过以下方式先获取具体信息（包括最近文章地址），然后根据``获取
 
-    detail = get_gzh_info(wechatid）
+    detail = wechats.get_gzh_info(wechatid）
     url = detail['url']
 返回结果与上述search_gzh_info函数返回结果一致
 
 ## 获取最近文章列表字典 - get_gzh_article_dict
 
-    msgdict = get_gzh_article_dict(url)
+    msgdict = wechats.get_gzh_article_dict(url)
 msgdict是字典
+
 字段|含义
--|-
+---|---
 list|只有这一个字段，包含具体信息
 
 
@@ -81,8 +82,8 @@ multi_app_msg_item_list|多图文
 
 ## 获取最近文章列表 - get_gzh_article_detail
 
-    msgdict = get_gzh_article_dict(url)
-    item = get_gzh_article_detail(msgdict)
+    msgdict = wechats.get_gzh_article_dict(url)
+    item = wechats.get_gzh_article_detail(msgdict)
 item是列表，每一项均是具体信息字典
 
 字段|含义
@@ -101,7 +102,7 @@ content|...
 ---
 
 # TODO
-[ ] 主页热门公众号获取
-[ ] 文章详情页相似文章、公众号获取
+- [ ] 主页热门公众号获取
+- [ ] 文章详情页相似文章、公众号获取
 
 ---
