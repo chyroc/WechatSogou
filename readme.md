@@ -62,7 +62,7 @@ content|...
 
 app_msg_ext_info也是字典
 字段|含义
--|-
+---|---
 subtype|...
 title|标题
 copyright_stat|文章类型（100为普通，11原创，101转载）
