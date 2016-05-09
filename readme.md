@@ -19,8 +19,9 @@
     for info in infos:
         name = info['name']
 返回结果是列表，每一项均是公众号具体信息字典，具体如下
+
 字段|含义
--|-
+---|---
 name|公众号名称
 wechatid|公众号ID
 jieshao|介绍
@@ -51,8 +52,9 @@ list|只有这一个字段，包含具体信息
         app_msg_ext_info = info['app_msg_ext_info']
 
 comm_msg_info是字典
+
 字段|含义
--|-
+---|---
 status|...
 fakeid|...
 datetime|...
@@ -61,6 +63,7 @@ id|...
 content|...
 
 app_msg_ext_info也是字典
+
 字段|含义
 ---|---
 subtype|...
@@ -98,7 +101,7 @@ content|...
 ---
 
 # TODO
-* 主页热门公众号获取
-* 文章详情页相似文章、公众号获取
+[ ] 主页热门公众号获取
+[ ] 文章详情页相似文章、公众号获取
 
 ---
