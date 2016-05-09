@@ -81,6 +81,7 @@ multi_app_msg_item_list|多图文
     msgdict = get_gzh_article_dict(url)
     item = get_gzh_article_detail(msgdict)
 item是列表，每一项均是具体信息字典
+
 字段|含义
 -|-
 title|标题
