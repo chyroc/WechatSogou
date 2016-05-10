@@ -1,14 +1,7 @@
 #coding=utf-8
 
-import os,sys
-parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0,parentdir)
-
-from tools import myproxy as proxy
-from tools import myrequests as req
 from lxml import etree
 import requests
-import random
 import re
 
 def get_elem_text(elem):
@@ -157,8 +150,3 @@ def get_gzh_article_detail(msgdict):
                               'copyright_stat': multidic['copyright_stat']})
 
     return items
-
-msgdict = get_gzh_article_dict(
-    'http://mp.weixin.qq.com/profile?src=3&timestamp=1462779952&ver=1&signature=OpcTZp20TUdKHjSqWh7m73RWBIzwYwINpib2ZktBkLF9AWOMZksuvnJtrqsb98P113QJ*9pWPeKn6N-JaG*yKg==')
-item = get_gzh_article_detail(msgdict)
-print(item)
