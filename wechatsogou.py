@@ -158,10 +158,7 @@ class wechatspider(object):
 
     def get_gzh_info(self, wechatid):
         info = self.search_gzh_info(wechatid, 1)
-        if info:
-            return info[0]
-        else:
-            return False
+        return info[0] if info else False
 
     def get_gzh_article_dict(self, url):
         text = self.__get(url, 'mp.weixin.qq.com')
@@ -233,7 +230,6 @@ class wechatspider(object):
         ret = related_dict['base_resp']['ret']
         errmsg = related_dict['base_resp']['errmsg'] if related_dict['base_resp']['errmsg'] else 'ret:'+str(ret)
         if ret != 0:
-            print(related_dict)
             raise WechatSogouException(errmsg)
         return related_dict
     def __deal_content(self, text):
