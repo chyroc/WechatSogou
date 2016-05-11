@@ -120,7 +120,7 @@ yuan|文章的固定地址（通过搜索获取的文章地址有时效性？）
 content|文章内容，字典，一下三项均含img和br标签
 content->content_html|原始文章内容，包括html标签及样式
 content->content_rich|包含图片（包括图片应展示的样式）的文章内容
-content->content_text|包含图片（<img src="..." />格式）的文章内容
+content->content_text|包含图片（`<img src="..." />`格式）的文章内容
 comment|评论以及阅读量，字典
 comment->base_resp|返回码，字典，包含下面两项
 comment->base_resp->ret|返回码
