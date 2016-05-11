@@ -14,8 +14,8 @@
 
 ## 引用
 
-    from wechatsogou import wechatspider
-    wechats = wechatspider()
+    from wechatsogou import WechatSpider
+    wechats = WechatSpider()
     wechats.get_session()
 
 ## 搜索公众号 - search_gzh_info
