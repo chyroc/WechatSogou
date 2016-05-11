@@ -58,15 +58,11 @@ class wechatspider(object):
 
     def __get_encoding_from_reponse(self, r):
         encoding = requests.utils.get_encodings_from_content(r.text)
-        if encoding:
-            return encoding[0]
-        else:
-            return requests.utils.get_encoding_from_headers(r.headers)
+        return encoding[0] if encoding else requests.utils.get_encoding_from_headers(r.headers)
 
     def get_session(self):
         with Session() as self.session:
             pass
-
 
     def __get(self, url, host='', referer=''):
         headers = {
@@ -80,10 +76,7 @@ class wechatspider(object):
         #     'http' : proip_http['http']+"://" + proip_http['ip'] + ":" + proip_http['duan'],
         #     'https' : proip_http['http'] + "://" + proip_http['ip'] + ":" + proip_http['duan']
         # }
-        if hasattr(self, 'session'):
-            req = self.session
-        else:
-            req = requests
+        req = self.session if hasattr(self, 'session') else requests
         r = req.get(url, headers=headers)  #, proxies=proxies
         if r.status_code == requests.codes.ok:
             r.encoding = self.__get_encoding_from_reponse(r)
@@ -111,14 +104,16 @@ class wechatspider(object):
     def search_gzh_info(self, name, page):
         text = self.search_gzh(name, page)
         page = etree.HTML(text)
-        info_imgs = page.xpath(u"//div[@class='img-box']/img")
         img = list()
+        info_imgs = page.xpath(u"//div[@class='img-box']/img")
         for info_img in info_imgs:
             img.append(info_img.attrib['src'])
-        info_urls = page.xpath(u"//div[@target='_blank']")
+
         url = list()
+        info_urls = page.xpath(u"//div[@target='_blank']")
         for info_url in info_urls:
             url.append(info_url.attrib['href'])
+
         name = list()
         wechatid = list()
         jieshao = list()
@@ -137,22 +132,24 @@ class wechatspider(object):
             else:
                 jieshao.append(cache_re[2])
                 renzhen.append('')
+
         qrcodes = list()
         info_qrcodes = page.xpath(u"//div[@class='pos-ico']/div/img")
         for info_qrcode in info_qrcodes:
             qrcodes.append(info_qrcode.attrib['src'])
+
         returns = list()
         for i in range(len(qrcodes)):
             returns.append(
                 {
-                    'name':name[i],
-                     'wechatid':wechatid[i],
-                     'jieshao':jieshao[i],
-                     'renzhen':renzhen[i],
-                     'qrcode':qrcodes[i],
-                     'img':img[i],
-                     'url':url[i]
-                 }
+                    'name': name[i],
+                    'wechatid': wechatid[i],
+                    'jieshao': jieshao[i],
+                    'renzhen': renzhen[i],
+                    'qrcode': qrcodes[i],
+                    'img': img[i],
+                    'url': url[i]
+                }
             )
         return returns
 
@@ -213,7 +210,7 @@ class wechatspider(object):
         comment_text = self.__get(comment_req_url, 'mp.weixin.qq.com', 'http://mp.weixin.qq.com')
         comment_dict = eval(comment_text)
         ret = comment_dict['base_resp']['ret']
-        errmsg = comment_dict['base_resp']['errmsg']
+        errmsg = comment_dict['base_resp']['errmsg'] if comment_dict['base_resp']['errmsg'] else 'ret:' + str(ret)
         if ret != 0:
             raise WechatSogouException(errmsg)
         return comment_dict
@@ -232,15 +229,16 @@ class wechatspider(object):
         if ret != 0:
             raise WechatSogouException(errmsg)
         return related_dict
+
     def __deal_content(self, text):
         content_html = re.findall(r'<div class="rich_media_content " id="js_content">(.*?)</div>', text, re.S)[0]
         content_rich = re.sub(r'<(?!img|br).*?>', '', content_html)
         pipei = re.compile(r'<img(.*?)src="(.*?)"(.*?)/>')
         content_text = pipei.sub(lambda m: '<img src="' + m.group(2) + '" />', content_rich)
         return content_html, content_rich, content_text
-    def get_get_gzh_article_info(self, article):
-        content_url = article['content_url']
-        text = self.__get(content_url, 'mp.weixin.qq.com')
+
+    def get_gzh_article_info(self, article):
+        text = self.__get(article['content_url'], 'mp.weixin.qq.com')
         yuan_url = re.findall('var msg_link = "(.*?)";', text)[0].replace('amp;','')
         related = self.__deal_related(article)
         comment = self.__deal_comment(text)
