@@ -208,12 +208,10 @@ class WechatSpider(object):
         info_imgs = page.xpath(u"//div[@class='img-box']/img")
         for info_img in info_imgs:
             img.append(info_img.attrib['src'])
-
         url = list()
         info_urls = page.xpath(u"//div[@target='_blank']")
         for info_url in info_urls:
             url.append(info_url.attrib['href'])
-
         name = list()
         wechatid = list()
         jieshao = list()
@@ -232,12 +230,10 @@ class WechatSpider(object):
             else:
                 jieshao.append(cache_re[2])
                 renzhen.append('')
-
         qrcodes = list()
         info_qrcodes = page.xpath(u"//div[@class='pos-ico']/div/img")
         for info_qrcode in info_qrcodes:
             qrcodes.append(info_qrcode.attrib['src'])
-
         returns = list()
         for i in range(len(qrcodes)):
             returns.append(
