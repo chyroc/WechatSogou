@@ -13,7 +13,10 @@
 # 项目使用
 
 ## 引用
-    from WechatSogou import wechatsogou as wechats
+
+    from wechatsogou import wechatspider
+    wechats = wechatspider()
+    wechats.get_session()
 
 ## 搜索公众号 - search_gzh_info
 
@@ -101,10 +104,48 @@ source_url|原文地址
 fileid|...
 content|...
 
+## 获取文章具体信息 - get_get_gzh_article_info
+
+    infos = wechats.get_gzh_info('newsbro')
+    articledict = wechats.get_gzh_article_dict(infos['url'])
+    articles = wechats.get_gzh_article_detail(articledict)
+    for article in articles:
+        article_info = wechats.get_get_gzh_article_info(article)
+
+article_info是文章页具体信息字典
+
+字段|含义
+---|---
+yuan|文章的固定地址（通过搜索获取的文章地址有时效性？）
+content|文章内容，字典，一下三项均含img和br标签
+content->content_html|原始文章内容，包括html标签及样式
+content->content_rich|包含图片（包括图片应展示的样式）的文章内容
+content->content_text|包含图片（<img src="..." />格式）的文章内容
+comment|评论以及阅读量，字典
+comment->base_resp|返回码，字典，包含下面两项
+comment->base_resp->ret|返回码
+comment->base_resp->errmsg|返回错误信息
+comment->read_num|阅读量
+comment->like_num|点赞数
+comment->elected_comment_total_cnt|评论数
+comment->comment|具体评论数据，每一项均是一个列表，设为comment_comment
+
+comment_comment是一项评论
+
+字段|含义
+---|---
+content|评论内容
+like_num|点赞数
+nick_name|评论者昵称
+logo_url|评论者头像
+reply|回复
+其余字典未说明，请打印自行查看|
+
 ---
 
 # TODO
+- [ ] 相似文章的公众号获取
 - [ ] 主页热门公众号获取
-- [ ] 文章详情页相似文章、公众号获取
+- [x] 文章详情页信息
 
 ---
