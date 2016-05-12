@@ -400,3 +400,17 @@ class WechatSpider(object):
             if e.status_code == 404:
                 return False
 
+    def get_recent_article_url_by_index_all(self):
+        i = 0
+        j = 0
+        urls = self.get_recent_article_url_by_index_single(i, j)
+        return_urls = []
+        while urls:
+            while urls:
+                return_urls.extend(urls)
+                j += 1
+                urls = self.get_recent_article_url_by_index_single(i, j)
+            i += 1
+            j = 0
+            urls = self.get_recent_article_url_by_index_single(i, j)
+        return return_urls
