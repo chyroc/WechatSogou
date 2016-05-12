@@ -44,15 +44,21 @@ url|最近文章地址
 
 ## 获取最近文章列表字典 - get_gzh_article_dict
 
-    msgdict = wechats.get_gzh_article_dict(url)
-msgdict是字典
+    article_list_infos = wechats.get_gzh_article_dict(url)
+article_list_infos是字典{info:{img:'',name:'',wechatid:'',jieshao:'',zhuti:''},msgdict:''}
 
 字段|含义
 ---|---
-list|只有这一个字段，包含具体信息
+info|公众号信息
+info->img|头像
+info->name|名称
+info->wechatid|id
+info->jieshao|介绍
+info->zhuti|主体
+msgdict|具体文章信息列表
 
 
-    infos = msgdict['list']
+    infos = article_list_infos['msgdict']['list']
     for info in infos:
         comm_msg_info = info['comm_msg_info']
         app_msg_ext_info = info['app_msg_ext_info']
@@ -87,8 +93,8 @@ multi_app_msg_item_list|多图文
 
 ## 获取最近文章列表 - get_gzh_article_detail
 
-    msgdict = wechats.get_gzh_article_dict(url)
-    item = wechats.get_gzh_article_detail(msgdict)
+    article_list_infos = wechats.get_gzh_article_dict(url)
+    item = wechats.get_gzh_article_detail(article_list_infos['msgdict'])
 item是列表，每一项均是具体信息字典
 
 字段|含义
@@ -104,13 +110,13 @@ source_url|原文地址
 fileid|...
 content|...
 
-## 获取文章具体信息 - get_get_gzh_article_info
+## 获取文章具体信息 - get_gzh_article_info
 
     infos = wechats.get_gzh_info('newsbro')
     articledict = wechats.get_gzh_article_dict(infos['url'])
     articles = wechats.get_gzh_article_detail(articledict)
     for article in articles:
-        article_info = wechats.get_get_gzh_article_info(article)
+        article_info = wechats.get_gzh_article_info(article)
 
 article_info是文章页具体信息字典
 
@@ -141,11 +147,20 @@ logo_url|评论者头像
 reply|回复
 其余字典未说明，请打印自行查看|
 
+## 获取首页推荐文章公众号最近文章地址 - get_recent_article_url_by_index_single
+
+    wechats = WechatSpider()
+    urls = wechats.get_recent_article_url_by_index_single(2,10) #单页
+    # urls = wechats.get_recent_article_url_by_index_all() #首页全部
+    dict = wechats.get_gzh_article_dict(url[0])
+
+    url是最近文章字典
+
 ---
 
 # TODO
 - [ ] 相似文章的公众号获取
-- [ ] 主页热门公众号获取
+- [x] 主页热门公众号获取
 - [x] 文章详情页信息
 
 ---

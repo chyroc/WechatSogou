@@ -228,6 +228,12 @@ class WechatSpider(object):
             url: 最近文章页地址
 
         Returns:
+            {info:{img:'',name:'',wechatid:'',jieshao:'',zhuti:''},msgdict:''}
+            img: 头像地址
+            name: 公众号名称
+            wechatid: 公众号id
+            jieshao: 公众号介绍
+            zhuti: 公众号主体信息
             msgdict: 最近文章信息字典
         """
         text = self.__get(url, 'mp.weixin.qq.com')
@@ -403,6 +409,17 @@ class WechatSpider(object):
         }
 
     def get_recent_article_url_by_index_single(self, kind=0, page=0):
+        """获取首页推荐文章公众号最近文章地址
+
+        Args:
+            kind: 类别，从0开始，经检测，至少应检查0-19，不保证之间每个都有
+            page: 页数，从0开始
+
+        Returns:
+            recent_article_urls或者False
+            recent_article_urls: 最近文章地址列表
+            False: 该kind和page对应的页数没有文章
+        """
         if page == 0:
             page_str = 'pc_0'
         else:
@@ -418,16 +435,17 @@ class WechatSpider(object):
                 return False
 
     def get_recent_article_url_by_index_all(self):
-        i = 0
-        j = 0
-        urls = self.get_recent_article_url_by_index_single(i, j)
+        """获取首页推荐文章公众号最近文章地址，所有分类，所有页数
+
+        Returns:
+            return_urls: 最近文章地址列表
+        """
         return_urls = []
-        while urls:
+        for i in range(20):
+            j = 0
+            urls = self.get_recent_article_url_by_index_single(i, j)
             while urls:
                 return_urls.extend(urls)
                 j += 1
                 urls = self.get_recent_article_url_by_index_single(i, j)
-            i += 1
-            j = 0
-            urls = self.get_recent_article_url_by_index_single(i, j)
         return return_urls
