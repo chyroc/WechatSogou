@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 #coding=utf-8
 import urllib.request
 from lxml import etree
@@ -40,12 +39,12 @@ class Session(object):
                 cookie = json.load(f)
             self.session.cookies.update(cookie)
             try:
-                wechatspider().search_gzh('newsbro')
+                WechatSpider().search_gzh('newsbro')
             except WechatSogouException:
                 os.remove(self.cookiefile)
                 self.session = requests.session()
                 try:
-                    wechatspider().search_gzh('newsbro')
+                    WechatSpider().search_gzh('newsbro')
                 except WechatSogouException:
                     raise WechatSogouException('session test error')
         return self.session
