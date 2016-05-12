@@ -10,7 +10,11 @@ import json
 class WechatSogouException(Exception):
     """基于搜狗的微信公众号爬虫异常类
     """
+    pass
 
+class WechatSogouVcodeException(WechatSogouException):
+    """基于搜狗的微信公众号爬虫 出现验证码 异常类
+    """
     pass
 
 class Session(object):
@@ -18,7 +22,7 @@ class Session(object):
 
     Attributes:
         cookiefile: cookie存放文件名
-        session： requests库中对象，
+        session： requests库中requests.session()对象，
     """
 
     def __init__(self):
@@ -28,25 +32,26 @@ class Session(object):
         """读取更新或生成session
 
         Returns:
-            self.session
+            session
 
         Raises:
             WechatSogouException: session读取或生成错误
         """
-        self.session = requests.session()
         if os.path.exists(self.cookiefile):
+            self.session = requests.session()
             with open(self.cookiefile) as f:
                 cookie = json.load(f)
             self.session.cookies.update(cookie)
             try:
                 WechatSpider().search_gzh('newsbro')
-            except WechatSogouException:
+                return self.session
+            except WechatSogouVcodeException:
                 os.remove(self.cookiefile)
-                self.session = requests.session()
-                try:
-                    WechatSpider().search_gzh('newsbro')
-                except WechatSogouException:
-                    raise WechatSogouException('session test error')
+        self.session = requests.session()
+        try:
+            WechatSpider().search_gzh('newsbro')
+        except WechatSogouVcodeException:
+            raise WechatSogouVcodeException('session get error')
         return self.session
 
     def __exit__(self, exception_type, exception_value, exception_traceback):
@@ -147,7 +152,8 @@ class WechatSpider(object):
         if r.status_code == requests.codes.ok:
             r.encoding = self.__get_encoding_from_reponse(r)
             if '用户您好，您的访问过于频繁，为确认本次访问为正常用户行为，需要您协助验证' in r.text:
-                raise WechatSogouException('weixin.sogou.com verification code')
+                #raise WechatSogouException('weixin.sogou.com verification code')
+                raise WechatSogouVcodeException('weixin.sogou.com verification code')
         else:
             raise WechatSogouException('requests status_code error')
         return r.text
