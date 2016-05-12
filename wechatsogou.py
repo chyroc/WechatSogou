@@ -231,9 +231,25 @@ class WechatSpider(object):
             msgdict: 最近文章信息字典
         """
         text = self.__get(url, 'mp.weixin.qq.com')
+        page = etree.HTML(text)
+        img = page.xpath('//div[@class="profile_info_area"]/div[@class="profile_info_group"]/span/img/@src')[0]
+        info = page.xpath('//div[@class="profile_info_area"]/div[@class="profile_info_group"]/div')[0]
+        info_list = self.__get_elem_text(info).split('微信号: ')
+        jieshao = page.xpath('//div[@class="profile_info_area"]/ul')[0]
+        jieshao_text = self.__get_elem_text(jieshao)
+        jieshao_list = re.split('功能介绍|帐号主体', jieshao_text)
         msglist = re.findall("var msgList = '(.+?)';", text, re.S)[0]
         msgdict = eval(self.__replace_html(msglist))
-        return msgdict
+        return {
+            'info': {
+                'img': img,
+                'name': info_list[0],
+                'wechatid': info_list[1],
+                'jieshao': jieshao_list[1],
+                'zhuti': jieshao_list[2]
+            },
+            'msgdict': msgdict
+        }
 
     def get_gzh_article_detail(self, msgdict):
         """处理最近文章页信息
@@ -385,6 +401,7 @@ class WechatSpider(object):
                 'content_text': content_text
             }
         }
+
     def get_recent_article_url_by_index_single(self, kind=0, page=0):
         if page == 0:
             page_str = 'pc_0'
