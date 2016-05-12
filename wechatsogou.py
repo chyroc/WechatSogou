@@ -6,6 +6,7 @@ import requests
 import re
 import os
 import json
+import random
 
 class WechatSogouException(Exception):
     """基于搜狗的微信公众号爬虫异常类
@@ -17,55 +18,6 @@ class WechatSogouVcodeException(WechatSogouException):
     """
     pass
 
-class Session(object):
-    """基于搜狗的微信公众号爬虫COOKIE管理类
-
-    Attributes:
-        cookiefile: cookie存放文件名
-        session： requests库中requests.session()对象，
-    """
-
-    def __init__(self):
-        self.cookiefile = 'cookie.dat'
-
-    def __enter__(self):
-        """读取更新或生成session
-
-        Returns:
-            session
-
-        Raises:
-            WechatSogouException: session读取或生成错误
-        """
-        if os.path.exists(self.cookiefile):
-            self.session = requests.session()
-            with open(self.cookiefile) as f:
-                cookie = json.load(f)
-            self.session.cookies.update(cookie)
-            try:
-                WechatSpider().search_gzh('newsbro')
-                return self.session
-            except WechatSogouVcodeException:
-                os.remove(self.cookiefile)
-        self.session = requests.session()
-        try:
-            WechatSpider().search_gzh('newsbro')
-        except WechatSogouVcodeException:
-            raise WechatSogouVcodeException('session get error')
-        return self.session
-
-    def __exit__(self, exception_type, exception_value, exception_traceback):
-        """存储session
-
-        Raises:
-            WechatSogouException: 没有session属性
-        """
-        if hasattr(self, 'session'):
-            with open(self.cookiefile, 'w') as f:
-                json.dump(self.session.cookies.get_dict(), f)
-        else:
-            raise WechatSogouException('session empty cannot save')
-
 class WechatSpider(object):
     """基于搜狗的微信公众号爬虫类
 
@@ -74,13 +26,10 @@ class WechatSpider(object):
     """
 
     def __init__(self):
+        self.cookiefile = 'cookie.dat'
         self.agent = [
-            'Opera/9.27 (Windows NT 5.2; U; zh-cn)',
-            'Mozilla/5.0 (Windows; U; Windows NT 5.2) AppleWebKit/525.13 (KHTML, like Gecko) Version/3.1 Safari/525.13',
-            'Mozilla/5.0 (Windows; U; Windows NT 5.2) AppleWebKit/525.13 (KHTML, like Gecko) Chrome/0.2.149.27 Safari/525.13',
             'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0',
-            'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 UBrowser/4.0.3214.0 Safari/537.36',
-            'Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8J2 Safari/6533.18.5'
+            'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36'
         ]
 
     def __get_elem_text(self, elem):
@@ -109,15 +58,6 @@ class WechatSpider(object):
         encoding = requests.utils.get_encodings_from_content(r.text)
         return encoding[0] if encoding else requests.utils.get_encoding_from_headers(r.headers)
 
-    def get_session(self):
-        """获取session
-
-        Returns:
-            session: requests的session对象，有get或post方法
-        """
-        with Session() as self.session:
-            pass
-
     def __get(self, url, host='', referer='', proxy=False):
         """封装request库get方法
 
@@ -134,19 +74,18 @@ class WechatSpider(object):
             WechatSogouException: 操作频繁以致出现验证码或requests请求返回码错误
         """
         headers = {
-            "User-Agent": 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/45.0.2454.101 Chrome/45.0.2454.101 Safari/537.36',
+            "User-Agent": self.agent[random.randint(0, len(self.agent) - 1)],
             "Referer": referer if referer else 'http://weixin.sogou.com/',
             'Host': host if host else 'weixin.sogou.com',
         }
-        req = self.session if hasattr(self, 'session') else requests
-        if proxy:
+s        if proxy:
             proip_http  = myproxy.get_one('http')
             proip_https = myproxy.get_one('https')
             proxies = {
                 'http' : proip_http['http']+"://" + proip_http['ip'] + ":" + proip_http['duan'],
                 'https' : proip_http['http'] + "://" + proip_http['ip'] + ":" + proip_http['duan']
             }
-            r = req.get(url, headers=headers, proxies=proxies)
+            r = requests.get(url, headers=headers, proxies=proxies)
         else:
             r = req.get(url, headers=headers)
         if r.status_code == requests.codes.ok:
@@ -186,7 +125,7 @@ class WechatSpider(object):
         Returns:
             text: 返回的文本
         """
-        request_url = 'http://weixin.sogou.com/weixin?query='+name+'&_sug_type_=&_sug_=n&type=1&page='+str(page)+'&ie=utf8'
+        request_url = 'http://weixin.sogou.com/weixin?query='+urllib.request.quote(name)+'&_sug_type_=&_sug_=n&type=1&page='+str(page)+'&ie=utf8'
         text = self.__get(request_url)
         return text
 
