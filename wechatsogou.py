@@ -385,13 +385,18 @@ class WechatSpider(object):
                 'content_text': content_text
             }
         }
-    def get_recent_article_url_by_index_single(self):
-        url = 'http://weixin.sogou.com/pcindex/pc/pc_23/pc_23.html'
+    def get_recent_article_url_by_index_single(self, kind=0, page=0):
+        if page == 0:
+            page_str = 'pc_0'
+        else:
+            page_str = str(page)
+        url = 'http://weixin.sogou.com/pcindex/pc/pc_'+str(kind)+'/'+page_str+'.html'
         try:
             text = self.__get(url)
+            page = etree.HTML(text)
+            recent_article_urls = page.xpath('//li/div[@class="pos-wxrw"]/a/@href')
+            return recent_article_urls
         except WechatSogouRequestsException as e:
-            print(e.status_code)
-            exit()
-        page = etree.HTML(text)
-        recent_article_urls = page.xpath('//li/div[@class="pos-wxrw"]/a/@href')
-        return recent_article_urls
+            if e.status_code == 404:
+                return False
+
