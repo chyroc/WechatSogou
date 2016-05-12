@@ -18,6 +18,13 @@ class WechatSogouVcodeException(WechatSogouException):
     """
     pass
 
+class WechatSogouRequestsException(WechatSogouException):
+    """基于搜狗的微信公众号爬虫 抓取 异常类
+    """
+    def __init__(self, errmsg, status_code):
+        WechatSogouException(errmsg)
+        self.status_code = status_code
+
 class WechatSpider(object):
     """基于搜狗的微信公众号爬虫类
 
@@ -78,7 +85,7 @@ class WechatSpider(object):
             "Referer": referer if referer else 'http://weixin.sogou.com/',
             'Host': host if host else 'weixin.sogou.com',
         }
-s        if proxy:
+        if proxy:
             proip_http  = myproxy.get_one('http')
             proip_https = myproxy.get_one('https')
             proxies = {
@@ -87,14 +94,14 @@ s        if proxy:
             }
             r = requests.get(url, headers=headers, proxies=proxies)
         else:
-            r = req.get(url, headers=headers)
+            r = requests.get(url, headers=headers)
         if r.status_code == requests.codes.ok:
             r.encoding = self.__get_encoding_from_reponse(r)
             if '用户您好，您的访问过于频繁，为确认本次访问为正常用户行为，需要您协助验证' in r.text:
                 #raise WechatSogouException('weixin.sogou.com verification code')
-                raise WechatSogouVcodeException('weixin.sogou.com verification code')
+                raise WechatSogouException('weixin.sogou.com verification code')
         else:
-            raise WechatSogouException('requests status_code error')
+            raise WechatSogouRequestsException('requests status_code error', r.status_code)
         return r.text
 
     def __replace_html(self, s):
@@ -378,3 +385,13 @@ s        if proxy:
                 'content_text': content_text
             }
         }
+    def get_recent_article_url_by_index_single(self):
+        url = 'http://weixin.sogou.com/pcindex/pc/pc_23/pc_23.html'
+        try:
+            text = self.__get(url)
+        except WechatSogouRequestsException as e:
+            print(e.status_code)
+            exit()
+        page = etree.HTML(text)
+        recent_article_urls = page.xpath('//li/div[@class="pos-wxrw"]/a/@href')
+        return recent_article_urls
