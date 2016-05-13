@@ -105,7 +105,7 @@ cover|封面图片地址
 main|是否为一次推送中第一篇文章
 content_url|文章地址
 author|作者
-copyright_stat|文章类型（100为普通，11原创，101转载）
+copyright_stat|文章类型（100为普通，11原创，101转载,12?）
 source_url|原文地址
 fileid|...
 content|...

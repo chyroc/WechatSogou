@@ -7,6 +7,11 @@ import re
 import os
 import json
 import random
+import sys
+
+if sys.version_info < (3,):
+    raise RuntimeError("at least Python3.0 is required!!")
+
 
 class WechatSogouException(Exception):
     """基于搜狗的微信公众号爬虫异常类
@@ -361,6 +366,30 @@ class WechatSpider(object):
             raise WechatSogouException(errmsg)
         return related_dict
 
+    def deal_related(self, content_url, title):
+        """获取文章相似文章
+
+        Args:
+            content_url: 文章地址
+            title: 标题
+
+        Returns:
+            related_dict: 相似文章字典
+
+        Raises:
+            WechatSogouException: 错误信息errmsg
+        """
+        related_req_url = 'http://mp.weixin.qq.com/mp/getrelatedmsg?' \
+                          'url=' + urllib.request.quote(content_url) \
+                          + '&title=' + title \
+                          + '&uin=&key=&pass_ticket=&wxtoken=&devicetype=&clientversion=0&x5=0'
+        related_text = self.__get(related_req_url, 'mp.weixin.qq.com', content_url)
+        related_dict = eval(related_text)
+        ret = related_dict['base_resp']['ret']
+        errmsg = related_dict['base_resp']['errmsg'] if related_dict['base_resp']['errmsg'] else 'ret:' + str(ret)
+        if ret != 0:
+            raise WechatSogouException(errmsg)
+        return related_dict
     def __deal_content(self, text):
         """获取文章内容
 
