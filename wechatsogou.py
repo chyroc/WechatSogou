@@ -138,6 +138,14 @@ class WechatSpider(object):
         return r.text
 
     def __jiefeng(self, ruokuai=False):
+        """对于出现验证码，识别验证码，解封
+
+        Args:
+            ruokuai: 是否采用若快打码平台
+
+        Raises:
+            WechatSogouVcodeException: 解封失败，可能验证码识别失败
+        """
         codeurl = 'http://weixin.sogou.com/antispider/util/seccode.php?tc=' + str(time.time())[0:10]
         coder = self.session.get(codeurl)
         if ruokuai:
