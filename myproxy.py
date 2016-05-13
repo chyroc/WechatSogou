@@ -2,9 +2,13 @@ import requests
 import re
 import random
 
-def get(nei='http'):
+def get():
     retu = list()
-    r = requests.get('http://ip84.com/dlgn-http')
+    r = requests.get('http://proxy.goubanjia.com/free/gngn/index.shtml')
+    ips = re.findall(r'<td class="ip">(.*?)</td>', r.text)
+    ips = [re.compile(r'<[^>]+>', re.S).sub('', ip) for ip in ips]
+    print(ips)
+    exit()
     myItems = re.findall('<tr>(.+?)<td>(.+?)</td>(.+?)<td>(.+?)</td>(.+?)<td>(.+?)</td>(.+?)<td>(.+?)</td>(.+?)<td>(.+?)</td>(.+?)<td>(.+?)</td>(.+?)<td>(.+?)</td>(.+?)</tr>', r.text, re.S)
     for items in myItems:
         if items[9].lower() == nei:
@@ -21,8 +25,11 @@ def test(pro):
     else:
         return True
 def get_one(nei='http'):
-    pros = get(nei)
+    pros = get()
     while True:
         pro = pros[random.randint(0, len(pros) - 1)]
         if test(pro):
             return pro
+
+if __name__ == '__main__':
+    get()
