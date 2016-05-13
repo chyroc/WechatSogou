@@ -8,6 +8,11 @@ import os
 import json
 import random
 import sys
+import time
+import tempfile
+from PIL import Image
+from ruokuaicode import RClient
+
 
 if sys.version_info < (3,):
     raise RuntimeError("at least Python3.0 is required!!")
@@ -35,13 +40,33 @@ class WechatSpider(object):
 
     Attributes:
         agent: 模拟浏览器头
+        session: requests.session()对象
     """
 
     def __init__(self):
         self.cookiefile = 'cookie.dat'
+        self.session = requests.session()
+        if os.path.exists(self.cookiefile):
+            with open(self.cookiefile) as f:
+                cookie = json.load(f)
+            self.session.cookies.update(cookie)
         self.agent = [
-            'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0',
-            'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36'
+            "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; AcooBrowser; .NET CLR 1.1.4322; .NET CLR 2.0.50727)",
+            "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; Acoo Browser; SLCC1; .NET CLR 2.0.50727; Media Center PC 5.0; .NET CLR 3.0.04506)",
+            "Mozilla/4.0 (compatible; MSIE 7.0; AOL 9.5; AOLBuild 4337.35; Windows NT 5.1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)",
+            "Mozilla/5.0 (Windows; U; MSIE 9.0; Windows NT 9.0; en-US)",
+            "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET CLR 2.0.50727; Media Center PC 6.0)",
+            "Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 6.0; Trident/4.0; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET CLR 1.0.3705; .NET CLR 1.1.4322)",
+            "Mozilla/4.0 (compatible; MSIE 7.0b; Windows NT 5.2; .NET CLR 1.1.4322; .NET CLR 2.0.50727; InfoPath.2; .NET CLR 3.0.04506.30)",
+            "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN) AppleWebKit/523.15 (KHTML, like Gecko, Safari/419.3) Arora/0.3 (Change: 287 c9dfb30)",
+            "Mozilla/5.0 (X11; U; Linux; en-US) AppleWebKit/527+ (KHTML, like Gecko, Safari/419.3) Arora/0.6",
+            "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.2pre) Gecko/20070215 K-Ninja/2.1.1",
+            "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9) Gecko/20080705 Firefox/3.0 Kapiko/3.0",
+            "Mozilla/5.0 (X11; Linux i686; U;) Gecko/20070322 Kazehakase/0.4.5",
+            "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.8) Gecko Fedora/1.9.0.8-1.fc10 Kazehakase/0.5.6",
+            "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.56 Safari/535.11",
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.20 (KHTML, like Gecko) Chrome/19.0.1036.7 Safari/535.20",
+            "Opera/9.80 (Macintosh; Intel Mac OS X 10.6.8; U; fr) Presto/2.9.168 Version/11.52",
         ]
 
     def __get_elem_text(self, elem):
@@ -86,29 +111,59 @@ class WechatSpider(object):
             WechatSogouException: 操作频繁以致出现验证码或requests请求返回码错误
         """
         headers = {
-            "User-Agent": self.agent[random.randint(0, len(self.agent) - 1)],
+            "User-Agent": self.agent[1], #random.randint(0, len(self.agent) - 1)
             "Referer": referer if referer else 'http://weixin.sogou.com/',
             'Host': host if host else 'weixin.sogou.com',
         }
         if proxy:
             proip_http  = myproxy.get_one('http')
-            proip_https = myproxy.get_one('https')
             proxies = {
                 'http' : proip_http['http']+"://" + proip_http['ip'] + ":" + proip_http['duan'],
                 'https' : proip_http['http'] + "://" + proip_http['ip'] + ":" + proip_http['duan']
             }
-            r = requests.get(url, headers=headers, proxies=proxies)
+            r = self.session.get(url, headers=headers, proxies=proxies)
         else:
-            r = requests.get(url, headers=headers)
+            r = self.session.get(url, headers=headers)
         if r.status_code == requests.codes.ok:
             r.encoding = self.__get_encoding_from_reponse(r)
             if '用户您好，您的访问过于频繁，为确认本次访问为正常用户行为，需要您协助验证' in r.text:
-                #raise WechatSogouException('weixin.sogou.com verification code')
-                raise WechatSogouException('weixin.sogou.com verification code')
+                self.vcode_url = url
+                raise WechatSogouVcodeException('weixin.sogou.com verification code')
         else:
             raise WechatSogouRequestsException('requests status_code error', r.status_code)
         return r.text
 
+    def __jiefeng(self, ruokuai=False):
+        f = tempfile.TemporaryFile()
+        codeurl = 'http://weixin.sogou.com/antispider/util/seccode.php?tc=' + str(time.time())[0:10]
+        coder = self.session.get(codeurl)
+        f.write(coder.content)
+        if ruokuai:
+            # todo
+            img_code = ''
+        else:
+            im = Image.open(f)
+            im.show()
+            img_code = input("please input code: ")
+        post_url = 'http://weixin.sogou.com/antispider/thank.php'
+        post_data = {
+            'c': img_code,
+            'r': urllib.request.quote(self.vcode_url),
+            'v': 5
+        }
+        headers = {
+            "User-Agent": self.agent[1], #random.randint(0, len(self.agent) - 1)
+            'Host': 'weixin.sogou.com',
+            'Referer': 'http://weixin.sogou.com/antispider/?from=%2f'+urllib.request.quote(self.vcode_url.replace('http://',''))
+        }
+        rr = self.session.post(post_url, post_data, headers=headers)
+        remsg = eval(rr.content)
+        if remsg['code'] != 0:
+            raise WechatSogouVcodeException('cannot jiefeng because '+ remsg['msg'])
+        if hasattr(self, 'session'):
+            with open(self.cookiefile, 'w') as f:
+                json.dump(self.session.cookies.get_dict(), f)
+        print(remsg['msg'])
     def __replace_html(self, s):
         """替换html‘&quot;’等转义内容为正常内容
 
@@ -138,7 +193,11 @@ class WechatSpider(object):
             text: 返回的文本
         """
         request_url = 'http://weixin.sogou.com/weixin?query='+urllib.request.quote(name)+'&_sug_type_=&_sug_=n&type=1&page='+str(page)+'&ie=utf8'
-        text = self.__get(request_url)
+        try:
+            text = self.__get(request_url)
+        except WechatSogouVcodeException:
+            self.__jiefeng()
+            text = self.__get(request_url, '', 'http://weixin.sogou.com/antispider/?from=%2f'+urllib.request.quote(self.vcode_url.replace('http://','')))
         return text
 
     def search_gzh_info(self, name, page):
