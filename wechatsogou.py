@@ -43,9 +43,13 @@ class WechatSpider(object):
         session: requests.session()对象
     """
 
-    def __init__(self):
+    def __init__(self, rk_username='', rk_password='', soft_id='', soft_key=''):
         self.cookiefile = 'cookie.dat'
         self.session = requests.session()
+        self.rk_username = rk_username
+        self.rk_password = rk_password
+        self.rk_soft_id = soft_id
+        self.rk_soft_key = soft_key
         if os.path.exists(self.cookiefile):
             with open(self.cookiefile) as f:
                 cookie = json.load(f)
@@ -111,7 +115,7 @@ class WechatSpider(object):
             WechatSogouException: 操作频繁以致出现验证码或requests请求返回码错误
         """
         headers = {
-            "User-Agent": self.agent[1], #random.randint(0, len(self.agent) - 1)
+            "User-Agent": self.agent[random.randint(0, len(self.agent) - 1)], #
             "Referer": referer if referer else 'http://weixin.sogou.com/',
             'Host': host if host else 'weixin.sogou.com',
         }
@@ -134,14 +138,17 @@ class WechatSpider(object):
         return r.text
 
     def __jiefeng(self, ruokuai=False):
-        f = tempfile.TemporaryFile()
         codeurl = 'http://weixin.sogou.com/antispider/util/seccode.php?tc=' + str(time.time())[0:10]
         coder = self.session.get(codeurl)
-        f.write(coder.content)
         if ruokuai:
-            # todo
-            img_code = ''
+            if self.rk_username == '' or self.rk_password == '' or self.rk_soft_id == '' or self.rk_soft_key == '':
+                raise WechatSogouException('ruokuai config empty')
+            rc = RClient(self.rk_username, self.rk_password, self.rk_soft_id, self.rk_soft_key)
+            result = rc.create(coder.content, 3060)
+            img_code = result['Result']
         else:
+            f = tempfile.TemporaryFile()
+            f.write(coder.content)
             im = Image.open(f)
             im.show()
             img_code = input("please input code: ")
@@ -152,7 +159,7 @@ class WechatSpider(object):
             'v': 5
         }
         headers = {
-            "User-Agent": self.agent[1], #random.randint(0, len(self.agent) - 1)
+            "User-Agent": self.agent[random.randint(0, len(self.agent) - 1)], #
             'Host': 'weixin.sogou.com',
             'Referer': 'http://weixin.sogou.com/antispider/?from=%2f'+urllib.request.quote(self.vcode_url.replace('http://',''))
         }
