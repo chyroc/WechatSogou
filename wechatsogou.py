@@ -478,3 +478,29 @@ class WechatSpider(object):
                 j += 1
                 urls = self.get_recent_article_url_by_index_single(i, j)
         return return_urls
+
+    def get_sugg(self, keyword):
+        """获取微信搜狗搜索关键词联想
+
+        Args:
+            keyword: 关键词
+
+        Returns:
+            sugg: 联想关键词列表
+
+        Raises:
+            WechatSogouException: get_sugg keyword error 关键词不是str或者不是可以str()的类型
+            WechatSogouException: sugg refind error 返回分析错误
+        """
+        try:
+            keyword = str(keyword) if type(keyword) !=str else keyword
+        except:
+            raise WechatSogouException('get_sugg keyword error')
+        url = 'http://w.sugg.sogou.com/sugg/ajaj_json.jsp?key='+keyword+'&type=wxpub&pr=web'
+        text = self.__get(url, 'w.sugg.sogou.com')
+        try:
+            sugg = re.findall(r'\["'+keyword+'",(.*?),\["', text)[0]
+            sugg = eval(sugg)
+            return sugg
+        except:
+            raise WechatSogouException('sugg refind error')
