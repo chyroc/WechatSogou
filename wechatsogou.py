@@ -316,7 +316,7 @@ class WechatSpider(object):
             msgdict: 最近文章信息字典
         """
         text = self.__get(url, 'mp.weixin.qq.com')
-        page = etree.HTML(text)
+        page = etree.HTML(text.encode('utf-8'))
         img = page.xpath('//div[@class="profile_info_area"]/div[@class="profile_info_group"]/span/img/@src')[0]
         info = page.xpath('//div[@class="profile_info_area"]/div[@class="profile_info_group"]/div')[0]
         info_list = self.__get_elem_text(info).split('微信号: ')
