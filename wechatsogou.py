@@ -1,7 +1,6 @@
 #coding=utf-8
 import urllib.request
 from lxml import etree
-import myproxy
 import requests
 import re
 import os
@@ -120,12 +119,8 @@ class WechatSpider(object):
             'Host': host if host else 'weixin.sogou.com',
         }
         if proxy:
-            proip_http  = myproxy.get_one('http')
-            proxies = {
-                'http' : proip_http['http']+"://" + proip_http['ip'] + ":" + proip_http['duan'],
-                'https' : proip_http['http'] + "://" + proip_http['ip'] + ":" + proip_http['duan']
-            }
-            r = self.session.get(url, headers=headers, proxies=proxies)
+            # todo 代理
+            r = self.session.get(url, headers=headers)
         else:
             r = self.session.get(url, headers=headers)
         if r.status_code == requests.codes.ok:
@@ -215,8 +210,8 @@ class WechatSpider(object):
             text = self.__get(request_url, '', 'http://weixin.sogou.com/antispider/?from=%2f'+urllib.request.quote(self.vcode_url.replace('http://','')))
         return text
 
-    def search_gzh_info(self, name, page):
-        """对搜索的文本进行处理
+    def search_gzh_info(self, name, page=1):
+        """对搜索的公众号文本进行处理
 
         Args:
             name: 搜索关键字
@@ -280,8 +275,7 @@ class WechatSpider(object):
         return returns
 
     def get_gzh_info(self, wechatid):
-        """通过wechatid获取公众号信息，因为
-
+        """通过wechatid获取公众号信息
         因为wechatid唯一确定，所以第一个就是要搜索的公众号
 
         Args:
@@ -299,6 +293,95 @@ class WechatSpider(object):
         """
         info = self.search_gzh_info(wechatid, 1)
         return info[0] if info else False
+
+    def search_article(self, name, page=1):
+        """通过搜狗搜索微信文章关键字返回的返回的文本
+    
+        Args:
+            name: 搜索文章关键字
+            page: 搜索的页数
+
+        Returns:
+            text: 返回的文本
+        """
+        request_url = 'http://weixin.sogou.com/weixin?query=' + urllib.request.quote(
+            name) + '&_sug_type_=&_sug_=n&type=2&page=' + str(page) + '&ie=utf8'
+        try:
+            text = self.__get(request_url)
+        except WechatSogouVcodeException:
+            self.__jiefeng()
+            text = self.__get(request_url, '', 'http://weixin.sogou.com/antispider/?from=%2f' + urllib.request.quote(
+                self.vcode_url.replace('http://', '')))
+        return text
+
+    def search_article_info(self, name, page=1):
+        """对搜索的文章文本进行处理
+
+        Args:
+            name: 搜索文章关键字
+            page: 搜索的页数
+
+        Returns:
+            列表，每一项均是{'name','url','img','zhaiyao','gzhname','gzhqrcodes','gzhurl','time'}
+            name: 文章标题
+            url: 文章链接
+            img: 文章封面图片缩略图，可转为高清大图
+            zhaiyao: 文章摘要
+            time: 文章推送时间，10位时间戳
+            gzhname: 公众号名称
+            gzhqrcodes: 公众号二维码
+            gzhurl: 公众号最近文章地址
+
+        """
+        text = self.search_article(name, page)
+        page = etree.HTML(text)
+        img = list()
+        info_imgs = page.xpath(u"//div[@class='wx-rb wx-rb3']/div[1]/a/img")
+        for info_img in info_imgs:
+            img.append(info_img.attrib['src'])
+        url = list()
+        info_urls = page.xpath(u"//div[@class='wx-rb wx-rb3']/div[2]/h4/a")
+        for info_url in info_urls:
+            url.append(info_url.attrib['href'])
+        name = list()
+        info_names = page.xpath(u"//div[@class='wx-rb wx-rb3']/div[2]/h4")
+        for info_name in info_names:
+            cache = self.__get_elem_text(info_name)
+            cache = cache.replace('red_beg', '').replace('red_end', '')
+            name.append(cache)
+        zhaiyao = list()
+        info_zhaiyaos = page.xpath(u"//div[@class='wx-rb wx-rb3']/div[2]/p")
+        for info_zhaiyao in info_zhaiyaos:
+            cache = self.__get_elem_text(info_zhaiyao)
+            cache = cache.replace('red_beg', '').replace('red_end', '')
+            zhaiyao.append(cache)
+        gzhname = list()
+        gzhqrcodes = list()
+        gzhurl = list()
+        info_gzhs = page.xpath(u"//div[@class='wx-rb wx-rb3']/div[2]/div/a")
+        for info_gzh in info_gzhs:
+            gzhname.append(info_gzh.attrib['title'])
+            gzhqrcodes.append(info_gzh.attrib['data-encqrcodeurl'])
+            gzhurl.append(info_gzh.attrib['href'])
+        time = list()
+        info_times = page.xpath(u"//div[@class='wx-rb wx-rb3']/div[2]/div/span/script/text()")
+        for info_time in info_times:
+            time.append(re.findall('vrTimeHandle552write\(\'(.*?)\'\)', info_time)[0])
+        returns = list()
+        for i in range(len(url)):
+            returns.append(
+                {
+                    'name': name[i],
+                    'url': url[i],
+                    'img': img[i],
+                    'zhaiyao': zhaiyao[i],
+                    'gzhname': gzhname[i],
+                    'gzhqrcodes': gzhqrcodes[i],
+                    'gzhurl': gzhurl[i],
+                    'time': time[i]
+                }
+            )
+        return returns
 
     def get_gzh_article_dict(self, url):
         """获取公众号最近文章页信息
