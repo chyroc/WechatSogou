@@ -485,16 +485,18 @@ class WechatSpider(object):
         Raises:
             WechatSogouException: 错误信息errmsg
         """
+        comment_dict = {}
         sg_data = re.findall(r'window.sg_data=(.*?)seajs', text, re.S)
-        sg_data = sg_data[0].replace(u'\r\n','').replace(' ','')
-        sg_data = re.findall(r'{src:"(.*?)",ver:"(.*?)",timestamp:"(.*?)",signature:"(.*?)"}', sg_data)[0]
-        comment_req_url = 'http://mp.weixin.qq.com/mp/getcomment?src='+sg_data[0]+'&ver='+sg_data[1]+'&timestamp='+sg_data[2]+'&signature='+sg_data[3]+'&uin=&key=&pass_ticket=&wxtoken=&devicetype=&clientversion=0&x5=0'
-        comment_text = self.__get(comment_req_url, 'mp.weixin.qq.com', 'http://mp.weixin.qq.com')
-        comment_dict = eval(comment_text)
-        ret = comment_dict['base_resp']['ret']
-        errmsg = comment_dict['base_resp']['errmsg'] if comment_dict['base_resp']['errmsg'] else 'ret:' + str(ret)
-        if ret != 0:
-            raise WechatSogouException(errmsg)
+        if sg_data:
+            sg_data = sg_data[0].replace(u'\r\n','').replace(' ','')
+            sg_data = re.findall(r'{src:"(.*?)",ver:"(.*?)",timestamp:"(.*?)",signature:"(.*?)"}', sg_data)[0]
+            comment_req_url = 'http://mp.weixin.qq.com/mp/getcomment?src='+sg_data[0]+'&ver='+sg_data[1]+'&timestamp='+sg_data[2]+'&signature='+sg_data[3]+'&uin=&key=&pass_ticket=&wxtoken=&devicetype=&clientversion=0&x5=0'
+            comment_text = self.__get(comment_req_url, 'mp.weixin.qq.com', 'http://mp.weixin.qq.com')
+            comment_dict = eval(comment_text)
+            ret = comment_dict['base_resp']['ret']
+            errmsg = comment_dict['base_resp']['errmsg'] if comment_dict['base_resp']['errmsg'] else 'ret:' + str(ret)
+            if ret != 0:
+                raise WechatSogouException(errmsg)
         return comment_dict
 
     def __deal_related(self, article):
@@ -580,12 +582,12 @@ class WechatSpider(object):
         """
         text = self.__get(article['content_url'], 'mp.weixin.qq.com')
         yuan_url = re.findall('var msg_link = "(.*?)";', text)[0].replace('amp;','')
-        related = self.__deal_related(article)
+        # related = self.__deal_related(article)
         comment = self.__deal_comment(text)
         content_html, content_rich, content_text = self.__deal_content(text)
         return {
             'yuan': yuan_url,
-            'related': related,
+            'related': {},
             'comment': comment,
             'content': {
                 'content_html': content_html,
