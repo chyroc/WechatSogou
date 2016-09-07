@@ -1,10 +1,11 @@
-# coding:utf-8
+# -*- coding: utf-8 -*-
 
 import requests
 from hashlib import md5
 
+from .base import WechatSogouBase
 
-class RClient(object):
+class RClient(WechatSogouBase):
 
     def __init__(self, username, password, soft_id, soft_key):
         self.username = username
