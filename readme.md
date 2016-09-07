@@ -4,7 +4,9 @@
 
 # 项目简介
 基于搜狗微信搜索的微信公众号爬虫接口，可以扩展成基于搜狗搜索的爬虫
+
 基于Python3，但是2应该也可以使用
+
 如果有问题，请提issue
 > 关于我，欢迎关注
   微博：[Chyroc](http://weibo.com/cyp1105)
@@ -24,7 +26,7 @@
     name = '南京航空航天大学'
     wechat_infos = wechats.search_gzh_info(name)
 
-    <img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/search_gzh_info.png" />
+<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/search_gzh_info.png" />
 
 返回结果是列表，每一项均是公众号具体信息字典，具体如下
 
@@ -44,7 +46,7 @@ url|最近文章地址
     wechat_id = 'nanhangqinggong'
     wechat_info = wechats.get_gzh_info(wechat_id)
 
-    <img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_info.png" />
+<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_info.png" />
 
 返回结果与上述search_gzh_info函数返回结果一致
 
@@ -54,7 +56,7 @@ url|最近文章地址
     keywords = '傅里叶变换'
     wechat_articles = wechats.search_article_info(keywords)
 
-    <img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/search_article_info.png" />
+<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/search_article_info.png" />
 
 返回结果是列表，每一项均是文章信息字典，具体如下
 
@@ -75,7 +77,7 @@ gzhurl|公众号最近文章地址
     wechat_info = wechats.get_gzh_info(wechat_id)
     data = wechats.get_gzh_article_and_gzh_by_url_dict(wechat_info['url'])
 
-    <img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_article_and_gzh_by_url_dict.png" />
+<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_article_and_gzh_by_url_dict.png" />
 
 
 字段|含义
@@ -158,11 +160,16 @@ reply|回复
 
     articles_single = wechats.get_recent_article_url_by_index_single()
 
+<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_recent_article_url_by_index_single.png" />
+
 返回的是列表，每一项是不同公众号的的最近文章页
 
 ## 获取首页推荐文章公众号最近文章地址  所有分类 - get_recent_article_url_by_index_all
 
     articles_all = wechats.get_recent_article_url_by_index_all()
+
+<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_recent_article_url_by_index_all.png" />
+
 
 返回的是列表，每一项是不同公众号的的最近文章页
 
