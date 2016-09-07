@@ -128,25 +128,29 @@ copyright_stat|文章内容版权性
     articles = wechats.get_gzh_article_by_url_dict(wechat_info['url'])
     article_info = wechats.get_gzh_article_info(articles[0])
 
+<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_article_info.png" />
+
 返回字典，具体如下
 字段|含义
 ---|---
-yuan|文章的固定地址（通过搜索获取的文章地址有时效性？）
-content|文章内容，字典，一下三项均含img和br标签
-content->content_html|原始文章内容，包括html标签及样式
-content->content_rich|包含图片（包括图片应展示的样式）的文章内容
-content->content_text|包含图片（`<img src="..." />`格式）的文章内容
-comment|评论以及阅读量，字典
-comment->base_resp|返回码，字典，包含下面两项
-comment->base_resp->ret|返回码
-comment->base_resp->errmsg|返回错误信息
-comment->read_num|阅读量
-comment->like_num|点赞数
-comment->elected_comment_total_cnt|评论数
-comment->comment|具体评论数据，每一项均是一个列表，设为comment_comment
+yuan|文章固定地址
+related|相似文章信息字典
+comment|评论信息字典
+content|文章内容
+
+
+comment是评论以及阅读量，字典
+字段|含义
+---|---
+base_resp|返回码，字典，包含下面两项
+base_resp->ret|返回码
+base_resp->errmsg|返回错误信息
+read_num|阅读量
+like_num|点赞数
+elected_comment_total_cnt|评论数
+comment|具体评论数据，每一项均是一个列表，设为comment_comment
 
 comment_comment是一项评论
-
 字段|含义
 ---|---
 content|评论内容
@@ -155,6 +159,13 @@ nick_name|评论者昵称
 logo_url|评论者头像
 reply|回复
 其余字典未说明，请打印自行查看|
+
+content是文章内容，字典，一下三项均含img和br标签
+字段|含义
+---|---
+content_html|原始文章内容，包括html标签及样式
+content_rich|包含图片（包括图片应展示的样式）的文章内容
+content_text|包含图片（`<img src="..." />`格式）的文章内容
 
 ## 获取首页推荐文章公众号最近文章地址 - get_recent_article_url_by_index_single
 
