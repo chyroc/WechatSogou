@@ -5,9 +5,10 @@
 # 项目简介
 基于搜狗微信搜索的微信公众号爬虫接口，可以扩展成基于搜狗搜索的爬虫
 
-基于Python3，但是2应该也可以使用
+基于Python3
 
 如果有问题，请提issue
+
 > 关于我，欢迎关注
   微博：[Chyroc](http://weibo.com/cyp1105)
 ---
@@ -41,14 +42,14 @@ img|头像地址
 url|最近文章地址
 
 ## 获取公众号
-对于一个已知`wechatid`的公众号，如果需要获取其最近文章，可以通过以下方式先获取具体信息（包括最近文章地址），然后根据``获取
+对于一个已知`wechatid`的公众号
 
     wechat_id = 'nanhangqinggong'
     wechat_info = wechats.get_gzh_info(wechat_id)
 
 <img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_info.png" />
 
-返回结果与上述search_gzh_info函数返回结果一致
+返回结果与上述search_gzh_info返回结果一致
 
 
 ## 搜索微信文章
@@ -85,7 +86,8 @@ gzhurl|公众号最近文章地址
 gzh_info|公众号信息字典
 articles|最近文章列表，每一项均是字典
 
-其中gzh_info的具体如下
+其中`gzh_info`的具体如下
+
 字段|含义
 ---|---
 name|公众号名称
@@ -96,14 +98,15 @@ qrcode|二维码
 img|头像图片
 url|最近文章地址
 
-articles的每一项具体如下
+`articles`的每一项具体如下
+
 字段|含义
 ---|---
 main|是否是一次推送中第一篇文章，1则是
 title|文章标题
 digest|摘要
-content:
-fileid:
+content|
+fileid|
 content_url|文章地址
 source_url|原文地址
 cover|封面图片
@@ -131,6 +134,7 @@ copyright_stat|文章内容版权性
 <img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_article_info.png" />
 
 返回字典，具体如下
+
 字段|含义
 ---|---
 yuan|文章固定地址
@@ -139,7 +143,8 @@ comment|评论信息字典
 content|文章内容
 
 
-comment是评论以及阅读量，字典
+`comment`是评论以及阅读量，字典
+
 字段|含义
 ---|---
 base_resp|返回码，字典，包含下面两项
@@ -150,7 +155,8 @@ like_num|点赞数
 elected_comment_total_cnt|评论数
 comment|具体评论数据，每一项均是一个列表，设为comment_comment
 
-comment_comment是一项评论
+`comment_comment`是一项评论
+
 字段|含义
 ---|---
 content|评论内容
@@ -160,7 +166,8 @@ logo_url|评论者头像
 reply|回复
 其余字典未说明，请打印自行查看|
 
-content是文章内容，字典，一下三项均含img和br标签
+`content`是文章内容，字典，一下三项均含`img`和`br`标签
+
 字段|含义
 ---|---
 content_html|原始文章内容，包括html标签及样式
