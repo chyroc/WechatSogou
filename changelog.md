@@ -2,6 +2,7 @@
 
 - dict.get如果为None应设为''
 - get_gzh_article_and_gzh_by_url_dict改为get_gzh_recent_info
+- 首页推荐文章最近地址获取 修复
 
 # 1.0.1
 

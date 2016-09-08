@@ -337,7 +337,11 @@ class WechatSogouApi(WechatSogouBasic):
             text = self.get(url)
             page = etree.HTML(text)
             recent_article_urls = page.xpath('//li/div[@class="pos-wxrw"]/a/@href')
-            return recent_article_urls
+            reurls = []
+            for reurl in recent_article_urls:
+                if 'mp.weixin.qq.com' in reurl:
+                    reurls.append(reurl)
+            return reurls
         except WechatSogouRequestsException as e:
             if e.status_code == 404:
                 return False
