@@ -247,7 +247,8 @@ class WechatSogouBasic(WechatSogouBase):
         else:
             wechatid = ''
         jieshao = profile_info_area.xpath('ul/li[1]/div/text()')[0]
-        renzhen = profile_info_area.xpath('ul/li[2]/div/text()')[0]
+        renzhen = profile_info_area.xpath('ul/li[2]/div/text()')
+        renzhen = renzhen[0] if renzhen else ''
         qrcode = page.xpath('//*[@id="js_pc_qr_code_img"]/@src')[0]
         qrcode = 'http://mp.weixin.qq.com/'+qrcode if qrcode else ''
         return {

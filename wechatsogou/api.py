@@ -200,7 +200,7 @@ class WechatSogouApi(WechatSogouBasic):
         text = self.get_gzh_article_by_url_text(url)
         return {
             'gzh_info': self.get_gzh_article_gzh_by_url_dict(text, url),
-            'articles': self.get_gzh_article_by_url_dict(text)
+            'articles': self.deal_gzh_article_dict(self.get_gzh_article_by_url_dict(text))
         }
 
 
