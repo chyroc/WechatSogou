@@ -319,16 +319,16 @@ class WechatSogouBasic(WechatSogouBase):
             items.append(
                 {
                     'main': '1',
-                    'title': item.get('title'),
-                    'digest': item.get('digest'),
-                    'content': item.get('content'),
-                    'fileid': item.get('fileid'),
+                    'title': item.get('title', ''),
+                    'digest': item.get('digest', ''),
+                    'content': item.get('content', ''),
+                    'fileid': item.get('fileid', ''),
                     'content_url': 'http://mp.weixin.qq.com' + item.get('content_url') if item.get(
                         'content_url') else '',
-                    'source_url': item.get('source_url'),
-                    'cover': item.get('cover'),
-                    'author': item.get('author'),
-                    'copyright_stat': item.get('copyright_stat')
+                    'source_url': item.get('source_url', ''),
+                    'cover': item.get('cover', ''),
+                    'author': item.get('author', ''),
+                    'copyright_stat': item.get('copyright_stat', '')
                 }
             )
             if item['is_multi'] == 1:
@@ -336,16 +336,16 @@ class WechatSogouBasic(WechatSogouBase):
                     items.append(
                         {
                             'main': '0',
-                            'title': multidic.get('title'),
-                            'digest': multidic.get('digest'),
-                            'content': multidic.get('content'),
-                            'fileid': multidic.get('fileid'),
+                            'title': multidic.get('title', ''),
+                            'digest': multidic.get('digest', ''),
+                            'content': multidic.get('content', ''),
+                            'fileid': multidic.get('fileid', ''),
                             'content_url': 'http://mp.weixin.qq.com' + multidic.get('content_url') if multidic.get(
                                 'content_url') else '',
-                            'source_url': multidic.get('source_url'),
-                            'cover': multidic.get('cover'),
-                            'author': multidic.get('author'),
-                            'copyright_stat': multidic.get('copyright_stat')
+                            'source_url': multidic.get('source_url', ''),
+                            'cover': multidic.get('cover', ''),
+                            'author': multidic.get('author', ''),
+                            'copyright_stat': multidic.get('copyright_stat', '')
                         }
                     )
         return items
