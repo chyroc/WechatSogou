@@ -220,11 +220,11 @@ class WechatSogouBasic(WechatSogouBase):
         """
         return self.get(url, 'mp.weixin.qq.com')
 
-    def get_gzh_article_gzh_by_url_dict(self, url):
+    def get_gzh_article_gzh_by_url_dict(self, text, url):
         """最近文章页  公众号信息
 
         Args:
-            url: 最近文章页地址
+            text: 最近文章文本
 
         Returns:
             字典{'name':name,'wechatid':wechatid,'jieshao':jieshao,'renzhen':renzhen,'qrcode':qrcodes,'img':img,'url':url}
@@ -236,14 +236,16 @@ class WechatSogouBasic(WechatSogouBase):
             img: 头像图片
             url: 最近文章地址
         """
-        text = self.get_gzh_article_by_url_text(url)
         page = etree.HTML(text)
         profile_info_area = page.xpath("//div[@class='profile_info_area']")[0]
         img = profile_info_area.xpath('div[1]/span/img/@src')[0]
         name = profile_info_area.xpath('div[1]/div/strong/text()')[0]
         name = self.replace_space(name)
-        wechatid = profile_info_area.xpath('div[1]/div/p/text()')[0]
-        wechatid = wechatid.replace('微信号: ', '')
+        wechatid = profile_info_area.xpath('div[1]/div/p/text()')
+        if wechatid:
+            wechatid = wechatid[0].replace('微信号: ', '')
+        else:
+            wechatid = ''
         jieshao = profile_info_area.xpath('ul/li[1]/div/text()')[0]
         renzhen = profile_info_area.xpath('ul/li[2]/div/text()')[0]
         qrcode = page.xpath('//*[@id="js_pc_qr_code_img"]/@src')[0]
@@ -258,41 +260,18 @@ class WechatSogouBasic(WechatSogouBase):
             'url': url
         }
 
-    def get_gzh_article_by_url_dict(self, url):
+    def get_gzh_article_by_url_dict(self, text):
         """最近文章页 文章信息
 
         Args:
-            url: 最近文章页地址
+            text: 最近文章文本
 
         Returns:
-            {info:{img:'',name:'',wechatid:'',jieshao:'',zhuti:''},msgdict:''}
-            img: 头像地址
-            name: 公众号名称
-            wechatid: 公众号id
-            jieshao: 公众号介绍
-            zhuti: 公众号主体信息
             msgdict: 最近文章信息字典
         """
-        text = self.get_gzh_article_by_url_text(url)
-        page = etree.HTML(text)
-        img = page.xpath('//div[@class="profile_info_area"]/div[@class="profile_info_group"]/span/img/@src')[0]
-        info = page.xpath('//div[@class="profile_info_area"]/div[@class="profile_info_group"]/div')[0]
-        info_list = self.get_elem_text(info).split('微信号: ')
-        jieshao = page.xpath('//div[@class="profile_info_area"]/ul')[0]
-        jieshao_text = self.get_elem_text(jieshao)
-        jieshao_list = re.split('功能介绍|帐号主体', jieshao_text)
         msglist = re.findall("var msgList = '(.+?)';", text, re.S)[0]
         msgdict = eval(self.replace_html(msglist))
-        return {
-            'info': {
-                'img': img,
-                'name': info_list[0],
-                'wechatid': info_list[1],
-                'jieshao': jieshao_list[1],
-                'zhuti': jieshao_list[2]
-            },
-            'msgdict': msgdict
-        }
+        return msgdict
 
     def deal_gzh_article_dict(self, msgdict):
         """处理最近文章页信息

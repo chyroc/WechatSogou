@@ -72,11 +72,11 @@ gzhname|公众号名称
 gzhqrcodes|公众号二维码
 gzhurl|公众号最近文章地址
 
-## 获取最近文章 详情页 字典 - get_gzh_article_and_gzh_by_url_dict
+## 获取最近文章 详情页 字典 - get_gzh_recent_info
 
     wechat_id = 'nanhangqinggong'
     wechat_info = wechats.get_gzh_info(wechat_id)
-    data = wechats.get_gzh_article_and_gzh_by_url_dict(wechat_info['url'])
+    data = wechats.get_gzh_recent_info(wechat_info['url'])
 
 <img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_article_and_gzh_by_url_dict.png" />
 

@@ -166,47 +166,8 @@ class WechatSogouApi(WechatSogouBasic):
             )
         return returns
 
-    def get_gzh_article_gzh_by_url_dict(self, url):
-        """最近文章页  公众号信息
 
-        Args:
-            url: 最近文章页地址
-
-        Returns:
-            字典{'name':name,'wechatid':wechatid,'jieshao':jieshao,'renzhen':renzhen,'qrcode':qrcodes,'img':img,'url':url}
-            name: 公众号名称
-            wechatid: 公众号id
-            jieshao: 介绍
-            renzhen: 认证，为空表示未认证
-            qrcode: 二维码
-            img: 头像图片
-            url: 最近文章地址
-        """
-        return super().get_gzh_article_gzh_by_url_dict(url)
-
-    def get_gzh_article_by_url_dict(self, url):
-        """获取微信号的最近文章
-
-        Args:
-            url: 最近文章页url
-
-        Returns:
-            列表，均是{'main':'', 'title':','digest':'','content':'','fileid':'','content_url':'','source_url':'','cover':'','author':'','copyright_stat':''}
-            main: 是否是一次推送中第一篇文章，1则是
-            title: 文章标题
-            digest: 摘要
-            content:
-            fileid:
-            content_url: 文章地址
-            source_url: 原文地址
-            cover: 封面图片
-            author: 作者
-            copyright_stat: 文章内容版权性
-        """
-        msg = super().get_gzh_article_by_url_dict(url)
-        return self.deal_gzh_article_dict(msg['msgdict'])
-
-    def get_gzh_article_and_gzh_by_url_dict(self, url):
+    def get_gzh_recent_info(self, url):
         """最近文章页  公众号信息 和文章列表
 
         Args:
@@ -236,9 +197,10 @@ class WechatSogouApi(WechatSogouBasic):
             author: 作者
             copyright_stat: 文章内容版权性
         """
+        text = self.get_gzh_article_by_url_text(url)
         return {
-            'gzh_info': self.get_gzh_article_gzh_by_url_dict(url),
-            'articles': self.get_gzh_article_by_url_dict(url)
+            'gzh_info': self.get_gzh_article_gzh_by_url_dict(text, url),
+            'articles': self.get_gzh_article_by_url_dict(text)
         }
 
 
