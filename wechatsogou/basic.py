@@ -254,7 +254,7 @@ class WechatSogouBasic(WechatSogouBase):
         renzhen = profile_info_area.xpath('ul/li[2]/div/text()')
         renzhen = renzhen[0] if renzhen else ''
         qrcode = page.xpath('//*[@id="js_pc_qr_code_img"]/@src')[0]
-        qrcode = 'http://mp.weixin.qq.com/'+qrcode if qrcode else ''
+        qrcode = 'http://mp.weixin.qq.com/' + qrcode if qrcode else ''
         return {
             'name': name,
             'wechatid': wechatid,
@@ -300,6 +300,12 @@ class WechatSogouBasic(WechatSogouBase):
         items = list()
         for listdic in msgdict['list']:
             item = listdic['app_msg_ext_info']
+            if item.get('content_url'):
+                url = item.get('content_url')
+                if 'http://mp.weixin.qq.com' not in url:
+                    url = 'http://mp.weixin.qq.com' + url
+            else:
+                url = ''
             items.append(
                 {
                     'main': '1',
@@ -307,8 +313,7 @@ class WechatSogouBasic(WechatSogouBase):
                     'digest': item.get('digest', ''),
                     'content': item.get('content', ''),
                     'fileid': item.get('fileid', ''),
-                    'content_url': 'http://mp.weixin.qq.com' + item.get('content_url') if item.get(
-                        'content_url') else '',
+                    'content_url': url,
                     'source_url': item.get('source_url', ''),
                     'cover': item.get('cover', ''),
                     'author': item.get('author', ''),
