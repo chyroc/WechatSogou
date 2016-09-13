@@ -156,8 +156,12 @@ class WechatSogouBasic(WechatSogouBase):
         Returns:
             s: 处理反转义后的文字
         """
+        s = s.replace('&#39;', '\'')
         s = s.replace('&quot;', '"')
         s = s.replace('&amp;', '&')
+        s = s.replace('&gt;', '>')
+        s = s.replace('&lt;', '<')
+        s = s.replace('&yen;', '¥')
         s = s.replace('amp;', '')
         s = s.replace('&lt;', '<')
         s = s.replace('&gt;', '>')
