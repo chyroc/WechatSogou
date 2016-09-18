@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import re
+import requests
 import time
 from lxml import etree
 
@@ -29,7 +30,7 @@ class WechatSogouApi(WechatSogouBasic):
             img: 头像图片
             url: 最近文章地址
         """
-        text = self.search_gzh_text(name, page)
+        text = self._search_gzh_text(name, page)
         page = etree.HTML(text)
         img = list()
         info_imgs = page.xpath(u"//div[@class='img-box']/img")
@@ -45,7 +46,7 @@ class WechatSogouApi(WechatSogouBasic):
         renzhen = list()
         info_instructions = page.xpath(u"//div[@class='txt-box']")
         for info_instruction in info_instructions:
-            cache = self.get_elem_text(info_instruction)
+            cache = self._get_elem_text(info_instruction)
             cache = cache.replace('red_beg', '').replace('red_end', '')
             cache_list = cache.split('\n')
             cache_re = re.split('微信号：|功能介绍：|认证：|最近文章：', cache_list[0])
@@ -116,7 +117,7 @@ class WechatSogouApi(WechatSogouBasic):
             gzhurl: 公众号最近文章地址
 
         """
-        text = self.search_article_text(name, page)
+        text = self._search_article_text(name, page)
         page = etree.HTML(text)
         img = list()
         info_imgs = page.xpath(u"//div[@class='wx-rb wx-rb3']/div[1]/a/img")
@@ -129,13 +130,13 @@ class WechatSogouApi(WechatSogouBasic):
         name = list()
         info_names = page.xpath(u"//div[@class='wx-rb wx-rb3']/div[2]/h4")
         for info_name in info_names:
-            cache = self.get_elem_text(info_name)
+            cache = self._get_elem_text(info_name)
             cache = cache.replace('red_beg', '').replace('red_end', '')
             name.append(cache)
         zhaiyao = list()
         info_zhaiyaos = page.xpath(u"//div[@class='wx-rb wx-rb3']/div[2]/p")
         for info_zhaiyao in info_zhaiyaos:
-            cache = self.get_elem_text(info_zhaiyao)
+            cache = self._get_elem_text(info_zhaiyao)
             cache = cache.replace('red_beg', '').replace('red_end', '')
             zhaiyao.append(cache)
         gzhname = list()
@@ -166,17 +167,52 @@ class WechatSogouApi(WechatSogouBasic):
             )
         return returns
 
-
-    def get_gzh_recent_info(self, url):
-        """最近文章页  公众号信息 和文章列表
+    def get_gzh_message(self, **kwargs):
+        """解析最近文章页  或  解析历史消息记录
 
         Args:
-            url: 最近文章页地址
+            ::param url 最近文章地址
+            ::param wechatid 微信号
+            ::param wechat_name 微信昵称(不推荐，因为不唯一)
+
+            最保险的做法是提供url或者wechatid
 
         Returns:
-            字典{'gzh_info':gzh_info, 'articles':articles}
+            gzh_messages 是 列表，每一项均是字典，一定含有字段qunfa_id,datetime,type
+            当type不同时，含有不同的字段，具体见文档
+        """
+        url = kwargs.get('url', None)
+        wechatid = kwargs.get('wechatid', None)
+        wechat_name = kwargs.get('wechat_name', None)
+        if url:
+            text = self._get_gzh_article_by_url_text(url)
+        elif wechatid:
+            gzh_info = self.get_gzh_info(wechatid)
+            url = gzh_info['url']
+            text = self._get_gzh_article_by_url_text(url)
+        elif wechat_name:
+            gzh_info = self.get_gzh_info(wechat_name)
+            url = gzh_info['url']
+            text = self._get_gzh_article_by_url_text(url)
+        else:
+            raise WechatSogouException('get_gzh_recent_info need param text and url')
 
-            gzh_info也是字典{'name':name,'wechatid':wechatid,'jieshao':jieshao,'renzhen':renzhen,'qrcode':qrcodes,'img':img,'url':url}
+        return self._deal_gzh_article_dict(self._get_gzh_article_by_url_dict(text))
+
+    def get_gzh_message_and_info(self, **kwargs):
+        """最近文章页  公众号信息 和 群发信息
+
+        Args:
+            ::param url 最近文章地址
+            ::param wechatid 微信号
+            ::param wechat_name 微信昵称(不推荐，因为不唯一)
+
+            最保险的做法是提供url或者wechatid
+
+        Returns:
+            字典{'gzh_info':gzh_info, 'gzh_messages':gzh_messages}
+
+            gzh_info 也是字典{'name':name,'wechatid':wechatid,'jieshao':jieshao,'renzhen':renzhen,'qrcode':qrcodes,'img':img,'url':url}
             name: 公众号名称
             wechatid: 公众号id
             jieshao: 介绍
@@ -185,69 +221,36 @@ class WechatSogouApi(WechatSogouBasic):
             img: 头像图片
             url: 最近文章地址
 
-            articles列表，均是{'main':'', 'title':','digest':'','content':'','fileid':'','content_url':'','source_url':'','cover':'','author':'','copyright_stat':''}
-            main: 是否是一次推送中第一篇文章，1则是
-            title: 文章标题
-            digest: 摘要
-            content:
-            fileid:
-            content_url: 文章地址
-            source_url: 原文地址
-            cover: 封面图片
-            author: 作者
-            copyright_stat: 文章内容版权性
+            gzh_messages 是 列表，每一项均是字典，一定含有字段qunfa_id,datetime,type
+            当type不同时，含有不同的字段，具体见文档
         """
-        text = self.get_gzh_article_by_url_text(url)
+        url = kwargs.get('url', None)
+        wechatid = kwargs.get('wechatid', None)
+        wechat_name = kwargs.get('wechat_name', None)
+        if url:
+            text = self._get_gzh_article_by_url_text(url)
+        elif wechatid:
+            gzh_info = self.get_gzh_info(wechatid)
+            url = gzh_info['url']
+            text = self._get_gzh_article_by_url_text(url)
+        elif wechat_name:
+            gzh_info = self.get_gzh_info(wechat_name)
+            url = gzh_info['url']
+            text = self._get_gzh_article_by_url_text(url)
+        else:
+            raise WechatSogouException('get_gzh_recent_info need param text and url')
+
         return {
-            'gzh_info': self.get_gzh_article_gzh_by_url_dict(text, url),
-            'articles': self.deal_gzh_article_dict(self.get_gzh_article_by_url_dict(text))
+            'gzh_info': self._get_gzh_article_gzh_by_url_dict(text, url),
+            'gzh_messages': self._deal_gzh_article_dict(self._get_gzh_article_by_url_dict(text))
         }
 
-
-    def get_gzh_article_by_wechatid_dict(self, wechatid):
-        """获取微信号的最近文章
-
-        Args:
-            wechatid: 微信号
-
-        Returns:
-            列表，均是{'main':'', 'title':','digest':'','content':'','fileid':'','content_url':'','source_url':'','cover':'','author':'','copyright_stat':''}
-            main: 是否是一次推送中第一篇文章，1则是
-            title: 文章标题
-            digest: 摘要
-            content:
-            fileid:
-            content_url: 文章地址
-            source_url: 原文地址
-            cover: 封面图片
-            author: 作者
-            copyright_stat: 文章内容版权性
-        """
-        gzh = self.get_gzh_info(wechatid)
-        if gzh:
-            return self.get_gzh_article_and_gzh_by_url_dict(gzh['url'])
-        return False
-
-    def deal_related(self, article):
-        """获取文章相似文章
-
-        Args:
-            article: 文章信息字典
-            包含字典：article['content_url'],article['title'] 即可
-
-        Returns:
-            related_dict: 相似文章字典
-
-        Raises:
-            WechatSogouException: 错误信息errmsg
-        """
-        return super().deal_related(article)
-
-    def deal_content(self, text):
+    def deal_article_content(self, **kwargs):
         """获取文章内容
 
         Args:
-            text: 文章页文本
+            ::param url 文章页 url
+            ::param text 文章页 文本
 
         Returns:
             content_html, content_rich, content_text
@@ -255,13 +258,38 @@ class WechatSogouApi(WechatSogouBasic):
             content_rich: 包含图片（包括图片应展示的样式）的文章内容
             content_text: 包含图片（`<img src="..." />`格式）的文章内容
         """
-        content_html = re.findall(r'<div class="rich_media_content " id="js_content">(.*?)</div>', text, re.S)[0]
-        content_rich = re.sub(r'<(?!img|br).*?>', '', content_html)
-        pipei = re.compile(r'<img(.*?)src="(.*?)"(.*?)/>')
-        content_text = pipei.sub(lambda m: '<img src="' + m.group(2) + '" />', content_rich)
-        return content_html, content_rich, content_text
+        url = kwargs.get('url', None)
+        text = kwargs.get('text', None)
 
-    def deal_comment(self, text):
+        if text:
+            pass
+        elif url:
+            text = self._get_gzh_article_text(url)
+        else:
+            raise WechatSogouException('deal_content need param url or text')
+
+        content_html = re.findall(r'<div class="rich_media_content " id="js_content">(.*?)</div>', text, re.S)[0]
+        # content_rich = re.sub(r'<(?!img|br).*?>', '', content_html)
+        # pipei = re.compile(r'<img(.*?)src="(.*?)"(.*?)/>')
+        # content_text = pipei.sub(lambda m: '<img src="' + m.group(2) + '" />', content_rich)
+        return content_html
+
+    def deal_article_related(self, url, title):
+        """获取文章相似文章
+
+        Args:
+            url: 文章链接
+            title: 文章标题
+
+        Returns:
+            related_dict: 相似文章字典
+
+        Raises:
+            WechatSogouException: 错误信息errmsg
+        """
+        return self._deal_related(url, title)
+
+    def deal_article_comment(self, **kwargs):
         """获取文章评论
 
         Args:
@@ -273,13 +301,23 @@ class WechatSogouApi(WechatSogouBasic):
         Raises:
             WechatSogouException: 错误信息errmsg
         """
+        url = kwargs.get('url', None)
+        text = kwargs.get('text', None)
+
+        if text:
+            pass
+        elif url:
+            text = self._get_gzh_article_text(url)
+        else:
+            raise WechatSogouException('deal_content need param url or text')
+
         sg_data = re.findall(r'window.sg_data={(.*?)}', text, re.S)
         sg_data = '{' + sg_data[0].replace(u'\r\n', '').replace(' ', '') + '}'
         sg_data = re.findall(r'{src:"(.*?)",ver:"(.*?)",timestamp:"(.*?)",signature:"(.*?)"}', sg_data)[0]
         comment_req_url = 'http://mp.weixin.qq.com/mp/getcomment?src=' + sg_data[0] + '&ver=' + sg_data[
             1] + '&timestamp=' + sg_data[2] + '&signature=' + sg_data[
                               3] + '&uin=&key=&pass_ticket=&wxtoken=&devicetype=&clientversion=0&x5=0'
-        comment_text = self.get(comment_req_url, 'mp.weixin.qq.com', 'http://mp.weixin.qq.com')
+        comment_text = self._get(comment_req_url, 'get', host='mp.weixin.qq.com', referer='http://mp.weixin.qq.com')
         comment_dict = eval(comment_text)
         ret = comment_dict['base_resp']['ret']
         errmsg = comment_dict['base_resp']['errmsg'] if comment_dict['base_resp']['errmsg'] else 'ret:' + str(ret)
@@ -287,11 +325,13 @@ class WechatSogouApi(WechatSogouBasic):
             raise WechatSogouException(errmsg)
         return comment_dict
 
-    def get_gzh_article_info(self, article):
+    def deal_article(self, url, title=None):
         """获取文章详情
 
         Args:
-            article: 文章信息字典
+            url: 文章链接
+            title: 文章标题
+            注意，title可以为空，则表示不根据title获取相似文章
 
         Returns:
             {'yuan':'','related':'','comment':'','content': {'content_html':'','content_rich':'','content_text':''}
@@ -300,21 +340,23 @@ class WechatSogouApi(WechatSogouBasic):
             comment: 评论信息字典
             content: 文章内容
         """
-        text = self.get_gzh_article_text(article['content_url'])
+        text = self._get_gzh_article_text(url)
         yuan_url = re.findall('var msg_link = "(.*?)";', text)[0].replace('amp;', '')
-        related = self.deal_related(article)
-        comment = self.deal_comment(text)
-        content_html, content_rich, content_text = self.deal_content(text)
-        return {
+
+        comment = self.deal_article_comment(text=text)
+        content_html = self.deal_article_content(text=text)
+        retu = {
             'yuan': yuan_url,
-            'related': related,
             'comment': comment,
-            'content': {
-                'content_html': content_html,
-                'content_rich': content_rich,
-                'content_text': content_text
-            }
+            'content_html': content_html
         }
+
+        if title is not None:
+            related = self.deal_article_related(url, title)
+            retu['related'] = related
+            return retu
+        else:
+            return retu
 
     def get_recent_article_url_by_index_single(self, kind=0, page=0):
         """获取首页推荐文章公众号最近文章地址
@@ -334,7 +376,7 @@ class WechatSogouApi(WechatSogouBasic):
             page_str = str(page)
         url = 'http://weixin.sogou.com/pcindex/pc/pc_' + str(kind) + '/' + page_str + '.html'
         try:
-            text = self.get(url)
+            text = self._get(url)
             page = etree.HTML(text)
             recent_article_urls = page.xpath('//li/div[@class="pos-wxrw"]/a/@href')
             reurls = []
@@ -380,10 +422,27 @@ class WechatSogouApi(WechatSogouBasic):
         except:
             raise WechatSogouException('get_sugg keyword error')
         url = 'http://w.sugg.sogou.com/sugg/ajaj_json.jsp?key=' + keyword + '&type=wxpub&pr=web'
-        text = self.get(url, 'w.sugg.sogou.com')
+        text = self._get(url, 'get', host='w.sugg.sogou.com')
         try:
             sugg = re.findall(r'\["' + keyword + '",(.*?),\["', text)[0]
             sugg = eval(sugg)
             return sugg
         except:
             raise WechatSogouException('sugg refind error')
+
+    def deal_mass_send_msg(self, url):
+        """解析 历史消息
+
+        ::param url是抓包获取的历史消息页
+        """
+        r = requests.get(url, verify=False)
+        if r.status_code == requests.codes.ok:
+            biz = re.findall('biz = \'(.*?)\',', r.text)[0]
+            key = re.findall('key = \'(.*?)\',', r.text)[0]
+            uin = re.findall('uin = \'(.*?)\',', r.text)[0]
+            msg_dict = re.findall('msgList = \'(.*?)\';', r.text)
+            msg_dict = self._replace_html(msg_dict[0])
+            msg_dict = self._deal_gzh_article_dict(eval(msg_dict), biz=biz, key=key, uin=uin)
+            return msg_dict
+        else:
+            raise WechatSogouRequestsException('requests status_code error', r.status_code)

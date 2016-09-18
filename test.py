@@ -20,21 +20,19 @@ keywords = '傅里叶变换'
 wechat_articles = wechats.search_article_info(keywords)
 
 # 在上面，我们得到过微信号的最近文章页的地址，现在，就去获取该页的数据
-articles = wechats.get_gzh_article_by_url_dict(wechat_info['url'])
-gzhinfo = wechats.get_gzh_article_gzh_by_url_dict(wechat_info['url'])
-# 一般合起来，如下
-data = wechats.get_gzh_article_and_gzh_by_url_dict(wechat_info['url'])
-
-
-# 上面，是先获取最近文章页地址再获取文章列表的，如果希望一步完成，或者最近文章页失效，则
-articles_by_wechatid = wechats.get_gzh_article_by_wechatid_dict(wechat_id)
+data = wechats.get_gzh_message(wechatid='nanhangqinggong')
+data_all = wechats.get_gzh_message_and_info(wechatid='nanhangqinggong')
 
 # 对于上面获取的文章链接，需要处理,注意此方法获取的`yuan`字段是文章固定地址，应该存储这个
-article_info = wechats.get_gzh_article_info(articles[0])
+messages = wechats.get_gzh_message(wechatid='nanhangqinggong')
+for m in messages:
+    if m['type'] == '49':
+        article_info = wechats.deal_article(m['content_url'])
+        # 或 article_info = wechats.deal_article(m['content_url'], m['title'])
 
 # 直接获取热门文章
 articles_single = wechats.get_recent_article_url_by_index_single()
 articles_all = wechats.get_recent_article_url_by_index_all()
 
-
-prdict(data)
+# 微信搜索联想词
+sugg_keyword = wechats.get_sugg('中国梦')

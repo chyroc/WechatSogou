@@ -5,13 +5,8 @@
 # 项目简介
 基于搜狗微信搜索的微信公众号爬虫接口，可以扩展成基于搜狗搜索的爬虫
 
-基于Python3
-
 如果有问题，请提issue
 
-> 关于我，欢迎关注
-  微博：[Chyroc](http://weibo.com/cyp1105)
----
 
 # 项目使用
 
@@ -72,19 +67,77 @@ gzhname|公众号名称
 gzhqrcodes|公众号二维码
 gzhurl|公众号最近文章地址
 
-## 获取最近文章 详情页 字典 - get_gzh_recent_info
 
-    wechat_id = 'nanhangqinggong'
-    wechat_info = wechats.get_gzh_info(wechat_id)
-    data = wechats.get_gzh_recent_info(wechat_info['url'])
+## 解析最近文章页  或  解析历史消息记录 - get_gzh_message
 
-<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_article_and_gzh_by_url_dict.png" />
+    data = wechats.get_gzh_message(url=url)
+    # 或者 data = wechats.get_gzh_message(wechatid=wechatid)
+    # 或者（不推荐） data = wechats.get_gzh_message(wechat_name=wechat_name)
 
+<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_message.png" />
+
+返回的是 列表，每一项均是字典，一定含有字段qunfa_id,datetime,type
+
+字段|含义
+---|---
+qunfa_id|群发消息id
+datetime|群发10位时间戳
+type|群发消息类型
+
+下面是type不同的值时的其他字段
+
+字段|含义
+---|---
+type|1,表示文字
+content|文字内容
+
+字段|含义
+---|---
+type|3,表示图片
+img_url|图片链接
+
+字段|含义
+---|---
+type|34,表示音频
+play_length|长度
+fileid|id
+audio_src|音频地址
+
+字段|含义
+---|---
+type|49,表示图文
+main|是否是一次推送中第一篇文章，1则是
+is_multi|本图文所属推送是否是多图文
+title|文章标题
+digest|摘要
+fileid|id
+content_url|文章地址
+source_url|原文地址
+cover|封面图片
+author|作者
+copyright_stat|文章内容版权性
+
+字段|含义
+---|---
+type|62,表示视频
+cdn_videoid|id
+thumb|缩略图
+video_src|视频地址
+
+## 解析公众号信息  和  最近群发文章 - get_gzh_message_and_info
+
+    data = wechats.get_gzh_message_and_info(url=url)
+    # 或者 data = wechats.get_gzh_message_and_info(wechatid=wechatid)
+    # 或者（不推荐） data = wechats.get_gzh_message_and_info(wechat_name=wechat_name)
+
+<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_message_and_info.png" />
+
+返回的是字典{'gzh_info':gzh_info, 'gzh_messages':gzh_messages}
 
 字段|含义
 ---|---
 gzh_info|公众号信息字典
-articles|最近文章列表，每一项均是字典
+gzh_messages|群发消息列表
 
 其中`gzh_info`的具体如下
 
@@ -98,40 +151,38 @@ qrcode|二维码
 img|头像图片
 url|最近文章地址
 
-`articles`的每一项具体如下
+`gzh_messages`一定含有字段qunfa_id,datetime,type
+具体见上一项
 
-字段|含义
----|---
-main|是否是一次推送中第一篇文章，1则是
-title|文章标题
-digest|摘要
-content|
-fileid|
-content_url|文章地址
-source_url|原文地址
-cover|封面图片
-author|作者
-copyright_stat|文章内容版权性
+## 获取文章内容 - deal_article_content
 
+    article_content = wechats.deal_article_content(text=text)
+    # 或 article_content = wechats.deal_article_content(url=url)
 
-## 通过微信号获取上一步数据 - get_gzh_article_by_wechatid_dict
+`text`是文章页文本，`url`是文章页链接
 
-    wechat_id = 'nanhangqinggong'
-    articles_by_wechatid = wechats.get_gzh_article_by_wechatid_dict(wechat_id)
+返回是文章内容（含有html格式）
 
-返回结果与上一步一样
+## 获取相似文章 - deal_article_related
 
+    article_related = wechats.deal_article_related(url, title)
 
-## 处理文章 - get_gzh_article_info
+`url`: 文章链接,`title`: 文章标题
+
+## 获取文章评论 - deal_article_comment
+
+    article_comment = wechats.deal_article_comment(text=text)
+    # 或 article_comment = wechats.deal_article_comment(url=url)
+
+`text`是文章页文本，`url`是文章页链接
+
+## 获取文章以上三项信息 - deal_article
 
 一般需要处理，因为需要在这一步获取固定的而不是临时的文章链接
 
-    wechat_id = 'nanhangqinggong'
-    wechat_info = wechats.get_gzh_info(wechat_id)
-    articles = wechats.get_gzh_article_by_url_dict(wechat_info['url'])
-    article_info = wechats.get_gzh_article_info(articles[0])
+    article_info = wechats.deal_article(url)
 
-<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_article_info.png" />
+<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/deal_article.png" />
 
 返回字典，具体如下
 
@@ -140,7 +191,7 @@ copyright_stat|文章内容版权性
 yuan|文章固定地址
 related|相似文章信息字典
 comment|评论信息字典
-content|文章内容
+content_html|文章内容
 
 
 `comment`是评论以及阅读量，字典
@@ -164,15 +215,7 @@ like_num|点赞数
 nick_name|评论者昵称
 logo_url|评论者头像
 reply|回复
-其余字典未说明，请打印自行查看|
-
-`content`是文章内容，字典，一下三项均含`img`和`br`标签
-
-字段|含义
----|---
-content_html|原始文章内容，包括html标签及样式
-content_rich|包含图片（包括图片应展示的样式）的文章内容
-content_text|包含图片（`<img src="..." />`格式）的文章内容
+其余字典未说明，请打印自行查看|...
 
 ## 获取首页推荐文章公众号最近文章地址 - get_recent_article_url_by_index_single
 
@@ -191,12 +234,22 @@ content_text|包含图片（`<img src="..." />`格式）的文章内容
 
 返回的是列表，每一项是不同公众号的的最近文章页
 
+## 获取微信搜狗搜索关键词联想 - get_sugg
+
+    sugg_keyword = wechats.get_sugg('中国梦')
+
+<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_sugg.png" />
+
+
+返回的是列表，每一项是不同公众号的的最近文章页
+
 ---
 
 # TODO
 - [x] 相似文章的公众号获取
 - [x] 主页热门公众号获取
 - [x] 文章详情页信息
+- [x] 所有类型的解析
 - [ ] 验证码识别
 - [ ] 接入爬虫框架
 - [ ] 兼容py2

@@ -22,14 +22,14 @@ class WechatSogouBasic(WechatSogouBase):
     """
 
     def __init__(self):
-        self.cache = WechatCache(config.cache_dir, 60 * 60)
-        self.session = self.cache.get(config.cache_session_name) if self.cache.get(
+        self._cache = WechatCache(config.cache_dir, 60 * 60)
+        self._session = self._cache.get(config.cache_session_name) if self._cache.get(
             config.cache_session_name) else requests.session()
 
         if config.dama_type == 'ruokuai':
-            self.ocr = RClient(config.dama_name, config.dama_pswd, config.dama_soft_id, config.dama_soft_key)
+            self._ocr = RClient(config.dama_name, config.dama_pswd, config.dama_soft_id, config.dama_soft_key)
 
-        self.agent = [
+        self._agent = [
             "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; AcooBrowser; .NET CLR 1.1.4322; .NET CLR 2.0.50727)",
             "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; Acoo Browser; SLCC1; .NET CLR 2.0.50727; Media Center PC 5.0; .NET CLR 3.0.04506)",
             "Mozilla/4.0 (compatible; MSIE 7.0; AOL 9.5; AOLBuild 4337.35; Windows NT 5.1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)",
@@ -48,7 +48,7 @@ class WechatSogouBasic(WechatSogouBase):
             "Opera/9.80 (Macintosh; Intel Mac OS X 10.6.8; U; fr) Presto/2.9.168 Version/11.52",
         ]
 
-    def get_elem_text(self, elem):
+    def _get_elem_text(self, elem):
         """抽取lxml.etree库中elem对象中文字
 
         Args:
@@ -62,7 +62,7 @@ class WechatSogouBasic(WechatSogouBase):
             rc.append(node.strip())
         return ''.join(rc)
 
-    def get_encoding_from_reponse(self, r):
+    def _get_encoding_from_reponse(self, r):
         """获取requests库get或post返回的对象编码
 
         Args:
@@ -74,8 +74,8 @@ class WechatSogouBasic(WechatSogouBase):
         encoding = requests.utils.get_encodings_from_content(r.text)
         return encoding[0] if encoding else requests.utils.get_encoding_from_headers(r.headers)
 
-    def get(self, url, host='', referer='', proxy=False):
-        """封装request库get方法
+    def _get(self, url, rtype='get', **kwargs):
+        """封装request库get,post方法
 
         Args:
             url: 请求url
@@ -89,26 +89,33 @@ class WechatSogouBasic(WechatSogouBase):
         Raises:
             WechatSogouException: 操作频繁以致出现验证码或requests请求返回码错误
         """
+        referer = kwargs.get('referer', None)
+        host = kwargs.get('host', None)
+        if host:
+            del kwargs['host']
+        if referer:
+            del kwargs['referer']
         headers = {
-            "User-Agent": self.agent[random.randint(0, len(self.agent) - 1)],
+            "User-Agent": self._agent[random.randint(0, len(self._agent) - 1)],
             "Referer": referer if referer else 'http://weixin.sogou.com/',
             'Host': host if host else 'weixin.sogou.com',
         }
-        if proxy:
-            # todo 代理
-            r = self.session.get(url, headers=headers)
+        if rtype == 'get':
+            r = self._session.get(url, headers=headers, **kwargs)
         else:
-            r = self.session.get(url, headers=headers)
+            data = kwargs.get('data', None)
+            json = kwargs.get('json', None)
+            r = self._session.post(url, data=data, json=json, headers=headers, **kwargs)
         if r.status_code == requests.codes.ok:
-            r.encoding = self.get_encoding_from_reponse(r)
+            r.encoding = self._get_encoding_from_reponse(r)
             if '用户您好，您的访问过于频繁，为确认本次访问为正常用户行为，需要您协助验证' in r.text:
-                self.vcode_url = url
+                self._vcode_url = url
                 raise WechatSogouVcodeException('weixin.sogou.com verification code')
         else:
             raise WechatSogouRequestsException('requests status_code error', r.status_code)
         return r.text
 
-    def jiefeng(self, ruokuai=False):
+    def _jiefeng(self, ruokuai=False):
         """对于出现验证码，识别验证码，解封
 
         Args:
@@ -118,7 +125,7 @@ class WechatSogouBasic(WechatSogouBase):
             WechatSogouVcodeException: 解封失败，可能验证码识别失败
         """
         codeurl = 'http://weixin.sogou.com/antispider/util/seccode.php?tc=' + str(time.time())[0:10]
-        coder = self.session.get(codeurl)
+        coder = self._session.get(codeurl)
         if hasattr(self, 'ocr'):
             result = self.ocr.create(coder.content, 3060)
             img_code = result['Result']
@@ -131,23 +138,23 @@ class WechatSogouBasic(WechatSogouBase):
         post_url = 'http://weixin.sogou.com/antispider/thank.php'
         post_data = {
             'c': img_code,
-            'r': urllib.request.quote(self.vcode_url),
+            'r': urllib.request.quote(self._vcode_url),
             'v': 5
         }
         headers = {
-            "User-Agent": self.agent[random.randint(0, len(self.agent) - 1)],
+            "User-Agent": self._agent[random.randint(0, len(self._agent) - 1)],
             'Host': 'weixin.sogou.com',
             'Referer': 'http://weixin.sogou.com/antispider/?from=%2f' + urllib.request.quote(
-                self.vcode_url.replace('http://', ''))
+                self._vcode_url.replace('http://', ''))
         }
-        rr = self.session.post(post_url, post_data, headers=headers)
+        rr = self._session.post(post_url, post_data, headers=headers)
         remsg = eval(rr.content)
         if remsg['code'] != 0:
             raise WechatSogouVcodeException('cannot jiefeng because ' + remsg['msg'])
-        self.cache.set(config.cache_session_name, self.session)
+        self._cache.set(config.cache_session_name, self._session)
         print(remsg['msg'])
 
-    def replace_html(self, s):
+    def _replace_html(self, s):
         """替换html‘&quot;’等转义内容为正常内容
 
         Args:
@@ -169,12 +176,12 @@ class WechatSogouBasic(WechatSogouBase):
         s = s.replace(r"\\", r'')
         return s
 
-    def replace_space(self, s):
+    def _replace_space(self, s):
         s = s.replace(' ', '')
         s = s.replace('\r\n', '')
         return s
 
-    def search_gzh_text(self, name, page=1):
+    def _search_gzh_text(self, name, page=1):
         """通过搜狗搜索获取关键字返回的文本
 
         Args:
@@ -187,14 +194,15 @@ class WechatSogouBasic(WechatSogouBase):
         request_url = 'http://weixin.sogou.com/weixin?query=' + urllib.request.quote(
             name) + '&_sug_type_=&_sug_=n&type=1&page=' + str(page) + '&ie=utf8'
         try:
-            text = self.get(request_url)
+            text = self._get(request_url)
         except WechatSogouVcodeException:
-            self.jiefeng()
-            text = self.get(request_url, '', 'http://weixin.sogou.com/antispider/?from=%2f' + urllib.request.quote(
-                self.vcode_url.replace('http://', '')))
+            self._jiefeng()
+            text = self._get(request_url, 'get', host='',
+                             referer='http://weixin.sogou.com/antispider/?from=%2f' + urllib.request.quote(
+                                 self._vcode_url.replace('http://', '')))
         return text
 
-    def search_article_text(self, name, page=1):
+    def _search_article_text(self, name, page=1):
         """通过搜狗搜索微信文章关键字返回的文本
         Args:
             name: 搜索文章关键字
@@ -206,14 +214,15 @@ class WechatSogouBasic(WechatSogouBase):
         request_url = 'http://weixin.sogou.com/weixin?query=' + urllib.request.quote(
             name) + '&_sug_type_=&_sug_=n&type=2&page=' + str(page) + '&ie=utf8'
         try:
-            text = self.get(request_url)
+            text = self._get(request_url)
         except WechatSogouVcodeException:
-            self.jiefeng()
-            text = self.get(request_url, '', 'http://weixin.sogou.com/antispider/?from=%2f' + urllib.request.quote(
-                self.vcode_url.replace('http://', '')))
+            self._jiefeng()
+            text = self._get(request_url, 'get', host='',
+                             referer='http://weixin.sogou.com/antispider/?from=%2f' + urllib.request.quote(
+                                 self._vcode_url.replace('http://', '')))
         return text
 
-    def get_gzh_article_by_url_text(self, url):
+    def _get_gzh_article_by_url_text(self, url):
         """最近文章页的文本
 
         Args:
@@ -222,9 +231,9 @@ class WechatSogouBasic(WechatSogouBase):
         Returns:
             text: 返回的文本
         """
-        return self.get(url, 'mp.weixin.qq.com')
+        return self._get(url, 'get', host='mp.weixin.qq.com')
 
-    def get_gzh_article_gzh_by_url_dict(self, text, url):
+    def _get_gzh_article_gzh_by_url_dict(self, text, url):
         """最近文章页  公众号信息
 
         Args:
@@ -244,7 +253,7 @@ class WechatSogouBasic(WechatSogouBase):
         profile_info_area = page.xpath("//div[@class='profile_info_area']")[0]
         img = profile_info_area.xpath('div[1]/span/img/@src')[0]
         name = profile_info_area.xpath('div[1]/div/strong/text()')[0]
-        name = self.replace_space(name)
+        name = self._replace_space(name)
         wechatid = profile_info_area.xpath('div[1]/div/p/text()')
         if wechatid:
             wechatid = wechatid[0].replace('微信号: ', '')
@@ -265,7 +274,7 @@ class WechatSogouBasic(WechatSogouBase):
             'url': url
         }
 
-    def get_gzh_article_by_url_dict(self, text):
+    def _get_gzh_article_by_url_dict(self, text):
         """最近文章页 文章信息
 
         Args:
@@ -275,71 +284,94 @@ class WechatSogouBasic(WechatSogouBase):
             msgdict: 最近文章信息字典
         """
         msglist = re.findall("var msgList = '(.+?)';", text, re.S)[0]
-        msgdict = eval(self.replace_html(msglist))
+        msgdict = eval(self._replace_html(msglist))
         return msgdict
 
-    def deal_gzh_article_dict(self, msgdict):
-        """处理最近文章页信息
+    def _deal_gzh_article_dict(self, msgdict, **kwargs):
+        """解析 公众号 群发消息
 
         Args:
-            msgdict: 最近文章信息字典
+            msgdict: 信息字典
 
         Returns:
-            列表，均是{'main':'', 'title':','digest':'','content':'','fileid':'','content_url':'','source_url':'','cover':'','author':'','copyright_stat':''}
-            main: 是否是一次推送中第一篇文章，1则是
-            title: 文章标题
-            digest: 摘要
-            content:
-            fileid:
-            content_url: 文章地址
-            source_url: 原文地址
-            cover: 封面图片
-            author: 作者
-            copyright_stat: 文章内容版权性
+            列表，均是字典，一定含有一下字段qunfa_id,datetime,type
+
+            当type不同时，含有不同的字段，具体见文档
         """
+        biz = kwargs.get('biz', '')
+        uin = kwargs.get('uin', '')
+        key = kwargs.get('key', '')
         items = list()
         for listdic in msgdict['list']:
-            item = listdic['app_msg_ext_info']
-            if item.get('content_url'):
-                url = item.get('content_url')
-                if 'http://mp.weixin.qq.com' not in url:
-                    url = 'http://mp.weixin.qq.com' + url
-            else:
-                url = ''
-            items.append(
-                {
-                    'main': '1',
-                    'title': item.get('title', ''),
-                    'digest': item.get('digest', ''),
-                    'content': item.get('content', ''),
-                    'fileid': item.get('fileid', ''),
-                    'content_url': url,
-                    'source_url': item.get('source_url', ''),
-                    'cover': item.get('cover', ''),
-                    'author': item.get('author', ''),
-                    'copyright_stat': item.get('copyright_stat', '')
-                }
-            )
-            if item['is_multi'] == 1:
-                for multidic in item['multi_app_msg_item_list']:
-                    items.append(
-                        {
-                            'main': '0',
-                            'title': multidic.get('title', ''),
-                            'digest': multidic.get('digest', ''),
-                            'content': multidic.get('content', ''),
-                            'fileid': multidic.get('fileid', ''),
-                            'content_url': 'http://mp.weixin.qq.com' + multidic.get('content_url') if multidic.get(
-                                'content_url') else '',
-                            'source_url': multidic.get('source_url', ''),
-                            'cover': multidic.get('cover', ''),
-                            'author': multidic.get('author', ''),
-                            'copyright_stat': multidic.get('copyright_stat', '')
-                        }
-                    )
+            item = dict()
+            comm_msg_info = listdic['comm_msg_info']
+            item['qunfa_id'] = comm_msg_info.get('id', '')  # 不可判重，一次群发的消息的id是一样的
+            item['datetime'] = comm_msg_info.get('datetime', '')
+            item['type'] = str(comm_msg_info.get('type', ''))
+            if item['type'] == '1':
+                # 文字
+                item['content'] = comm_msg_info.get('content', '')
+            elif item['type'] == '3':
+                # 图片
+                item[
+                    'img_url'] = 'https://mp.weixin.qq.com/mp/getmediadata?__biz=' + biz + '&type=img&mode=small&msgid=' + \
+                                 item[
+                                     'qunfa_id'] + '&uin=' + uin + '&key=' + key
+            elif item['type'] == '34':
+                # 音频
+                item['play_length'] = listdic['voice_msg_ext_info'].get('play_length', '')
+                item['fileid'] = listdic['voice_msg_ext_info'].get('fileid', '')
+                item['audio_src'] = 'https://mp.weixin.qq.com/mp/getmediadata?__biz=' + biz + '&type=voice&msgid=' + \
+                                    item[
+                                        'qunfa_id'] + '&uin=' + uin + '&key=' + key
+            elif item['type'] == '49':
+                # 图文
+                app_msg_ext_info = listdic['app_msg_ext_info']
+                url = app_msg_ext_info.get('content_url')
+                if url:
+                    url = 'http://mp.weixin.qq.com' + url if 'http://mp.weixin.qq.com' not in url else url
+                else:
+                    url = ''
+                item['main'] = "1"
+                item['is_multi'] = app_msg_ext_info.get('is_multi', '')
+                item['title'] = app_msg_ext_info.get('title', '')
+                item['digest'] = app_msg_ext_info.get('digest', '')
+                item['fileid'] = app_msg_ext_info.get('fileid', '')
+                item['content_url'] = url
+                item['source_url'] = app_msg_ext_info.get('source_url', '')
+                item['cover'] = app_msg_ext_info.get('cover', '')
+                item['author'] = app_msg_ext_info.get('author', '')
+                item['copyright_stat'] = app_msg_ext_info.get('copyright_stat', '')
+                items.append(item)
+                if item['is_multi'] == 1:
+                    for multidic in app_msg_ext_info['multi_app_msg_item_list']:
+                        url = multidic.get('content_url')
+                        if url:
+                            url = 'http://mp.weixin.qq.com' + url if 'http://mp.weixin.qq.com' not in url else url
+                        else:
+                            url = ''
+                        item['main'] = '0'
+                        item['is_multi'] = ''
+                        item['title'] = multidic.get('title', '')
+                        item['digest'] = multidic.get('digest', '')
+                        item['fileid'] = multidic.get('fileid', '')
+                        item['content_url'] = url
+                        item['source_url'] = multidic.get('source_url', '')
+                        item['cover'] = multidic.get('cover', '')
+                        item['author'] = multidic.get('author', '')
+                        item['copyright_stat'] = multidic.get('copyright_stat', '')
+                        items.append(item)
+                continue
+            elif item['type'] == '62':
+                item['cdn_videoid'] = listdic['video_msg_ext_info'].get('cdn_videoid', '')
+                item['thumb'] = listdic['video_msg_ext_info'].get('thumb', '')
+                item[
+                    'video_src'] = 'https://mp.weixin.qq.com/mp/getcdnvideourl?__biz=' + biz + '&cdn_videoid=' + item[
+                    'cdn_videoid'] + '&thumb=' + item['thumb'] + '&uin=' + uin + '&key=' + key
+            items.append(item)
         return items
 
-    def get_gzh_article_text(self, url):
+    def _get_gzh_article_text(self, url):
         """获取文章文本
 
         Args:
@@ -348,14 +380,14 @@ class WechatSogouBasic(WechatSogouBase):
         Returns:
             text: 文章文本
         """
-        return self.get(url, 'mp.weixin.qq.com')
+        return self._get(url, 'get', host='mp.weixin.qq.com')
 
-    def deal_related(self, article):
+    def _deal_related(self, url, title):
         """获取文章相似文章
 
         Args:
-            article: 文章信息字典
-            包含字典：article['content_url'],article['title'] 即可
+            url: 文章链接
+            title: 文章标题
 
         Returns:
             related_dict: 相似文章字典
@@ -363,13 +395,11 @@ class WechatSogouBasic(WechatSogouBase):
         Raises:
             WechatSogouException: 错误信息errmsg
         """
-        content_url = article['content_url']
-        title = article['title']
         related_req_url = 'http://mp.weixin.qq.com/mp/getrelatedmsg?' \
-                          'url=' + urllib.request.quote(content_url) \
+                          'url=' + urllib.request.quote(url) \
                           + '&title=' + title \
                           + '&uin=&key=&pass_ticket=&wxtoken=&devicetype=&clientversion=0&x5=0'
-        related_text = self.get(related_req_url, 'mp.weixin.qq.com', content_url)
+        related_text = self._get(related_req_url, 'get', host='mp.weixin.qq.com', referer=url)
         related_dict = eval(related_text)
         ret = related_dict['base_resp']['ret']
         errmsg = related_dict['base_resp']['errmsg'] if related_dict['base_resp']['errmsg'] else 'ret:' + str(ret)
