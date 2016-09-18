@@ -5,13 +5,28 @@ try:
 except ImportError:
     from urllib import quote as quote
     import sys
+
     reload(sys)
     sys.setdefaultencoding('utf-8')
 import requests
 import random
 import time
 import re
-import tempfile
+
+try:
+    import StringIO
+
+
+    def readimg(content):
+        return Image.open(StringIO.StringIO(content))
+except ImportError:
+    import tempfile
+
+
+    def readimg(content):
+        f = tempfile.TemporaryFile()
+        f.write(content)
+        return Image.open(f)
 
 from lxml import etree
 from PIL import Image
@@ -21,7 +36,6 @@ from .base import WechatSogouBase
 from .exceptions import *
 from .ruokuaicode import RClient
 from .filecache import WechatCache
-
 
 
 class WechatSogouBasic(WechatSogouBase):
@@ -137,9 +151,7 @@ class WechatSogouBasic(WechatSogouBase):
             result = self.ocr.create(coder.content, 3060)
             img_code = result['Result']
         else:
-            f = tempfile.TemporaryFile()
-            f.write(coder.content)
-            im = Image.open(f)
+            im = readimg(coder.content)
             im.show()
             img_code = input("please input code: ")
         post_url = 'http://weixin.sogou.com/antispider/thank.php'
