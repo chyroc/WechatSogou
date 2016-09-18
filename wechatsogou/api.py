@@ -49,7 +49,7 @@ class WechatSogouApi(WechatSogouBasic):
             cache = self._get_elem_text(info_instruction)
             cache = cache.replace('red_beg', '').replace('red_end', '')
             cache_list = cache.split('\n')
-            cache_re = re.split('微信号：|功能介绍：|认证：|最近文章：', cache_list[0])
+            cache_re = re.split(u'微信号：|功能介绍：|认证：|最近文章：', cache_list[0])
             name.append(cache_re[0])
             wechatid.append(cache_re[1])
             if "authnamewrite" in cache_re[2]:
@@ -268,9 +268,9 @@ class WechatSogouApi(WechatSogouBasic):
         else:
             raise WechatSogouException('deal_content need param url or text')
 
-        content_html = re.findall(r'<div class="rich_media_content " id="js_content">(.*?)</div>', text, re.S)[0]
-        # content_rich = re.sub(r'<(?!img|br).*?>', '', content_html)
-        # pipei = re.compile(r'<img(.*?)src="(.*?)"(.*?)/>')
+        content_html = re.findall(u'<div class="rich_media_content " id="js_content">(.*?)</div>', text, re.S)[0]
+        # content_rich = re.sub(u'<(?!img|br).*?>', '', content_html)
+        # pipei = re.compile(u'<img(.*?)src="(.*?)"(.*?)/>')
         # content_text = pipei.sub(lambda m: '<img src="' + m.group(2) + '" />', content_rich)
         return content_html
 
@@ -311,9 +311,9 @@ class WechatSogouApi(WechatSogouBasic):
         else:
             raise WechatSogouException('deal_content need param url or text')
 
-        sg_data = re.findall(r'window.sg_data={(.*?)}', text, re.S)
+        sg_data = re.findall(u'window.sg_data={(.*?)}', text, re.S)
         sg_data = '{' + sg_data[0].replace(u'\r\n', '').replace(' ', '') + '}'
-        sg_data = re.findall(r'{src:"(.*?)",ver:"(.*?)",timestamp:"(.*?)",signature:"(.*?)"}', sg_data)[0]
+        sg_data = re.findall(u'{src:"(.*?)",ver:"(.*?)",timestamp:"(.*?)",signature:"(.*?)"}', sg_data)[0]
         comment_req_url = 'http://mp.weixin.qq.com/mp/getcomment?src=' + sg_data[0] + '&ver=' + sg_data[
             1] + '&timestamp=' + sg_data[2] + '&signature=' + sg_data[
                               3] + '&uin=&key=&pass_ticket=&wxtoken=&devicetype=&clientversion=0&x5=0'
@@ -424,7 +424,7 @@ class WechatSogouApi(WechatSogouBasic):
         url = 'http://w.sugg.sogou.com/sugg/ajaj_json.jsp?key=' + keyword + '&type=wxpub&pr=web'
         text = self._get(url, 'get', host='w.sugg.sogou.com')
         try:
-            sugg = re.findall(r'\["' + keyword + '",(.*?),\["', text)[0]
+            sugg = re.findall(u'\["' + keyword + '",(.*?),\["', text)[0]
             sugg = eval(sugg)
             return sugg
         except:

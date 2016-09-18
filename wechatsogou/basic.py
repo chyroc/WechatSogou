@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import urllib.request
+try:
+    from urllib.request import quote as quote
+except ImportError:
+    from urllib import quote as quote
+    import sys
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
 import requests
 import random
 import time
@@ -15,6 +21,7 @@ from .base import WechatSogouBase
 from .exceptions import *
 from .ruokuaicode import RClient
 from .filecache import WechatCache
+
 
 
 class WechatSogouBasic(WechatSogouBase):
@@ -108,7 +115,7 @@ class WechatSogouBasic(WechatSogouBase):
             r = self._session.post(url, data=data, json=json, headers=headers, **kwargs)
         if r.status_code == requests.codes.ok:
             r.encoding = self._get_encoding_from_reponse(r)
-            if '用户您好，您的访问过于频繁，为确认本次访问为正常用户行为，需要您协助验证' in r.text:
+            if u'用户您好，您的访问过于频繁，为确认本次访问为正常用户行为，需要您协助验证' in r.text:
                 self._vcode_url = url
                 raise WechatSogouVcodeException('weixin.sogou.com verification code')
         else:
@@ -138,13 +145,13 @@ class WechatSogouBasic(WechatSogouBase):
         post_url = 'http://weixin.sogou.com/antispider/thank.php'
         post_data = {
             'c': img_code,
-            'r': urllib.request.quote(self._vcode_url),
+            'r': quote(self._vcode_url),
             'v': 5
         }
         headers = {
             "User-Agent": self._agent[random.randint(0, len(self._agent) - 1)],
             'Host': 'weixin.sogou.com',
-            'Referer': 'http://weixin.sogou.com/antispider/?from=%2f' + urllib.request.quote(
+            'Referer': 'http://weixin.sogou.com/antispider/?from=%2f' + quote(
                 self._vcode_url.replace('http://', ''))
         }
         rr = self._session.post(post_url, post_data, headers=headers)
@@ -191,14 +198,14 @@ class WechatSogouBasic(WechatSogouBase):
         Returns:
             text: 返回的文本
         """
-        request_url = 'http://weixin.sogou.com/weixin?query=' + urllib.request.quote(
+        request_url = 'http://weixin.sogou.com/weixin?query=' + quote(
             name) + '&_sug_type_=&_sug_=n&type=1&page=' + str(page) + '&ie=utf8'
         try:
             text = self._get(request_url)
         except WechatSogouVcodeException:
             self._jiefeng()
             text = self._get(request_url, 'get', host='',
-                             referer='http://weixin.sogou.com/antispider/?from=%2f' + urllib.request.quote(
+                             referer='http://weixin.sogou.com/antispider/?from=%2f' + quote(
                                  self._vcode_url.replace('http://', '')))
         return text
 
@@ -211,14 +218,14 @@ class WechatSogouBasic(WechatSogouBase):
         Returns:
             text: 返回的文本
         """
-        request_url = 'http://weixin.sogou.com/weixin?query=' + urllib.request.quote(
+        request_url = 'http://weixin.sogou.com/weixin?query=' + quote(
             name) + '&_sug_type_=&_sug_=n&type=2&page=' + str(page) + '&ie=utf8'
         try:
             text = self._get(request_url)
         except WechatSogouVcodeException:
             self._jiefeng()
             text = self._get(request_url, 'get', host='',
-                             referer='http://weixin.sogou.com/antispider/?from=%2f' + urllib.request.quote(
+                             referer='http://weixin.sogou.com/antispider/?from=%2f' + quote(
                                  self._vcode_url.replace('http://', '')))
         return text
 
@@ -256,7 +263,7 @@ class WechatSogouBasic(WechatSogouBase):
         name = self._replace_space(name)
         wechatid = profile_info_area.xpath('div[1]/div/p/text()')
         if wechatid:
-            wechatid = wechatid[0].replace('微信号: ', '')
+            wechatid = wechatid[0].replace(u'微信号: ', '')
         else:
             wechatid = ''
         jieshao = profile_info_area.xpath('ul/li[1]/div/text()')[0]
@@ -396,7 +403,7 @@ class WechatSogouBasic(WechatSogouBase):
             WechatSogouException: 错误信息errmsg
         """
         related_req_url = 'http://mp.weixin.qq.com/mp/getrelatedmsg?' \
-                          'url=' + urllib.request.quote(url) \
+                          'url=' + quote(url) \
                           + '&title=' + title \
                           + '&uin=&key=&pass_ticket=&wxtoken=&devicetype=&clientversion=0&x5=0'
         related_text = self._get(related_req_url, 'get', host='mp.weixin.qq.com', referer=url)
