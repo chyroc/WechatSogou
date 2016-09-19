@@ -195,6 +195,16 @@ class WechatSogouBasic(WechatSogouBase):
         s = s.replace(r"\\", r'')
         return s
 
+    def _fix_json(self, wrong_json):
+        json_str = re.sub('"title":"(.*?)","',
+                          lambda m: '"title":"' + m.group(0)[9:-3].replace('"', '”').replace(',', '，') + '","',
+                          wrong_json)
+        json_str = re.sub('"digest":"(.*?)","',
+                          lambda m: '"digest":"' + m.group(0)[10:-3].replace('"', '“').replace(',', '，') + '","',
+                          json_str)
+
+        return json_str
+
     def _replace_space(self, s):
         s = s.replace(' ', '')
         s = s.replace('\r\n', '')
@@ -351,8 +361,7 @@ class WechatSogouBasic(WechatSogouBase):
                     url = 'http://mp.weixin.qq.com' + url if 'http://mp.weixin.qq.com' not in url else url
                 else:
                     url = ''
-                item['main'] = "1"
-                item['is_multi'] = app_msg_ext_info.get('is_multi', '')
+                item['main'] = 1
                 item['title'] = app_msg_ext_info.get('title', '')
                 item['digest'] = app_msg_ext_info.get('digest', '')
                 item['fileid'] = app_msg_ext_info.get('fileid', '')
@@ -362,30 +371,32 @@ class WechatSogouBasic(WechatSogouBase):
                 item['author'] = app_msg_ext_info.get('author', '')
                 item['copyright_stat'] = app_msg_ext_info.get('copyright_stat', '')
                 items.append(item)
-                if item['is_multi'] == 1:
+                if app_msg_ext_info.get('is_multi', 0) == 1:
                     for multidic in app_msg_ext_info['multi_app_msg_item_list']:
                         url = multidic.get('content_url')
                         if url:
                             url = 'http://mp.weixin.qq.com' + url if 'http://mp.weixin.qq.com' not in url else url
                         else:
                             url = ''
-                        item['main'] = '0'
-                        item['is_multi'] = ''
-                        item['title'] = multidic.get('title', '')
-                        item['digest'] = multidic.get('digest', '')
-                        item['fileid'] = multidic.get('fileid', '')
-                        item['content_url'] = url
-                        item['source_url'] = multidic.get('source_url', '')
-                        item['cover'] = multidic.get('cover', '')
-                        item['author'] = multidic.get('author', '')
-                        item['copyright_stat'] = multidic.get('copyright_stat', '')
-                        items.append(item)
+                        itemnew = dict()
+                        itemnew['qunfa_id'] = item['qunfa_id']
+                        itemnew['datetime'] = item['datetime']
+                        itemnew['type'] = item['type']
+                        itemnew['main'] = 0
+                        itemnew['title'] = multidic.get('title', '')
+                        itemnew['digest'] = multidic.get('digest', '')
+                        itemnew['fileid'] = multidic.get('fileid', '')
+                        itemnew['content_url'] = url
+                        itemnew['source_url'] = multidic.get('source_url', '')
+                        itemnew['cover'] = multidic.get('cover', '')
+                        itemnew['author'] = multidic.get('author', '')
+                        itemnew['copyright_stat'] = multidic.get('copyright_stat', '')
+                        items.append(itemnew)
                 continue
             elif item['type'] == '62':
                 item['cdn_videoid'] = listdic['video_msg_ext_info'].get('cdn_videoid', '')
                 item['thumb'] = listdic['video_msg_ext_info'].get('thumb', '')
-                item[
-                    'video_src'] = 'https://mp.weixin.qq.com/mp/getcdnvideourl?__biz=' + biz + '&cdn_videoid=' + item[
+                item['video_src'] = 'https://mp.weixin.qq.com/mp/getcdnvideourl?__biz=' + biz + '&cdn_videoid=' + item[
                     'cdn_videoid'] + '&thumb=' + item['thumb'] + '&uin=' + uin + '&key=' + key
             items.append(item)
         return items
@@ -425,3 +436,18 @@ class WechatSogouBasic(WechatSogouBase):
         if ret != 0:
             raise WechatSogouException(errmsg)
         return related_dict
+
+    def _uinkeybiz(self, keyword, uin=None, key=None, biz=None, pass_ticket=None, msgid=None):
+        if uin:
+            self._cache.set(keyword + 'uin', uin, 36000)
+            self._cache.set(keyword + 'key', key, 36000)
+            self._cache.set(keyword + 'biz', biz, 36000)
+            self._cache.set(keyword + 'pass_ticket', pass_ticket, 36000)
+            self._cache.set(keyword + 'msgid', msgid, 36000)
+        else:
+            uin = self._cache.get(keyword + 'uin')
+            key = self._cache.get(keyword + 'key')
+            biz = self._cache.get(keyword + 'biz')
+            pass_ticket = self._cache.get(keyword + 'pass_ticket')
+            msgid = self._cache.get(keyword + 'msgid')
+            return uin, key, biz, pass_ticket, msgid

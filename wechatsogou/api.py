@@ -430,19 +430,85 @@ class WechatSogouApi(WechatSogouBasic):
         except:
             raise WechatSogouException('sugg refind error')
 
-    def deal_mass_send_msg(self, url):
+    def deal_mass_send_msg(self, url, wechatid):
         """解析 历史消息
 
         ::param url是抓包获取的历史消息页
         """
         r = requests.get(url, verify=False)
         if r.status_code == requests.codes.ok:
-            biz = re.findall('biz = \'(.*?)\',', r.text)[0]
-            key = re.findall('key = \'(.*?)\',', r.text)[0]
-            uin = re.findall('uin = \'(.*?)\',', r.text)[0]
-            msg_dict = re.findall('msgList = \'(.*?)\';', r.text)
-            msg_dict = self._replace_html(msg_dict[0])
-            msg_dict = self._deal_gzh_article_dict(eval(msg_dict), biz=biz, key=key, uin=uin)
-            return msg_dict
+            try:
+                biz = re.findall('biz = \'(.*?)\',', r.text)[0]
+                key = re.findall('key = \'(.*?)\',', r.text)[0]
+                uin = re.findall('uin = \'(.*?)\',', r.text)[0]
+
+                try:
+                    pass_ticket = re.findall('pass_ticket=(.*?)&', url)[0]
+                except IndexError:
+                    pass_ticket = re.findall('pass_ticket=(.*?)', url)[0]
+
+                msg_dict = re.findall('msgList = \'(.*?)\';', r.text)
+                msg_dict = self._replace_html(msg_dict[0])
+
+                try:
+                    data_dict_from_str = eval(self._replace_html(msg_dict))
+                except SyntaxError:
+                    data_value_no_syh = self._fix_json(self._replace_html(msg_dict))
+                    data_dict_from_str = eval(data_value_no_syh)
+
+                msg_dict = self._deal_gzh_article_dict(data_dict_from_str, biz=biz, key=key, uin=uin)
+                msg_dict_new = reversed(msg_dict)
+                msgid = 0
+                for m in msg_dict_new:
+                    if int(m['type']) == 49:
+                        msgid = m['qunfa_id']
+                        break
+                self._uinkeybiz(wechatid, uin, key, biz, pass_ticket, msgid)
+                return msg_dict
+            except IndexError:
+                raise WechatSogouException('deal_mass_send_msg error. maybe you should get the mp url again')
         else:
             raise WechatSogouRequestsException('requests status_code error', r.status_code)
+
+    def deal_mass_send_msg_page(self, wechatid):
+        url = 'http://mp.weixin.qq.com/mp/getmasssendmsg?'
+        uin, key, biz, pass_ticket, frommsgid = self._uinkeybiz(wechatid)
+        url = url + 'uin=' + uin + '&'
+        url = url + 'key=' + key + '&'
+        url = url + '__biz=' + biz + '&'
+        url = url + 'pass_ticket=' + pass_ticket + '&'
+        url = url + 'frommsgid=' + str(frommsgid) + '&'
+        data = {
+            'f': 'json',
+            'count': '10',
+            'wxtoken': '',
+            'x5': '0'
+        }
+        for k, v in data.items():
+            url = url + k + '=' + v + '&'
+        url = url[:-1]
+        # print(url)
+        r = requests.get(url, verify=False)
+        rdic = eval(r.text)
+        if rdic['ret'] == 0:
+
+            try:
+                data_dict_from_str = eval(self._replace_html(rdic['general_msg_list']))
+            except SyntaxError:
+                data_value_no_syh = self._fix_json(self._replace_html(rdic['general_msg_list']))
+                data_dict_from_str = eval(data_value_no_syh)
+
+            if rdic['is_continue'] == 0 and rdic['count'] == 0:
+                raise WechatSogouEndException()
+
+            msg_dict = self._deal_gzh_article_dict(data_dict_from_str)
+            msg_dict_new = reversed(msg_dict)
+            msgid = 0
+            for m in msg_dict_new:
+                if int(m['type']) == 49:
+                    msgid = m['qunfa_id']
+                    break
+            self._uinkeybiz(wechatid, rdic['uin_code'], rdic['key'], rdic['bizuin_code'], pass_ticket, msgid)
+            return msg_dict
+        else:
+            raise WechatSogouException('deal_mass_send_msg_page ret ' + str(rdic['ret']) + ' errmsg ' + rdic['errmsg'])
