@@ -466,11 +466,11 @@ class WechatSogouApi(WechatSogouBasic):
                 self._uinkeybiz(wechatid, uin, key, biz, pass_ticket, msgid)
                 return msg_dict
             except IndexError:
-                raise WechatSogouException('deal_mass_send_msg error. maybe you should get the mp url again')
+                raise WechatSogouHistoryMsgException('deal_mass_send_msg error. maybe you should get the mp url again')
         else:
             raise WechatSogouRequestsException('requests status_code error', r.status_code)
 
-    def deal_mass_send_msg_page(self, wechatid):
+    def deal_mass_send_msg_page(self, wechatid, updatecache=True):
         url = 'http://mp.weixin.qq.com/mp/getmasssendmsg?'
         uin, key, biz, pass_ticket, frommsgid = self._uinkeybiz(wechatid)
         url = url + 'uin=' + uin + '&'
@@ -508,7 +508,10 @@ class WechatSogouApi(WechatSogouBasic):
                 if int(m['type']) == 49:
                     msgid = m['qunfa_id']
                     break
-            self._uinkeybiz(wechatid, rdic['uin_code'], rdic['key'], rdic['bizuin_code'], pass_ticket, msgid)
+
+            if updatecache:
+                self._uinkeybiz(wechatid, rdic['uin_code'], rdic['key'], rdic['bizuin_code'], pass_ticket, msgid)
+
             return msg_dict
         else:
-            raise WechatSogouException('deal_mass_send_msg_page ret ' + str(rdic['ret']) + ' errmsg ' + rdic['errmsg'])
+            raise WechatSogouHistoryMsgException('deal_mass_send_msg_page ret ' + str(rdic['ret']) + ' errmsg ' + rdic['errmsg'])

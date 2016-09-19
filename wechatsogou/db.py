@@ -3,6 +3,7 @@
 import pymysql
 from . import config
 
+
 class DbException(Exception):
     """数据库 异常 基类
     """
@@ -25,8 +26,6 @@ class mysql():
     m.table('user').field(['id']).where({}).order({'id':'desc'}).find() # 读取，asc，desc
     m.where({}).delete() # 删除
     """
-
-
 
     def __init__(self, table='', prefix=''):
         """初始化
@@ -158,8 +157,8 @@ class mysql():
         ks = ''
         vs = ''
         for k, v in data.items():
-            ks += "`" + str(k) + "`,"
-            vs += "'" + str(v) + "',"
+            ks += "`" + str(k).replace('\'', '\\\'') + "`,"
+            vs += "'" + str(v).replace('\'', '\\\'') + "',"
         if hasattr(self, 'tablename'):
             sql = "insert into `" + self.tablename + "` (" + ks[:-1] + ") values (" + vs[:-1] + ")"
             try:

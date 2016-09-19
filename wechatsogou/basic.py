@@ -260,7 +260,10 @@ class WechatSogouBasic(WechatSogouBase):
         Returns:
             text: 返回的文本
         """
-        return self._get(url, 'get', host='mp.weixin.qq.com')
+        text = self._get(url, 'get', host='mp.weixin.qq.com')
+        if u'为了保护你的网络安全，请输入验证码' in text:
+            print(text)
+        return text
 
     def _get_gzh_article_gzh_by_url_dict(self, text, url):
         """最近文章页  公众号信息
@@ -344,15 +347,13 @@ class WechatSogouBasic(WechatSogouBase):
                 # 图片
                 item[
                     'img_url'] = 'https://mp.weixin.qq.com/mp/getmediadata?__biz=' + biz + '&type=img&mode=small&msgid=' + \
-                                 item[
-                                     'qunfa_id'] + '&uin=' + uin + '&key=' + key
+                                 str(item['qunfa_id']) + '&uin=' + uin + '&key=' + key
             elif item['type'] == '34':
                 # 音频
                 item['play_length'] = listdic['voice_msg_ext_info'].get('play_length', '')
                 item['fileid'] = listdic['voice_msg_ext_info'].get('fileid', '')
                 item['audio_src'] = 'https://mp.weixin.qq.com/mp/getmediadata?__biz=' + biz + '&type=voice&msgid=' + \
-                                    item[
-                                        'qunfa_id'] + '&uin=' + uin + '&key=' + key
+                                    str(item['qunfa_id']) + '&uin=' + uin + '&key=' + key
             elif item['type'] == '49':
                 # 图文
                 app_msg_ext_info = listdic['app_msg_ext_info']
