@@ -325,6 +325,19 @@ class WechatSogouApi(WechatSogouBasic):
             raise WechatSogouException(errmsg)
         return comment_dict
 
+    def deal_article_yuan(self, **kwargs):
+        url = kwargs.get('url', None)
+        text = kwargs.get('text', None)
+
+        if text:
+            pass
+        elif url:
+            text = self._get_gzh_article_text(url)
+        else:
+            raise WechatSogouException('deal_article_yuan need param url or text')
+
+        return re.findall('var msg_link = "(.*?)";', text)[0].replace('amp;', '')
+
     def deal_article(self, url, title=None):
         """获取文章详情
 

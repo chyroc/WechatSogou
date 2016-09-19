@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from wechatsogou import *
 from wechatsogou.exceptions import *
+from wechatsogou.tools import *
 
 try:
     import urlparse as url_parse
@@ -15,6 +16,8 @@ def get_url_param(url):
     sn = url_param.get('sn')[0] if url_param.get('sn') else ''
     mid = url_param.get('mid')[0] if url_param.get('mid') else ''
     return {'biz': biz, 'sn': sn, 'mid': mid}
+
+
 """
 创建表
 
@@ -36,26 +39,23 @@ CREATE TABLE IF NOT EXISTS `yu_article` (
 """
 
 
-class DownArticles(object):
-    """获取存储所有群发消息
-    """
-
-    def __init__(self, wechatid, url, table, pre):
+class UpdateArticls(object):
+    def __init__(self, wechatid, table, pre):
         self.wechats = WechatSogouApi()
         self.wechatid = wechatid
-        self.url = url
+        self.cache = WechatCache()
         self.m = mysql(table, pre)
 
     def save(self, messages):
         for message in messages:
             if int(message['type']) == 49:
+                yuan = self.wechats.deal_article_yuan(url=message['content_url'])
 
-                url_param = get_url_param(message['content_url'])
+                url_param = get_url_param(yuan)
                 msgid = ''
                 msgid = msgid + 'biz=' + url_param['biz'] + '&'
                 msgid = msgid + 'sn=' + url_param['sn'] + '&'
                 msgid = msgid + 'mid=' + url_param['mid']
-
 
                 message_save = dict()
                 message_save['mp_id'] = self.wechatid
@@ -63,7 +63,7 @@ class DownArticles(object):
                 message_save['title'] = message['title']
                 message_save['thumb'] = message['cover']
                 message_save['brief_content'] = message['digest']
-                message_save['article_url'] = message['content_url']
+                message_save['article_url'] = yuan
                 message_save['content_url'] = message['content_url']
                 message_save['source_url'] = message['source_url']
                 message_save['post_date'] = message['datetime']
@@ -71,38 +71,32 @@ class DownArticles(object):
 
                 self.m.add(message_save)
 
-    def save_first(self):
-        print('msgid ', self.wechats._uinkeybiz(self.wechatid)[4])
-        messages = self.wechats.deal_mass_send_msg(self.url, self.wechatid)
-        self.save(messages)
+                print('deal article ' + yuan)
 
-    def save_next(self, updatecache=True):
-        print('msgid ', self.wechats._uinkeybiz(self.wechatid)[4])
-        try:
-            messages = self.wechats.deal_mass_send_msg_page(self.wechatid, updatecache)
-            self.save(messages)
-        except WechatSogouEndException:
-            print('end.')
-            exit()
+    def cache_rencent_url(self, url=None):
+        if url:
+            self.cache.set(self.wechatid + 'recent_url', url, 36000)
+        else:
+            return self.cache.get(self.wechatid + 'recent_url')
 
     def run(self):
-        try:
-            self.save_next(False)
-            print('next is ok')
-            while True:
-                self.save_next()
-        except (WechatSogouHistoryMsgException, TypeError):
-            try:
-                print('from url start')
-                self.save_first()
-                while True:
-                    self.save_next()
-            except WechatSogouHistoryMsgException:
-                print('next is error. need new url')
+        url = self.cache_rencent_url()
+
+        if not url:
+            print('get recent url from wechatid')
+            gzh_info = self.wechats.get_gzh_info(self.wechatid)
+            url = gzh_info['url']
+            self.cache_rencent_url(url)
+        else:
+            print('get recent url from cache')
+
+        gzh_messages = self.wechats.get_gzh_message(url=url)
+
+        self.save(gzh_messages)
+
+        print('end.')
 
 
 if __name__ == '__main__':
-    wechatid = '..........'
-    url = 'https://mp.weixin.qq.com/mp/getmasssendmsg?...............'
-
-    DownArticles(wechatid, url, 'article', 'yu').run()
+    wechatid = '........'
+    UpdateArticls(wechatid, 'article', 'yu').run()
