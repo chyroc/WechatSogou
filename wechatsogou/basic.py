@@ -28,6 +28,11 @@ except ImportError:
         f.write(content)
         return Image.open(f)
 
+try:
+    import urlparse as url_parse
+except ImportError:
+    import urllib.parse as url_parse
+
 from lxml import etree
 from PIL import Image
 
@@ -42,13 +47,20 @@ class WechatSogouBasic(WechatSogouBase):
     """基于搜狗搜索的的微信公众号爬虫接口 基本功能类
     """
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self._cache = WechatCache(config.cache_dir, 60 * 60)
         self._session = self._cache.get(config.cache_session_name) if self._cache.get(
             config.cache_session_name) else requests.session()
 
-        if config.dama_type == 'ruokuai':
-            self._ocr = RClient(config.dama_name, config.dama_pswd, config.dama_soft_id, config.dama_soft_key)
+        ocr_config = kwargs.get('ocr_config')
+        if ocr_config:
+
+            if ocr_config['type'] == 'ruokuai':
+                dama_name = ocr_config.get('dama_name')
+                dama_pswd = ocr_config.get('dama_pswd')
+                dama_soft_id = ocr_config.get('dama_soft_id')
+                dama_soft_key = ocr_config.get('dama_soft_key')
+                self._ocr = RClient(dama_name, dama_pswd, dama_soft_id, dama_soft_key)
 
         self._agent = [
             "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; AcooBrowser; .NET CLR 1.1.4322; .NET CLR 2.0.50727)",
@@ -136,7 +148,7 @@ class WechatSogouBasic(WechatSogouBase):
             raise WechatSogouRequestsException('requests status_code error', r.status_code)
         return r.text
 
-    def _jiefeng(self, ruokuai=False):
+    def _jiefeng(self):
         """对于出现验证码，识别验证码，解封
 
         Args:
@@ -147,8 +159,8 @@ class WechatSogouBasic(WechatSogouBase):
         """
         codeurl = 'http://weixin.sogou.com/antispider/util/seccode.php?tc=' + str(time.time())[0:10]
         coder = self._session.get(codeurl)
-        if hasattr(self, 'ocr'):
-            result = self.ocr.create(coder.content, 3060)
+        if hasattr(self, '_ocr'):
+            result = self._ocr.create(coder.content, 3060)
             img_code = result['Result']
         else:
             im = readimg(coder.content)
@@ -171,7 +183,36 @@ class WechatSogouBasic(WechatSogouBase):
         if remsg['code'] != 0:
             raise WechatSogouVcodeException('cannot jiefeng because ' + remsg['msg'])
         self._cache.set(config.cache_session_name, self._session)
-        print(remsg['msg'])
+        print('ocr ', remsg['msg'])
+
+    def _ocr_for_get_gzh_article_by_url_text(self, url):
+        timestr = str(time.time()).replace('.', '')
+        timever = timestr[0:13] + '.' + timestr[13:17]
+        codeurl = 'http://mp.weixin.qq.com/mp/verifycode?cert=' + timever
+        coder = self._session.get(codeurl)
+        if hasattr(self, '_ocr'):
+            result = self._ocr.create(coder.content, 2040)
+            img_code = result['Result']
+        else:
+            im = readimg(coder.content)
+            im.show()
+            img_code = input("please input code: ")
+        post_url = 'http://mp.weixin.qq.com/mp/verifycode'
+        post_data = {
+            'cert': timever,
+            'input': img_code
+        }
+        headers = {
+            "User-Agent": self._agent[random.randint(0, len(self._agent) - 1)],
+            'Host': 'mp.weixin.qq.com',
+            'Referer': url
+        }
+        rr = self._session.post(post_url, post_data, headers=headers)
+        remsg = eval(rr.text)
+        if remsg['ret'] != 0:
+            raise WechatSogouVcodeException('cannot jiefeng get_gzh_article  because ' + remsg['errmsg'])
+        self._cache.set(config.cache_session_name, self._session)
+        print('ocr ', remsg['errmsg'])
 
     def _replace_html(self, s):
         """替换html‘&quot;’等转义内容为正常内容
@@ -192,23 +233,43 @@ class WechatSogouBasic(WechatSogouBase):
         s = s.replace('&lt;', '<')
         s = s.replace('&gt;', '>')
         s = s.replace('&nbsp;', ' ')
-        s = s.replace(r"\\", r'')
+        s = s.replace('\\', '')
         return s
 
-    def _fix_json(self, wrong_json):
-        json_str = re.sub('"title":"(.*?)","',
-                          lambda m: '"title":"' + m.group(0)[9:-3].replace('"', '”').replace(',', '，') + '","',
-                          wrong_json)
-        json_str = re.sub('"digest":"(.*?)","',
-                          lambda m: '"digest":"' + m.group(0)[10:-3].replace('"', '“').replace(',', '，') + '","',
-                          json_str)
+    def _replace_dict(self, dicts):
+        retu_dict = dict()
+        for k, v in dicts.items():
+            retu_dict[self._replace_all(k)] = self._replace_all(v)
+        return retu_dict
 
-        return json_str
+    def _replace_list(self, lists):
+        retu_list = list()
+        for l in lists:
+            retu_list.append(self._replace_all(l))
+        return retu_list
+
+    def _replace_all(self, data):
+        if isinstance(data, dict):
+            return self._replace_dict(data)
+        elif isinstance(data, list):
+            return self._replace_list(data)
+        elif isinstance(data, str):
+            return self._replace_html(data)
+        else:
+            return data
+
+    def _str_to_dict(self, json_str):
+        json_dict = eval(json_str)
+        return self._replace_all(json_dict)
 
     def _replace_space(self, s):
         s = s.replace(' ', '')
         s = s.replace('\r\n', '')
         return s
+
+    def _get_url_param(self, url):
+        result = url_parse.urlparse(url)
+        return url_parse.parse_qs(result.query, True)
 
     def _search_gzh_text(self, name, page=1):
         """通过搜狗搜索获取关键字返回的文本
@@ -260,9 +321,12 @@ class WechatSogouBasic(WechatSogouBase):
         Returns:
             text: 返回的文本
         """
+
         text = self._get(url, 'get', host='mp.weixin.qq.com')
         if u'为了保护你的网络安全，请输入验证码' in text:
-            print(text)
+            self._ocr_for_get_gzh_article_by_url_text(url)
+
+            text = self._get(url, 'get', host='mp.weixin.qq.com')
         return text
 
     def _get_gzh_article_gzh_by_url_dict(self, text, url):

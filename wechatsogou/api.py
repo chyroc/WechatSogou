@@ -13,6 +13,9 @@ class WechatSogouApi(WechatSogouBasic):
     """基于搜狗搜索的的微信公众号爬虫接口  接口类
     """
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
     def search_gzh_info(self, name, page=1):
         """搜索公众号
 
@@ -335,8 +338,15 @@ class WechatSogouApi(WechatSogouBasic):
             text = self._get_gzh_article_text(url)
         else:
             raise WechatSogouException('deal_article_yuan need param url or text')
+        try:
+            yuan = re.findall('var msg_link = "(.*?)";', text)[0].replace('amp;', '')
+        except IndexError as e:
+            if '系统出错' not in text:
+                print(e)
+                print(text)
 
-        return re.findall('var msg_link = "(.*?)";', text)[0].replace('amp;', '')
+            raise WechatSogouBreakException()
+        return yuan
 
     def deal_article(self, url, title=None):
         """获取文章详情
@@ -455,29 +465,8 @@ class WechatSogouApi(WechatSogouBasic):
                 key = re.findall('key = \'(.*?)\',', r.text)[0]
                 uin = re.findall('uin = \'(.*?)\',', r.text)[0]
 
-                try:
-                    pass_ticket = re.findall('pass_ticket=(.*?)&', url)[0]
-                except IndexError:
-                    pass_ticket = re.findall('pass_ticket=(.*?)', url)[0]
+                self._uinkeybiz(wechatid, uin, key, biz, '', 0)
 
-                msg_dict = re.findall('msgList = \'(.*?)\';', r.text)
-                msg_dict = self._replace_html(msg_dict[0])
-
-                try:
-                    data_dict_from_str = eval(self._replace_html(msg_dict))
-                except SyntaxError:
-                    data_value_no_syh = self._fix_json(self._replace_html(msg_dict))
-                    data_dict_from_str = eval(data_value_no_syh)
-
-                msg_dict = self._deal_gzh_article_dict(data_dict_from_str, biz=biz, key=key, uin=uin)
-                msg_dict_new = reversed(msg_dict)
-                msgid = 0
-                for m in msg_dict_new:
-                    if int(m['type']) == 49:
-                        msgid = m['qunfa_id']
-                        break
-                self._uinkeybiz(wechatid, uin, key, biz, pass_ticket, msgid)
-                return msg_dict
             except IndexError:
                 raise WechatSogouHistoryMsgException('deal_mass_send_msg error. maybe you should get the mp url again')
         else:
@@ -486,6 +475,7 @@ class WechatSogouApi(WechatSogouBasic):
     def deal_mass_send_msg_page(self, wechatid, updatecache=True):
         url = 'http://mp.weixin.qq.com/mp/getmasssendmsg?'
         uin, key, biz, pass_ticket, frommsgid = self._uinkeybiz(wechatid)
+        print(uin, key, biz, pass_ticket, frommsgid)
         url = url + 'uin=' + uin + '&'
         url = url + 'key=' + key + '&'
         url = url + '__biz=' + biz + '&'
@@ -505,11 +495,7 @@ class WechatSogouApi(WechatSogouBasic):
         rdic = eval(r.text)
         if rdic['ret'] == 0:
 
-            try:
-                data_dict_from_str = eval(self._replace_html(rdic['general_msg_list']))
-            except SyntaxError:
-                data_value_no_syh = self._fix_json(self._replace_html(rdic['general_msg_list']))
-                data_dict_from_str = eval(data_value_no_syh)
+            data_dict_from_str = self._str_to_dict(rdic['general_msg_list'])
 
             if rdic['is_continue'] == 0 and rdic['count'] == 0:
                 raise WechatSogouEndException()
@@ -527,4 +513,5 @@ class WechatSogouApi(WechatSogouBasic):
 
             return msg_dict
         else:
-            raise WechatSogouHistoryMsgException('deal_mass_send_msg_page ret ' + str(rdic['ret']) + ' errmsg ' + rdic['errmsg'])
+            raise WechatSogouHistoryMsgException(
+                'deal_mass_send_msg_page ret ' + str(rdic['ret']) + ' errmsg ' + rdic['errmsg'])

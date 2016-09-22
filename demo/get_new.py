@@ -40,8 +40,11 @@ CREATE TABLE IF NOT EXISTS `yu_article` (
 
 
 class UpdateArticls(object):
-    def __init__(self, wechatid, table, pre):
-        self.wechats = WechatSogouApi()
+    def __init__(self, wechatid, table, pre, ocr_config=None):
+        if ocr_config:
+            self.wechats = WechatSogouApi(ocr_config=ocr_config)
+        else:
+            self.wechats = WechatSogouApi()
         self.wechatid = wechatid
         self.cache = WechatCache()
         self.m = mysql(table, pre)
@@ -49,7 +52,10 @@ class UpdateArticls(object):
     def save(self, messages):
         for message in messages:
             if int(message['type']) == 49:
-                yuan = self.wechats.deal_article_yuan(url=message['content_url'])
+                try:
+                    yuan = self.wechats.deal_article_yuan(url=message['content_url'])
+                except WechatSogouBreakException:
+                    continue
 
                 url_param = get_url_param(yuan)
                 msgid = ''
@@ -75,7 +81,7 @@ class UpdateArticls(object):
 
     def cache_rencent_url(self, url=None):
         if url:
-            self.cache.set(self.wechatid + 'recent_url', url, 36000)
+            self.cache.set(self.wechatid + 'recent_url', url, 0)
         else:
             return self.cache.get(self.wechatid + 'recent_url')
 
@@ -92,6 +98,8 @@ class UpdateArticls(object):
 
         gzh_messages = self.wechats.get_gzh_message(url=url)
 
+        print(gzh_messages)
+
         self.save(gzh_messages)
 
         print('end.')
@@ -99,4 +107,11 @@ class UpdateArticls(object):
 
 if __name__ == '__main__':
     wechatid = '........'
-    UpdateArticls(wechatid, 'article', 'yu').run()
+    ocr_config = {
+        'type': 'ruokuai',
+        'dama_name': '',
+        'dama_pswd': '',
+        'dama_soft_id': '',
+        'dama_soft_key': ''
+    }
+    UpdateArticls(w['id'], 'article', 'yu', ocr_config).run()

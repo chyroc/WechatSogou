@@ -23,6 +23,11 @@ class WechatSogouEndException(WechatSogouException):
     """
     pass
 
+class WechatSogouBreakException(WechatSogouException):
+    """基于搜狗搜索的的微信公众号爬虫接口 中断 异常类
+    """
+    pass
+
 class WechatSogouHistoryMsgException(WechatSogouException):
     """基于搜狗搜索的的微信公众号爬虫接口 数据处理完成 异常类
     """

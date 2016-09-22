@@ -15,6 +15,8 @@ def get_url_param(url):
     sn = url_param.get('sn')[0] if url_param.get('sn') else ''
     mid = url_param.get('mid')[0] if url_param.get('mid') else ''
     return {'biz': biz, 'sn': sn, 'mid': mid}
+
+
 """
 创建表
 
@@ -56,7 +58,6 @@ class DownArticles(object):
                 msgid = msgid + 'sn=' + url_param['sn'] + '&'
                 msgid = msgid + 'mid=' + url_param['mid']
 
-
                 message_save = dict()
                 message_save['mp_id'] = self.wechatid
                 message_save['post_user'] = message['author']
@@ -69,12 +70,16 @@ class DownArticles(object):
                 message_save['post_date'] = message['datetime']
                 message_save['msgid'] = msgid  # 去重
 
-                self.m.add(message_save)
+                try:
+                    self.m.add(message_save)
+                except Exception as e:
+                    print(e)
+                    print(message_save)
+                    exit()
 
     def save_first(self):
         print('msgid ', self.wechats._uinkeybiz(self.wechatid)[4])
-        messages = self.wechats.deal_mass_send_msg(self.url, self.wechatid)
-        self.save(messages)
+        self.wechats.deal_mass_send_msg(self.url, self.wechatid)
 
     def save_next(self, updatecache=True):
         print('msgid ', self.wechats._uinkeybiz(self.wechatid)[4])
@@ -97,8 +102,9 @@ class DownArticles(object):
                 self.save_first()
                 while True:
                     self.save_next()
-            except WechatSogouHistoryMsgException:
+            except WechatSogouHistoryMsgException as e:
                 print('next is error. need new url')
+                print(e)
 
 
 if __name__ == '__main__':
