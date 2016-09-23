@@ -14,7 +14,7 @@ class WechatSogouApi(WechatSogouBasic):
     """
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super(WechatSogouApi, self).__init__(**kwargs)
 
     def search_gzh_info(self, name, page=1):
         """搜索公众号
