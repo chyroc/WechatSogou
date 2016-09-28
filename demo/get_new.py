@@ -18,38 +18,31 @@ def get_url_param(url):
     return {'biz': biz, 'sn': sn, 'mid': mid}
 
 
-"""
-创建表
-
-CREATE TABLE IF NOT EXISTS `yu_article` (
-  `aid` int(10) NOT NULL AUTO_INCREMENT,
-  `mp_id` varchar(50) NOT NULL,
-  `title` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
-  `post_user` varchar(50) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `post_date` int(15) NOT NULL,
-  `brief_content` varchar(300) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `thumb` text CHARACTER SET utf8mb4,
-  `content_url` text CHARACTER SET utf8mb4,
-  `article_url` text NOT NULL,
-  `source_url` text CHARACTER SET utf8mb4,
-  `msgid` varchar(100) NOT NULL,
-  PRIMARY KEY (`aid`),
-  UNIQUE KEY `msgid` (`msgid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2049 ;
-"""
-
-
 class UpdateArticls(object):
-    def __init__(self, wechatid, table, pre, ocr_config=None):
+    def __init__(self, wechatid, **kwargs):
+
+        ocr_config = kwargs.get('ocr_config')
         if ocr_config:
             self.wechats = WechatSogouApi(ocr_config=ocr_config)
         else:
             self.wechats = WechatSogouApi()
+
+        self.save_func = kwargs.get('save_func')
+
         self.wechatid = wechatid
         self.cache = WechatCache()
-        self.m = mysql(table, pre)
 
-    def save(self, messages):
+    def save(self, gzh_messages):
+        if callable(self.save_func):
+            articles = self.dealkey(gzh_messages)
+            self.save_func(articles)
+            print('saved')
+        else:
+            print('no save_func, do nothing')
+
+    def dealkey(self, messages):
+        articles = []
+
         for message in messages:
             if int(message['type']) == 49:
                 try:
@@ -63,25 +56,25 @@ class UpdateArticls(object):
                 msgid = msgid + 'sn=' + url_param['sn'] + '&'
                 msgid = msgid + 'mid=' + url_param['mid']
 
-                message_save = dict()
-                message_save['mp_id'] = self.wechatid
-                message_save['post_user'] = message['author']
-                message_save['title'] = message['title']
-                message_save['thumb'] = message['cover']
-                message_save['brief_content'] = message['digest']
-                message_save['article_url'] = yuan
-                message_save['content_url'] = message['content_url']
-                message_save['source_url'] = message['source_url']
-                message_save['post_date'] = message['datetime']
-                message_save['msgid'] = msgid  # 去重
+                article = dict()
+                article['wechatID'] = self.wechatid
+                article['authorName'] = message['author']
+                article['title'] = message['title']
+                article['thumbnails'] = message['cover']
+                article['summary'] = message['digest']
+                article['url'] = yuan
+                article['pushTime'] = message['datetime']
 
-                self.m.add(message_save)
+                article['source_url'] = message['source_url']  # 左下角原文地址
+                article['msgid'] = msgid  # 去重
 
-                print('deal article ' + yuan)
+                articles.append(article)
+
+        return articles
 
     def cache_rencent_url(self, url=None):
         if url:
-            self.cache.set(self.wechatid + 'recent_url', url, 0)
+            self.cache.set(self.wechatid + 'recent_url', url, 5 * 3600)
         else:
             return self.cache.get(self.wechatid + 'recent_url')
 
@@ -98,8 +91,6 @@ class UpdateArticls(object):
 
         gzh_messages = self.wechats.get_gzh_message(url=url)
 
-        print(gzh_messages)
-
         self.save(gzh_messages)
 
         print('end.')
@@ -114,4 +105,10 @@ if __name__ == '__main__':
         'dama_soft_id': '',
         'dama_soft_key': ''
     }
-    UpdateArticls(w['id'], 'article', 'yu', ocr_config).run()
+
+
+    def save_func(articles):
+        print(articles)
+
+
+    UpdateArticls(wechatid, ocr_config=ocr_config, save_func=save_func).run()

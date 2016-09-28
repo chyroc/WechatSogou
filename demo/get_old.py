@@ -17,65 +17,58 @@ def get_url_param(url):
     return {'biz': biz, 'sn': sn, 'mid': mid}
 
 
-"""
-创建表
-
-CREATE TABLE IF NOT EXISTS `yu_article` (
-  `aid` int(10) NOT NULL AUTO_INCREMENT,
-  `mp_id` varchar(50) NOT NULL,
-  `title` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
-  `post_user` varchar(50) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `post_date` int(15) NOT NULL,
-  `brief_content` varchar(300) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `thumb` text CHARACTER SET utf8mb4,
-  `content_url` text CHARACTER SET utf8mb4,
-  `article_url` text NOT NULL,
-  `source_url` text CHARACTER SET utf8mb4,
-  `msgid` varchar(100) NOT NULL,
-  PRIMARY KEY (`aid`),
-  UNIQUE KEY `msgid` (`msgid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2049 ;
-"""
-
-
 class DownArticles(object):
     """获取存储所有群发消息
     """
 
-    def __init__(self, wechatid, url, table, pre):
-        self.wechats = WechatSogouApi()
+    def __init__(self, wechatid, url, **kwargs):
+
+        ocr_config = kwargs.get('ocr_config')
+        if ocr_config:
+            self.wechats = WechatSogouApi(ocr_config=ocr_config)
+        else:
+            self.wechats = WechatSogouApi()
+
+        self.save_func = kwargs.get('save_func')
+
         self.wechatid = wechatid
         self.url = url
-        self.m = mysql(table, pre)
 
     def save(self, messages):
+        if callable(self.save_func):
+            articles = self.dealkey(messages)
+            self.save_func(articles)
+            print('saved')
+        else:
+            print('no save_func, do nothing')
+
+    def dealkey(self, messages):
+        articles = []
+
         for message in messages:
             if int(message['type']) == 49:
-
                 url_param = get_url_param(message['content_url'])
                 msgid = ''
                 msgid = msgid + 'biz=' + url_param['biz'] + '&'
                 msgid = msgid + 'sn=' + url_param['sn'] + '&'
                 msgid = msgid + 'mid=' + url_param['mid']
 
-                message_save = dict()
-                message_save['mp_id'] = self.wechatid
-                message_save['post_user'] = message['author']
-                message_save['title'] = message['title']
-                message_save['thumb'] = message['cover']
-                message_save['brief_content'] = message['digest']
-                message_save['article_url'] = message['content_url']
-                message_save['content_url'] = message['content_url']
-                message_save['source_url'] = message['source_url']
-                message_save['post_date'] = message['datetime']
-                message_save['msgid'] = msgid  # 去重
+                article = dict()
+                article['wechatID'] = self.wechatid
+                article['authorName'] = message['author']
+                article['title'] = message['title']
+                article['thumbnails'] = message['cover']
+                article['summary'] = message['digest']
+                article['url'] = message['content_url']
+                article['source_url'] = message['source_url']
+                article['pushTime'] = message['datetime']
 
-                try:
-                    self.m.add(message_save)
-                except Exception as e:
-                    print(e)
-                    print(message_save)
-                    exit()
+                article['source_url'] = message['source_url']  # 左下角原文地址
+                article['msgid'] = msgid  # 去重
+
+                articles.append(article)
+
+        return articles
 
     def save_first(self):
         print('msgid ', self.wechats._uinkeybiz(self.wechatid)[4])
@@ -110,5 +103,21 @@ class DownArticles(object):
 if __name__ == '__main__':
     wechatid = '..........'
     url = 'https://mp.weixin.qq.com/mp/getmasssendmsg?...............'
+    ocr_config = {
+        'type': 'ruokuai',
+        'dama_name': '',
+        'dama_pswd': '',
+        'dama_soft_id': '',
+        'dama_soft_key': ''
+    }
 
-    DownArticles(wechatid, url, 'article', 'yu').run()
+
+    def save_func(articles):
+        """自定义的数据处理保存函数
+
+        ::param articles 文章字段字典的列表
+        """
+        print(articles)
+
+
+    DownArticles(wechatid, url, ocr_config=ocr_config, save_func=save_func).run()
