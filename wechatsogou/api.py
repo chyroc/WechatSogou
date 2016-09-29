@@ -458,14 +458,17 @@ class WechatSogouApi(WechatSogouBasic):
 
         ::param url是抓包获取的历史消息页
         """
-        r = requests.get(url, verify=False)
+        session = requests.session()
+        r = session.get(url, verify=False)
         if r.status_code == requests.codes.ok:
             try:
                 biz = re.findall('biz = \'(.*?)\',', r.text)[0]
                 key = re.findall('key = \'(.*?)\',', r.text)[0]
                 uin = re.findall('uin = \'(.*?)\',', r.text)[0]
+                pass_ticket = self._get_url_param(url).get('pass_ticket', [''])[0]
 
-                self._uinkeybiz(wechatid, uin, key, biz, '', 0)
+                self._uinkeybiz(wechatid, uin, key, biz, pass_ticket, 0)
+                self._cache_history_session(wechatid, session)
 
             except IndexError:
                 raise WechatSogouHistoryMsgException('deal_mass_send_msg error. maybe you should get the mp url again')
@@ -475,7 +478,7 @@ class WechatSogouApi(WechatSogouBasic):
     def deal_mass_send_msg_page(self, wechatid, updatecache=True):
         url = 'http://mp.weixin.qq.com/mp/getmasssendmsg?'
         uin, key, biz, pass_ticket, frommsgid = self._uinkeybiz(wechatid)
-        print(uin, key, biz, pass_ticket, frommsgid)
+        print([uin, key, biz, pass_ticket, frommsgid])
         url = url + 'uin=' + uin + '&'
         url = url + 'key=' + key + '&'
         url = url + '__biz=' + biz + '&'
@@ -491,27 +494,32 @@ class WechatSogouApi(WechatSogouBasic):
             url = url + k + '=' + v + '&'
         url = url[:-1]
         # print(url)
-        r = requests.get(url, verify=False)
-        rdic = eval(r.text)
-        if rdic['ret'] == 0:
 
-            data_dict_from_str = self._str_to_dict(rdic['general_msg_list'])
+        try:
+            session = self._cache_history_session(wechatid)
+            r = session.get(url, headers={'Host': 'mp.weixin.qq.com'}, verify=False)
+            rdic = eval(r.text)
+            if rdic['ret'] == 0:
 
-            if rdic['is_continue'] == 0 and rdic['count'] == 0:
-                raise WechatSogouEndException()
+                data_dict_from_str = self._str_to_dict(rdic['general_msg_list'])
 
-            msg_dict = self._deal_gzh_article_dict(data_dict_from_str)
-            msg_dict_new = reversed(msg_dict)
-            msgid = 0
-            for m in msg_dict_new:
-                if int(m['type']) == 49:
-                    msgid = m['qunfa_id']
-                    break
+                if rdic['is_continue'] == 0 and rdic['count'] == 0:
+                    raise WechatSogouEndException()
 
-            if updatecache:
-                self._uinkeybiz(wechatid, rdic['uin_code'], rdic['key'], rdic['bizuin_code'], pass_ticket, msgid)
+                msg_dict = self._deal_gzh_article_dict(data_dict_from_str)
+                msg_dict_new = reversed(msg_dict)
+                msgid = 0
+                for m in msg_dict_new:
+                    if int(m['type']) == 49:
+                        msgid = m['qunfa_id']
+                        break
 
-            return msg_dict
-        else:
-            raise WechatSogouHistoryMsgException(
-                'deal_mass_send_msg_page ret ' + str(rdic['ret']) + ' errmsg ' + rdic['errmsg'])
+                if updatecache:
+                    self._uinkeybiz(wechatid, rdic['uin_code'], rdic['key'], rdic['bizuin_code'], pass_ticket, msgid)
+
+                return msg_dict
+            else:
+                raise WechatSogouHistoryMsgException(
+                    'deal_mass_send_msg_page ret ' + str(rdic['ret']) + ' errmsg ' + rdic['errmsg'])
+        except AttributeError:
+            raise WechatSogouHistoryMsgException('deal_mass_send_msg_page error, please delete cache file')

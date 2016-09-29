@@ -516,3 +516,9 @@ class WechatSogouBasic(WechatSogouBase):
             pass_ticket = self._cache.get(keyword + 'pass_ticket')
             msgid = self._cache.get(keyword + 'msgid')
             return uin, key, biz, pass_ticket, msgid
+
+    def _cache_history_session(self, keyword, session=None):
+        if session:
+            self._cache.set(keyword + 'session', session, 36000)
+        else:
+            return self._cache.get(keyword + 'session')
