@@ -1,0 +1,15 @@
+.idea
+.git
+__pycache__
+ceshi.py
+cache
+wechatsogou/cache
+wechatsogou/ocr
+sprider
+wechatsogou.egg-info
+dist
+setup.py
+README.rst
+demo/cache
+demo/yu_save.py
+demo/wechatsogou
