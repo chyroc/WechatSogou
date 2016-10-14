@@ -33,6 +33,11 @@ class WechatSogouHistoryMsgException(WechatSogouException):
     """
     pass
 
+class ConfigException(WechatSogouException):
+    """基于搜狗搜索的的微信公众号爬虫接口 配置错误 异常类
+    """
+    pass
+
 class WechatSogouRequestsException(WechatSogouException):
     """基于搜狗搜索的的微信公众号爬虫接口 抓取 异常类
     """

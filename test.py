@@ -3,6 +3,12 @@
 # 导入包
 from wechatsogou.tools import *
 from wechatsogou import *
+import logging
+import logging.config
+
+# 日志
+logging.config.fileConfig('logging.conf')
+logger = logging.getLogger()
 
 # 实例
 wechats = WechatSogouApi()

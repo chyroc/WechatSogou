@@ -10,6 +10,7 @@ wechatsogou.egg-info
 dist
 setup.py
 README.rst
-demo/cache
 demo/yu_save.py
 demo/wechatsogou
+demo
+log.txt

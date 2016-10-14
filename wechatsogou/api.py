@@ -8,6 +8,10 @@ from lxml import etree
 from .basic import WechatSogouBasic
 from .exceptions import *
 
+import logging
+
+logger = logging.getLogger()
+
 
 class WechatSogouApi(WechatSogouBasic):
     """基于搜狗搜索的的微信公众号爬虫接口  接口类
@@ -325,6 +329,7 @@ class WechatSogouApi(WechatSogouBasic):
         ret = comment_dict['base_resp']['ret']
         errmsg = comment_dict['base_resp']['errmsg'] if comment_dict['base_resp']['errmsg'] else 'ret:' + str(ret)
         if ret != 0:
+            logger.error(errmsg)
             raise WechatSogouException(errmsg)
         return comment_dict
 
@@ -342,6 +347,7 @@ class WechatSogouApi(WechatSogouBasic):
             yuan = re.findall('var msg_link = "(.*?)";', text)[0].replace('amp;', '')
         except IndexError as e:
             if '系统出错' not in text:
+                logger.error(e)
                 print(e)
                 print(text)
 
@@ -442,7 +448,8 @@ class WechatSogouApi(WechatSogouBasic):
         """
         try:
             keyword = str(keyword) if type(keyword) != str else keyword
-        except:
+        except Exception as e:
+            logger.error('get_sugg keyword error', e)
             raise WechatSogouException('get_sugg keyword error')
         url = 'http://w.sugg.sogou.com/sugg/ajaj_json.jsp?key=' + keyword + '&type=wxpub&pr=web'
         text = self._get(url, 'get', host='w.sugg.sogou.com')
@@ -450,7 +457,8 @@ class WechatSogouApi(WechatSogouBasic):
             sugg = re.findall(u'\["' + keyword + '",(.*?),\["', text)[0]
             sugg = eval(sugg)
             return sugg
-        except:
+        except Exception as e:
+            logger.error('sugg refind error', e)
             raise WechatSogouException('sugg refind error')
 
     def deal_mass_send_msg(self, url, wechatid):
@@ -471,8 +479,10 @@ class WechatSogouApi(WechatSogouBasic):
                 self._cache_history_session(wechatid, session)
 
             except IndexError:
+                logger.error('deal_mass_send_msg error. maybe you should get the mp url again')
                 raise WechatSogouHistoryMsgException('deal_mass_send_msg error. maybe you should get the mp url again')
         else:
+            logger.error('requests status_code error', r.status_code)
             raise WechatSogouRequestsException('requests status_code error', r.status_code)
 
     def deal_mass_send_msg_page(self, wechatid, updatecache=True):
@@ -519,7 +529,9 @@ class WechatSogouApi(WechatSogouBasic):
 
                 return msg_dict
             else:
+                logger.error('deal_mass_send_msg_page ret ' + str(rdic['ret']) + ' errmsg ' + rdic['errmsg'])
                 raise WechatSogouHistoryMsgException(
                     'deal_mass_send_msg_page ret ' + str(rdic['ret']) + ' errmsg ' + rdic['errmsg'])
         except AttributeError:
+            logger.error('deal_mass_send_msg_page error, please delete cache file')
             raise WechatSogouHistoryMsgException('deal_mass_send_msg_page error, please delete cache file')

@@ -14,6 +14,12 @@
 
 参见[test.py](https://github.com/Chyroc/WechatSogou/blob/master/test.py)
 
+## 日志
+
+    import logging
+    import logging.config
+    logging.config.fileConfig('logging.conf')
+    logger = logging.getLogger()
 ## 引用
 
     from wechatsogou import *

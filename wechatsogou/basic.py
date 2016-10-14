@@ -1,5 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import logging
+import requests
+import random
+import time
+import re
+from lxml import etree
+from PIL import Image
+
 try:
     from urllib.request import quote as quote
 except ImportError:
@@ -8,10 +16,6 @@ except ImportError:
 
     reload(sys)
     sys.setdefaultencoding('utf-8')
-import requests
-import random
-import time
-import re
 
 try:
     import StringIO
@@ -33,14 +37,15 @@ try:
 except ImportError:
     import urllib.parse as url_parse
 
-from lxml import etree
-from PIL import Image
-
 from . import config
 from .base import WechatSogouBase
 from .exceptions import *
 from .ruokuaicode import RClient
 from .filecache import WechatCache
+
+import logging
+
+logger = logging.getLogger()
 
 
 class WechatSogouBasic(WechatSogouBase):
@@ -54,7 +59,6 @@ class WechatSogouBasic(WechatSogouBase):
 
         ocr_config = kwargs.get('ocr_config')
         if ocr_config:
-
             if ocr_config['type'] == 'ruokuai':
                 dama_name = ocr_config.get('dama_name')
                 dama_pswd = ocr_config.get('dama_pswd')
@@ -145,6 +149,7 @@ class WechatSogouBasic(WechatSogouBase):
                 self._vcode_url = url
                 raise WechatSogouVcodeException('weixin.sogou.com verification code')
         else:
+            logger.error('requests status_code error', r.status_code)
             raise WechatSogouRequestsException('requests status_code error', r.status_code)
         return r.text
 
@@ -157,6 +162,7 @@ class WechatSogouBasic(WechatSogouBase):
         Raises:
             WechatSogouVcodeException: 解封失败，可能验证码识别失败
         """
+        logger.debug('vcode appear, using _jiefeng')
         codeurl = 'http://weixin.sogou.com/antispider/util/seccode.php?tc=' + str(time.time())[0:10]
         coder = self._session.get(codeurl)
         if hasattr(self, '_ocr'):
@@ -181,11 +187,13 @@ class WechatSogouBasic(WechatSogouBase):
         rr = self._session.post(post_url, post_data, headers=headers)
         remsg = eval(rr.content)
         if remsg['code'] != 0:
+            logger.error('cannot jiefeng because ' + remsg['msg'])
             raise WechatSogouVcodeException('cannot jiefeng because ' + remsg['msg'])
         self._cache.set(config.cache_session_name, self._session)
         print('ocr ', remsg['msg'])
 
     def _ocr_for_get_gzh_article_by_url_text(self, url):
+        logger.debug('vcode appear, using _ocr_for_get_gzh_article_by_url_text')
         timestr = str(time.time()).replace('.', '')
         timever = timestr[0:13] + '.' + timestr[13:17]
         codeurl = 'http://mp.weixin.qq.com/mp/verifycode?cert=' + timever
@@ -210,9 +218,10 @@ class WechatSogouBasic(WechatSogouBase):
         rr = self._session.post(post_url, post_data, headers=headers)
         remsg = eval(rr.text)
         if remsg['ret'] != 0:
+            logger.error('cannot jiefeng get_gzh_article  because ' + remsg['errmsg'])
             raise WechatSogouVcodeException('cannot jiefeng get_gzh_article  because ' + remsg['errmsg'])
         self._cache.set(config.cache_session_name, self._session)
-        print('ocr ', remsg['errmsg'])
+        logger.debug('ocr ', remsg['errmsg'])
 
     def _replace_html(self, s):
         """替换html‘&quot;’等转义内容为正常内容
@@ -499,6 +508,7 @@ class WechatSogouBasic(WechatSogouBase):
         ret = related_dict['base_resp']['ret']
         errmsg = related_dict['base_resp']['errmsg'] if related_dict['base_resp']['errmsg'] else 'ret:' + str(ret)
         if ret != 0:
+            logger.error(errmsg)
             raise WechatSogouException(errmsg)
         return related_dict
 
