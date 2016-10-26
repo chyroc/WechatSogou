@@ -473,7 +473,14 @@ class WechatSogouBasic(WechatSogouBase):
                 item['video_src'] = 'https://mp.weixin.qq.com/mp/getcdnvideourl?__biz=' + biz + '&cdn_videoid=' + item[
                     'cdn_videoid'] + '&thumb=' + item['thumb'] + '&uin=' + uin + '&key=' + key
             items.append(item)
-        return items
+
+        items_new = []  # 删除搜狗本身携带的空数据
+        for item in items:
+            if (int(item['type']) == 49) and (not item['content_url']):
+                pass
+            else:
+                items_new.append(item)
+        return items_new
 
     def _get_gzh_article_text(self, url):
         """获取文章文本
