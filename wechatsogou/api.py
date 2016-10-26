@@ -346,12 +346,24 @@ class WechatSogouApi(WechatSogouBasic):
         try:
             yuan = re.findall('var msg_link = "(.*?)";', text)[0].replace('amp;', '')
         except IndexError as e:
-            if '系统出错' not in text:
+            if '系统出错' in text:
+                logger.debug('系统出错 - 链接问题，正常')
+            elif '此内容因违规无法查看' in text:
+                logger.debug('此内容因违规无法查看 - 剔除此类文章')
+            else:
                 logger.error(e)
-                print(e)
-                print(text)
+
+                if url:
+                    logger.error(url)
+                else:
+                    title = re.findall('<title>(.*?)</title>', text)
+                    if title:
+                        logger.error(title[0])
+                    else:
+                        logger.error(text)
 
             raise WechatSogouBreakException()
+
         return yuan
 
     def deal_article(self, url, title=None):
