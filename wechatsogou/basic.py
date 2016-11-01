@@ -37,6 +37,12 @@ try:
 except ImportError:
     import urllib.parse as url_parse
 
+def printf(msg=''):
+    try:
+        return raw_input(msg)
+    except NameError:
+        return input(msg)
+
 from . import config
 from .base import WechatSogouBase
 from .exceptions import *
@@ -171,7 +177,7 @@ class WechatSogouBasic(WechatSogouBase):
         else:
             im = readimg(coder.content)
             im.show()
-            img_code = input("please input code: ")
+            img_code = printf("please input code: ")
         post_url = 'http://weixin.sogou.com/antispider/thank.php'
         post_data = {
             'c': img_code,
@@ -204,7 +210,7 @@ class WechatSogouBasic(WechatSogouBase):
         else:
             im = readimg(coder.content)
             im.show()
-            img_code = input("please input code: ")
+            img_code = printf("please input code: ")
         post_url = 'http://mp.weixin.qq.com/mp/verifycode'
         post_data = {
             'cert': timever,
