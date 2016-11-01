@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from .api import WechatSogouApi
-from .db import mysql
 from .filecache import WechatCache
 
-__all__ = ['WechatSogouApi', 'WechatCache', 'mysql']
+__all__ = ['WechatSogouApi', 'WechatCache']
 
-__version__ = "1.1.8"
+__version__ = "1.1.9"

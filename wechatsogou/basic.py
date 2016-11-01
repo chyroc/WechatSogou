@@ -128,7 +128,7 @@ class WechatSogouBasic(WechatSogouBase):
         """
         referer = kwargs.get('referer', None)
         host = kwargs.get('host', None)
-        if host:
+        if host or (host == ''):
             del kwargs['host']
         if referer:
             del kwargs['referer']
