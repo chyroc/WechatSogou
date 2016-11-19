@@ -59,11 +59,15 @@ class WechatSogouApi(WechatSogouBasic):
             cache_re = re.split(u'微信号：|功能介绍：|认证：|最近文章：', cache_list[0])
             name.append(cache_re[0])
             wechatid.append(cache_re[1])
-            if "authnamewrite" in cache_re[2]:
-                jieshao.append(re.sub("authnamewrite\('[0-9]'\)", "", cache_re[2]))
-                renzhen.append(cache_re[3])
+            if len(cache_re) > 2:
+                if "authnamewrite" in cache_re[2]:
+                    jieshao.append(re.sub("authnamewrite\('[0-9]'\)", "", cache_re[2]))
+                    renzhen.append(cache_re[3])
+                else:
+                    jieshao.append(cache_re[2])
+                    renzhen.append('')
             else:
-                jieshao.append(cache_re[2])
+                jieshao.append('')
                 renzhen.append('')
         qrcodes = list()
         info_qrcodes = page.xpath(u"//div[@class='pos-ico']/div/img")
