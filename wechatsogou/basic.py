@@ -37,11 +37,13 @@ try:
 except ImportError:
     import urllib.parse as url_parse
 
+
 def printf(msg=''):
     try:
         return raw_input(msg)
     except NameError:
         return input(msg)
+
 
 from . import config
 from .base import WechatSogouBase
@@ -222,9 +224,11 @@ class WechatSogouBasic(WechatSogouBase):
             'Referer': url
         }
         rr = self._session.post(post_url, post_data, headers=headers)
+        print(rr.text)
         remsg = eval(rr.text)
         if remsg['ret'] != 0:
             logger.error('cannot jiefeng get_gzh_article  because ' + remsg['errmsg'])
+            print(remsg)
             raise WechatSogouVcodeException('cannot jiefeng get_gzh_article  because ' + remsg['errmsg'])
         self._cache.set(config.cache_session_name, self._session)
         logger.debug('ocr ', remsg['errmsg'])
@@ -394,7 +398,8 @@ class WechatSogouBasic(WechatSogouBase):
         Returns:
             msgdict: 最近文章信息字典
         """
-        msglist = re.findall("var msgList = '(.+?)';", text, re.S)[0]
+        msglist = re.findall("var msgList =(.+?)};", text, re.S)[0]
+        msglist = msglist + '}'
         msgdict = eval(self._replace_html(msglist))
         return msgdict
 
