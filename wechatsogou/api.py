@@ -59,6 +59,8 @@ class WechatSogouApi(WechatSogouBasic):
             cache_re = re.split(u'微信号：|功能介绍：|认证：|最近文章：', cache_list[0])
             name.append(cache_re[0])
             wechatid.append(cache_re[1])
+            for i in range(4 - len(cache_re)):
+                cache_re.append('')
             if "authnamewrite" in cache_re[2]:
                 jieshao.append(re.sub("authnamewrite\('[0-9]'\)", "", cache_re[2]))
                 renzhen.append(cache_re[3])
