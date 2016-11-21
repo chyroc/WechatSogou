@@ -475,30 +475,6 @@ class WechatSogouApi(WechatSogouBasic):
             logger.error('sugg refind error', e)
             raise WechatSogouException('sugg refind error')
 
-    def deal_mass_send_msg(self, url, wechatid):
-        """解析 历史消息
-
-        ::param url是抓包获取的历史消息页
-        """
-        session = requests.session()
-        r = session.get(url, verify=False)
-        if r.status_code == requests.codes.ok:
-            try:
-                biz = re.findall('biz = \'(.*?)\',', r.text)[0]
-                key = re.findall('key = \'(.*?)\',', r.text)[0]
-                uin = re.findall('uin = \'(.*?)\',', r.text)[0]
-                pass_ticket = self._get_url_param(url).get('pass_ticket', [''])[0]
-
-                self._uinkeybiz(wechatid, uin, key, biz, pass_ticket, 0)
-                self._cache_history_session(wechatid, session)
-
-            except IndexError:
-                logger.error('deal_mass_send_msg error. maybe you should get the mp url again')
-                raise WechatSogouHistoryMsgException('deal_mass_send_msg error. maybe you should get the mp url again')
-        else:
-            logger.error('requests status_code error', r.status_code)
-            raise WechatSogouRequestsException('requests status_code error', r.status_code)
-
     def deal_mass_send_msg_page(self, wechatid, updatecache=True):
         url = 'http://mp.weixin.qq.com/mp/getmasssendmsg?'
         uin, key, biz, pass_ticket, frommsgid = self._uinkeybiz(wechatid)
