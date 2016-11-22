@@ -400,7 +400,8 @@ class WechatSogouBasic(WechatSogouBase):
         """
         msglist = re.findall("var msgList =(.+?)};", text, re.S)[0]
         msglist = msglist + '}'
-        msgdict = eval(self._replace_html(msglist))
+        msgdict = eval(msglist)
+        msgdict = self._replace_all(msgdict)
         return msgdict
 
     def _deal_gzh_article_dict(self, msgdict, **kwargs):
@@ -492,17 +493,6 @@ class WechatSogouBasic(WechatSogouBase):
             else:
                 items_new.append(item)
         return items_new
-
-    def _get_gzh_article_text(self, url):
-        """获取文章文本
-
-        Args:
-            url: 文章链接
-
-        Returns:
-            text: 文章文本
-        """
-        return self._get(url, 'get', host='mp.weixin.qq.com')
 
     def _deal_related(self, url, title):
         """获取文章相似文章
