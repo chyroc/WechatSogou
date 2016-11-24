@@ -8,7 +8,6 @@
 学生党，过年想攒个PS4，各位好汉乐意就给个赞助~
 
 <img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/pay_zfb.jpg" width="250" />
-
 <img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/pay_wx.jpg" width="250" />
 
 # 项目简介
