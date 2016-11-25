@@ -39,52 +39,41 @@ class WechatSogouApi(WechatSogouBasic):
         """
         text = self._search_gzh_text(name, page)
         page = etree.HTML(text)
-        img = list()
-        info_imgs = page.xpath(u"//div[@class='img-box']/img")
-        for info_img in info_imgs:
-            img.append(info_img.attrib['src'])
-        url = list()
-        info_urls = page.xpath(u"//div[@target='_blank']")
-        for info_url in info_urls:
-            url.append(info_url.attrib['href'])
-        name = list()
-        wechatid = list()
-        jieshao = list()
-        renzhen = list()
-        info_instructions = page.xpath(u"//div[@class='txt-box']")
-        for info_instruction in info_instructions:
-            cache = self._get_elem_text(info_instruction)
-            cache = cache.replace('red_beg', '').replace('red_end', '')
-            cache_list = cache.split('\n')
-            cache_re = re.split(u'微信号：|功能介绍：|认证：|最近文章：', cache_list[0])
-            name.append(cache_re[0])
-            wechatid.append(cache_re[1])
-            for i in range(4 - len(cache_re)):
-                cache_re.append('')
-            if "authnamewrite" in cache_re[2]:
-                jieshao.append(re.sub("authnamewrite\('[0-9]'\)", "", cache_re[2]))
-                renzhen.append(cache_re[3])
-            else:
-                jieshao.append(cache_re[2])
-                renzhen.append('')
-        qrcodes = list()
-        info_qrcodes = page.xpath(u"//div[@class='pos-ico']/div/img")
-        for info_qrcode in info_qrcodes:
-            qrcodes.append(info_qrcode.attrib['src'])
-        returns = list()
-        for i in range(len(qrcodes)):
-            returns.append(
-                {
-                    'name': name[i],
-                    'wechatid': wechatid[i],
-                    'jieshao': jieshao[i],
-                    'renzhen': renzhen[i],
-                    'qrcode': qrcodes[i],
-                    'img': img[i],
-                    'url': url[i]
-                }
-            )
-        return returns
+        lis = page.xpath('//ul[@class="news-list2"]/li')
+        relist = []
+        for li in lis:
+            url = li.xpath('div/div[1]/a/@href')
+            img = li.xpath('div/div[1]/a/img/@src')
+            name = self._get_elem_text(li.xpath('div/div[2]/p[1]')[0])
+            info = self._get_elem_text(li.xpath('div/div[2]/p[2]')[0])
+            info = re.split('微信号:|月发文|篇|平均阅读', info)
+            try:
+                wechatid = info[1]
+            except IndexError:
+                wechatid = ''
+            try:
+                post_perm = info[2]
+            except IndexError:
+                post_perm = 0
+            try:
+                read_count = info[4]
+            except IndexError:
+                read_count = 0
+            qrcode = li.xpath('div/div[3]/span/img[1]/@src')
+            jieshao = self._get_elem_text(li.xpath('dl[1]/dd')[0])
+            renzhen = li.xpath('dl[2]/dd/text()')
+            relist.append({
+                'url': url[0],
+                'img': img[0],
+                'name': name.replace('red_beg', '').replace('red_end', ''),
+                'wechatid': wechatid,
+                'post_perm': post_perm,
+                'read_count': read_count,
+                'qrcode': qrcode[0],
+                'jieshao': jieshao.replace('red_beg', '').replace('red_end', ''),
+                'renzhen': renzhen[0]
+            })
+        return relist
 
     def get_gzh_info(self, wechatid):
         """获取公众号微信号wechatid的信息
@@ -384,12 +373,10 @@ class WechatSogouApi(WechatSogouBasic):
             content: 文章内容
         """
         text = self._get_gzh_article_text(url)
-        yuan_url = re.findall('var msg_link = "(.*?)";', text)[0].replace('amp;', '')
 
         comment = self.deal_article_comment(text=text)
         content_html = self.deal_article_content(text=text)
         retu = {
-            'yuan': yuan_url,
             'comment': comment,
             'content_html': content_html
         }

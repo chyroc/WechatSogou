@@ -49,6 +49,8 @@ renzhen|认证信息，为空表示未认证
 qrcode|二维码图片地址
 img|头像地址
 url|最近文章地址
+post_perm|月发文篇数
+read_count|平均阅读
 
 ## 获取公众号
 对于一个已知`wechatid`的公众号
