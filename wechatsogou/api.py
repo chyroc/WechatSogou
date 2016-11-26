@@ -52,11 +52,11 @@ class WechatSogouApi(WechatSogouBasic):
             except IndexError:
                 wechatid = ''
             try:
-                post_perm = info[2]
+                post_perm = int(info[2])
             except IndexError:
                 post_perm = 0
             try:
-                read_count = info[4]
+                read_count = int(info[4])
             except IndexError:
                 read_count = 0
             qrcode = li.xpath('div/div[3]/span/img[1]/@src')
