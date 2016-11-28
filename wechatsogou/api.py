@@ -69,9 +69,9 @@ class WechatSogouApi(WechatSogouBasic):
                 'wechatid': wechatid,
                 'post_perm': post_perm,
                 'read_count': read_count,
-                'qrcode': qrcode[0],
+                'qrcode': qrcode[0] if qrcode else '',
                 'jieshao': jieshao.replace('red_beg', '').replace('red_end', ''),
-                'renzhen': renzhen[0]
+                'renzhen': renzhen[0] if renzhen else ''
             })
         return relist
 
