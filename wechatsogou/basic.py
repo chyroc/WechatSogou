@@ -46,7 +46,6 @@ def printf(msg=''):
 
 
 from . import config
-from .base import WechatSogouBase
 from .exceptions import *
 from .ruokuaicode import RClient
 from .filecache import WechatCache
@@ -56,7 +55,7 @@ import logging
 logger = logging.getLogger()
 
 
-class WechatSogouBasic(WechatSogouBase):
+class WechatSogouBasic(object):
     """基于搜狗搜索的的微信公众号爬虫接口 基本功能类
     """
 
