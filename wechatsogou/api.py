@@ -70,8 +70,8 @@ class WechatSogouApi(WechatSogouBasic):
                 'post_perm': post_perm,
                 'read_count': read_count,
                 'qrcode': qrcode[0] if qrcode else '',
-                'jieshao': jieshao.replace('red_beg', '').replace('red_end', ''),
-                'renzhen': renzhen[0] if renzhen else ''
+                'introduction': jieshao.replace('red_beg', '').replace('red_end', ''),
+                'authentication': renzhen[0] if renzhen else ''
             })
         return relist
 
@@ -156,10 +156,10 @@ class WechatSogouApi(WechatSogouBasic):
                     'name': name[i],
                     'url': url[i],
                     'img': img[i],
-                    'zhaiyao': zhaiyao[i],
-                    'gzhname': gzhname[i],
-                    'gzhqrcodes': gzhqrcodes[i],
-                    'gzhurl': gzhurl[i],
+                    'abstract': zhaiyao[i],
+                    'gzh_name': gzhname[i],
+                    'gzh_qrcodes': gzhqrcodes[i],
+                    'gzh_url': gzhurl[i],
                     'time': time[i]
                 }
             )
