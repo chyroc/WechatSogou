@@ -46,7 +46,6 @@ def printf(msg=''):
 
 
 from . import config
-from .base import WechatSogouBase
 from .exceptions import *
 from .ruokuaicode import RClient
 from .filecache import WechatCache
@@ -56,7 +55,7 @@ import logging
 logger = logging.getLogger()
 
 
-class WechatSogouBasic(WechatSogouBase):
+class WechatSogouBasic(object):
     """基于搜狗搜索的的微信公众号爬虫接口 基本功能类
     """
 
@@ -149,8 +148,8 @@ class WechatSogouBasic(WechatSogouBase):
             r = self._session.get(url, headers=headers, **kwargs)
         else:
             data = kwargs.get('data', None)
-            json = kwargs.get('json', None)
-            r = self._session.post(url, data=data, json=json, headers=headers, **kwargs)
+            par_json = kwargs.get('json', None)
+            r = self._session.post(url, data=data, json=par_json, headers=headers, **kwargs)
         if r.status_code == requests.codes.ok:
             r.encoding = self._get_encoding_from_reponse(r)
             if u'用户您好，您的访问过于频繁，为确认本次访问为正常用户行为，需要您协助验证' in r.text:
@@ -382,8 +381,8 @@ class WechatSogouBasic(WechatSogouBase):
         return {
             'name': name,
             'wechatid': wechatid,
-            'jieshao': jieshao,
-            'renzhen': renzhen,
+            'introduction': jieshao,
+            'authentication': renzhen,
             'qrcode': qrcode,
             'img': img,
             'url': url

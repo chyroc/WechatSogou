@@ -3,10 +3,8 @@
 import requests
 from hashlib import md5
 
-from .base import WechatSogouBase
 
-class RClient(WechatSogouBase):
-
+class RClient(object):
     def __init__(self, username, password, soft_id, soft_key):
         self.username = username
         self.password = md5(password.encode('utf-8')).hexdigest()

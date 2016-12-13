@@ -12,7 +12,7 @@ logger = logging.getLogger()
 
 # 实例
 wechats = WechatSogouApi()
-
+exit()
 # 搜索一个微信公众号
 name = '南京航空航天大学'
 wechat_infos = wechats.search_gzh_info(name)

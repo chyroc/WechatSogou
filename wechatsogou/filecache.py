@@ -2,9 +2,8 @@
 
 from werkzeug.contrib.cache import FileSystemCache
 
-from .base import WechatSogouBase
 
-class WechatCache(WechatSogouBase):
+class WechatCache(object):
     """基于文件的缓存
 
     """
