@@ -13,6 +13,6 @@ class RuokuaicodeTest(unittest.TestCase):
         result_str = result['Result'].lower()
         assert result_str == '61xmv3'
 
-                      ∫
+
 if __name__ == '__main__':
     unittest.main()
