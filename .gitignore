@@ -17,3 +17,4 @@ log.txt
 web
 wechatid.txt
 .DS_Store
+test/config.py
