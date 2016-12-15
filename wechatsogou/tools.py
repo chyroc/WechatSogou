@@ -11,7 +11,7 @@ def prdict(content):
 def list_or_empty(content, contype=None):
     if isinstance(content, list):
         if content:
-            return contype(content[0]) if contype else  content[0]
+            return contype(content[0]) if contype else content[0]
         else:
             if contype:
                 if contype == int:
@@ -29,5 +29,5 @@ def list_or_empty(content, contype=None):
 
 
 if __name__ == '__main__':
-    aa = list_or_empty([], list)
+    aa = list_or_empty(['list'])
     print(aa, type(aa))

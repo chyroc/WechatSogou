@@ -2,6 +2,7 @@
 
 import re
 import time
+import requests
 from pprint import pprint
 from lxml import etree
 
@@ -422,13 +423,27 @@ class WechatSogouApi(WechatSogouBasic):
             page_str = str(page)
         url = 'http://weixin.sogou.com/pcindex/pc/pc_' + str(kind) + '/' + page_str + '.html'
         try:
-            text = self._get(url)
+            r = requests.get(url)
+            r.encoding = 'utf-8'
+            text = r.text
             page = etree.HTML(text)
-            recent_article_urls = page.xpath('//li/div[@class="pos-wxrw"]/a/@href')
+            lis = page.xpath('//ul[@class="news-list"]/li')
             reurls = []
-            for reurl in recent_article_urls:
-                if 'mp.weixin.qq.com' in reurl:
-                    reurls.append(reurl)
+            for li in lis:
+                url = li.xpath('div[1]/a/@href')
+                img = li.xpath('div[1]/a/img/@src')
+                title = li.xpath('div[2]/h3/a/text()')
+                time = li.xpath('div[2]/div/@t')
+                gzh_name = li.xpath('div[2]/div/a/text()')
+                gzh_article_list_url = li.xpath('div[2]/div/a/@href')
+                reurls.append({
+                    'url': list_or_empty(url),
+                    'img': list_or_empty(img),
+                    'title': list_or_empty(title),
+                    'time': list_or_empty(time, int),
+                    'gzh_name': list_or_empty(gzh_name),
+                    'gzh_article_list_url': list_or_empty(gzh_article_list_url)
+                })
             return reurls
         except WechatSogouRequestsException as e:
             if e.status_code == 404:
