@@ -209,6 +209,7 @@ class WechatSogouBasic(object):
             result = self._ocr.create(coder.content, 2040)
             img_code = result['Result']
         else:
+            result = None
             im = readimg(coder.content)
             im.show()
             img_code = printf("please input code: ")
@@ -231,6 +232,7 @@ class WechatSogouBasic(object):
             raise WechatSogouVcodeException('cannot jiefeng get_gzh_article  because ' + remsg['errmsg'])
         self._cache.set(config.cache_session_name, self._session)
         logger.debug('ocr ', remsg['errmsg'])
+        return result
 
     def _replace_html(self, s):
         """替换html‘&quot;’等转义内容为正常内容
@@ -339,12 +341,24 @@ class WechatSogouBasic(object):
         Returns:
             text: 返回的文本
         """
-
-        text = self._get(url, 'get', host='mp.weixin.qq.com')
-        if u'为了保护你的网络安全，请输入验证码' in text:
-            self._ocr_for_get_gzh_article_by_url_text(url)
-
+        if hasattr(self, '_get_gzh_article_by_url_text_counter'):
+            self._get_gzh_article_by_url_text_counter += 1
+            text = ''
+        else:
             text = self._get(url, 'get', host='mp.weixin.qq.com')
+            self._get_gzh_article_by_url_text_counter = 1
+
+        if u'为了保护你的网络安全，请输入验证码' in text or self._get_gzh_article_by_url_text_counter > 1:
+            result = self._ocr_for_get_gzh_article_by_url_text(url)
+            text = self._get(url, 'get', host='mp.weixin.qq.com')
+            if '验证码有误' in text:
+                print('验证时输入错误')
+                if result:
+                    self._ocr.report_error(result['Id'])
+                if self._get_gzh_article_by_url_text_counter > 1:
+                    raise WechatSogouVcodeOcrException('验证码识别错误 url:{}'.format(url))
+
+                self._get_gzh_article_by_url_text(url)
         return text
 
     def _get_gzh_article_gzh_by_url_dict(self, text, url):

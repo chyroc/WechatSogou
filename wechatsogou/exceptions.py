@@ -12,6 +12,10 @@ class WechatSogouVcodeException(WechatSogouException):
     pass
 
 
+class WechatSogouVcodeOcrException(WechatSogouException):
+    """基于搜狗搜索的的微信公众号爬虫接口 验证码 识别错误 异常类
+    """
+    pass
 class WechatSogouJsonException(WechatSogouException):
     """基于搜狗搜索的的微信公众号爬虫接口 非标准json数据 异常类
     """
