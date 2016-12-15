@@ -24,6 +24,11 @@ class ApiTest(unittest.TestCase):
         wechat_name = [wechat_info['name'] for wechat_info in wechat_infos]
         assert name in wechat_name
 
+    def test_get_gzh_info(self):
+        wechat_id = 'nanhangqinggong'
+        wechat_info = self.api.get_gzh_info(wechat_id)
+        assert '南航青年志愿者' == wechat_info['name']
+
 
 if __name__ == '__main__':
     unittest.main()
