@@ -2,11 +2,12 @@
 
 import re
 import time
+from pprint import pprint
 from lxml import etree
 
 from .basic import WechatSogouBasic
 from .exceptions import *
-
+from .tools import *
 import logging
 
 logger = logging.getLogger()
@@ -116,53 +117,69 @@ class WechatSogouApi(WechatSogouBasic):
         """
         text = self._search_article_text(name, page)
         page = etree.HTML(text)
-        img = list()
-        info_imgs = page.xpath(u"//div[@class='wx-rb wx-rb3']/div[1]/a/img")
-        for info_img in info_imgs:
-            img.append(info_img.attrib['src'])
-        url = list()
-        info_urls = page.xpath(u"//div[@class='wx-rb wx-rb3']/div[2]/h4/a")
-        for info_url in info_urls:
-            url.append(info_url.attrib['href'])
-        name = list()
-        info_names = page.xpath(u"//div[@class='wx-rb wx-rb3']/div[2]/h4")
-        for info_name in info_names:
-            cache = self._get_elem_text(info_name)
-            cache = cache.replace('red_beg', '').replace('red_end', '')
-            name.append(cache)
-        zhaiyao = list()
-        info_zhaiyaos = page.xpath(u"//div[@class='wx-rb wx-rb3']/div[2]/p")
-        for info_zhaiyao in info_zhaiyaos:
-            cache = self._get_elem_text(info_zhaiyao)
-            cache = cache.replace('red_beg', '').replace('red_end', '')
-            zhaiyao.append(cache)
-        gzhname = list()
-        gzhqrcodes = list()
-        gzhurl = list()
-        info_gzhs = page.xpath(u"//div[@class='wx-rb wx-rb3']/div[2]/div/a")
-        for info_gzh in info_gzhs:
-            gzhname.append(info_gzh.attrib['title'])
-            gzhqrcodes.append(info_gzh.attrib['data-encqrcodeurl'])
-            gzhurl.append(info_gzh.attrib['href'])
-        time = list()
-        info_times = page.xpath(u"//div[@class='wx-rb wx-rb3']/div[2]/div/span/script/text()")
-        for info_time in info_times:
-            time.append(re.findall('vrTimeHandle552write\(\'(.*?)\'\)', info_time)[0])
-        returns = list()
-        for i in range(len(url)):
-            returns.append(
-                {
-                    'name': name[i],
-                    'url': url[i],
-                    'img': img[i],
-                    'abstract': zhaiyao[i],
-                    'gzh_name': gzhname[i],
-                    'gzh_qrcodes': gzhqrcodes[i],
-                    'gzh_url': gzhurl[i],
-                    'time': time[i]
+        articles = []
+        lis = page.xpath('//ul[@class="news-list"]/li')
+        for li in lis:
+            url = li.xpath('div[1]/a/@href')
+            if url:
+                title = li.xpath('div[2]/h3/a')
+                imgs = li.xpath('div[1]/a/img/@src')
+                abstract = li.xpath('div[2]/p')
+                time = li.xpath('div[2]/div/span/script/text()')
+                gzh_info = li.xpath('div[2]/div/a')[0]
+            else:
+                url = li.xpath('div/h3/a/@href')
+                title = li.xpath('div/h3/a')
+                imgs = []
+                spans = li.xpath('div/div[1]/a')
+                for span in spans:
+                    img = span.xpath('span/img/@src')
+                    if img:
+                        imgs.append(img)
+                abstract = li.xpath('div/p')
+                time = li.xpath('div/div[2]/span/script/text()')
+                gzh_info = li.xpath('div/div[2]/a')[0]
+
+            if title:
+                title = self._get_elem_text(title[0]).replace("red_beg", "").replace("red_end", "")
+            else:
+                title = ''
+            if abstract:
+                abstract = self._get_elem_text(abstract[0]).replace("red_beg", "").replace("red_end", "")
+            else:
+                abstract = ''
+            time = list_or_empty(time)
+            time = re.findall('timeConvert\(\'(.*?)\'\)', time)
+            time = list_or_empty(time, int)
+            gzh_article_url = gzh_info.xpath('@href')
+            gzh_headimage = gzh_info.xpath('@data-headimage')
+            gzh_qrcodeurl = gzh_info.xpath('@data-encqrcodeurl')
+            gzh_name = gzh_info.xpath('@data-sourcename')
+            gzh_wechatid = gzh_info.xpath('@data-username')
+            gzh_isv = gzh_info.xpath('@data-isv')
+            gzh_avgpublish = gzh_info.xpath('@data-avgpublish')
+            gzh_avgread = gzh_info.xpath('@data-avgread')
+
+            articles.append({
+                'article': {
+                    'title': title,
+                    'url': list_or_empty(url),
+                    'imgs': imgs,
+                    'abstract': abstract,
+                    'time': time
+                },
+                'gzh': {
+                    'article_list_url': list_or_empty(gzh_article_url),
+                    'headimage': list_or_empty((gzh_headimage)),
+                    'qrcodeurl': list_or_empty((gzh_qrcodeurl)),
+                    'name': list_or_empty(gzh_name),
+                    'wechatid': list_or_empty(gzh_wechatid),
+                    'isv': list_or_empty(gzh_isv, int),
+                    'avgpublish': list_or_empty(gzh_avgpublish, int),
+                    'avgread': list_or_empty(gzh_avgread, int)
                 }
-            )
-        return returns
+            })
+        return articles
 
     def get_gzh_message(self, **kwargs):
         """解析最近文章页  或  解析历史消息记录
