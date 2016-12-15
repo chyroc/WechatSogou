@@ -29,6 +29,14 @@ class ApiTest(unittest.TestCase):
         wechat_info = self.api.get_gzh_info(wechat_id)
         assert '南航青年志愿者' == wechat_info['name']
 
+    def test_search_article_info(self):
+        keywords = '马达数据与虎嗅F&M节的亲密接触'
+        wechat_articles = self.api.search_article_info(keywords)
+        times = [wechat_article['article']['time'] for wechat_article in wechat_articles]
+        names = [wechat_article['gzh']['name'] for wechat_article in wechat_articles]
+        assert 1481244814 in times
+        assert '马达数据' in names
+
 
 if __name__ == '__main__':
     unittest.main()
