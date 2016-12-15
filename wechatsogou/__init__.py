@@ -5,4 +5,4 @@ from .filecache import WechatCache
 
 __all__ = ['WechatSogouApi', 'WechatCache']
 
-__version__ = "1.1.10"
+__version__ = "2.0.0"
