@@ -48,6 +48,10 @@ class ApiTest(unittest.TestCase):
         assert len(data_all['gzh_messages']) > 2
         assert len(data_all['gzh_messages'][0]['title']) > 2
 
+    def test_get_recent_article_url_by_index_single(self):
+        articles_single = self.api.get_recent_article_url_by_index_single()
+        assert len(articles_single) == 20
+
 
 if __name__ == '__main__':
     unittest.main()
