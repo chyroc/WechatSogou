@@ -42,6 +42,12 @@ class ApiTest(unittest.TestCase):
         assert len(data) > 2
         assert len(data[0]['title']) > 2
 
+    def test_get_gzh_message_and_info(self):
+        data_all = self.api.get_gzh_message_and_info(wechatid='madadata')
+        assert '北京马达加科技有限公司' == data_all['gzh_info']['authentication']
+        assert len(data_all['gzh_messages']) > 2
+        assert len(data_all['gzh_messages'][0]['title']) > 2
+
 
 if __name__ == '__main__':
     unittest.main()
