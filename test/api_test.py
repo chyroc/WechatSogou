@@ -2,8 +2,8 @@
 
 import unittest
 from pprint import pprint
-
-import wechatsogou
+from .. import wechatsogou
+# import wechatsogou
 import env_variable
 
 

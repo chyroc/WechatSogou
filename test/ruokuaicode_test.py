@@ -1,7 +1,8 @@
 import unittest
 
 import env_variable
-from wechatsogou.ruokuaicode import RClient
+# from .. import wechatsogou
+from ..wechatsogou.ruokuaicode import RClient
 
 
 class RuokuaicodeTest(unittest.TestCase):
