@@ -6,8 +6,6 @@ python:
 
 before_script:
 - pip install -r requirements.txt
-- pip install requests
-- pip install feedparser
 
 script:
 - python test/travisci_test.py
