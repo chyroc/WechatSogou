@@ -21,4 +21,5 @@ before_script:
 - pip install -r requirements.txt
 
 script:
-- if [[ $OCR_RUOKUAI ]]; then python test/travisci_test.py $OCR_RUOKUAI $RUOKUAI_USERNAME $RUOKUAI_PASSWORD $RUOKUAI_SOFT_ID $RUOKUAI_SOFT_KEY; fi
+- if [[ $OCR_RUOKUAI ]]; then python test/ruokuaicode_test.py $OCR_RUOKUAI $RUOKUAI_USERNAME $RUOKUAI_PASSWORD $RUOKUAI_SOFT_ID $RUOKUAI_SOFT_KEY; fi
+- if [[ $OCR_RUOKUAI ]]; then python test/api_test.py $OCR_RUOKUAI $RUOKUAI_USERNAME $RUOKUAI_PASSWORD $RUOKUAI_SOFT_ID $RUOKUAI_SOFT_KEY; fi
