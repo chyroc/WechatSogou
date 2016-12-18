@@ -17,8 +17,9 @@ install:
   - pip wheel -r requirements.txt
   - pip install -r requirements.txt
 
-#before_script:
-#- pip install wechatsogou==
+before_script:
+#- pip install wechatsogou
+- export PYTHONPATH=$PYTHONPATH:$(pwd)
 
 script:
 - if [[ $OCR_RUOKUAI ]]; then python test/ruokuaicode_test.py $OCR_RUOKUAI $RUOKUAI_USERNAME $RUOKUAI_PASSWORD $RUOKUAI_SOFT_ID $RUOKUAI_SOFT_KEY; fi
