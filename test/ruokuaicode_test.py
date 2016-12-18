@@ -1,7 +1,7 @@
 import unittest
 
 from test import config
-from wechatsogou.ruokuaicode import RClient
+from wechatsogou import RClient
 
 
 class RuokuaicodeTest(unittest.TestCase):

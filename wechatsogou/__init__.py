@@ -2,7 +2,8 @@
 
 from .api import WechatSogouApi
 from .filecache import WechatCache
+from .ruokuaicode import RClient
 
-__all__ = ['WechatSogouApi', 'WechatCache']
+__all__ = ['WechatSogouApi', 'WechatCache', 'RClient']
 
-__version__ = "2.0.1"
+__version__ = "2.0.3"
