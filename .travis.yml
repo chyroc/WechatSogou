@@ -19,6 +19,7 @@ install:
 
 before_script:
 - pip install -r requirements.txt
+- pip install wechatsogou
 
 script:
 - if [[ $OCR_RUOKUAI ]]; then python test/ruokuaicode_test.py $OCR_RUOKUAI $RUOKUAI_USERNAME $RUOKUAI_PASSWORD $RUOKUAI_SOFT_ID $RUOKUAI_SOFT_KEY; fi
