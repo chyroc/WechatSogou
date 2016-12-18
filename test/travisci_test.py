@@ -6,14 +6,14 @@ try:
     print(1)
     print(ruokuai_name)
 except Exception as e:
-    pass
+    print(e)
 
 try:
     print(2)
     import sys
     print(sys.argv)
 except Exception as e:
-    pass
+    print(e)
 
 
 try:
@@ -21,6 +21,12 @@ try:
     import System
     System.getenv()
 except Exception as e:
-    pass
+    print(e)
 
 
+try:
+    print(4)
+    import System
+    System.getenv("ruokuai_name")
+except Exception as e:
+    print(e)
