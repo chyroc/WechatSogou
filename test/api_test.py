@@ -4,7 +4,7 @@ import unittest
 from pprint import pprint
 
 import wechatsogou
-from test import env_variable
+import env_variable
 
 
 class ApiTest(unittest.TestCase):

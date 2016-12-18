@@ -12,7 +12,7 @@ try:
 except IndexError:
     if not ci_environment:
         try:
-            from test import config
+            import config
 
             if config.soft_key:
                 print('local environment')

@@ -1,11 +1,12 @@
 import unittest
 
-from test import env_variable
+import env_variable
 from wechatsogou.ruokuaicode import RClient
 
 
 class RuokuaicodeTest(unittest.TestCase):
     def test_create(self):
+        s = env_variable
         rc = RClient(env_variable.username, env_variable.password, env_variable.soft_id, env_variable.soft_key)
         with open('code.jpg', 'rb') as f:
             im = f.read()
