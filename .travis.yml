@@ -1,4 +1,4 @@
-language: python #语言种类
+language: python
 
 python:
 - 2.7
@@ -7,6 +7,11 @@ python:
 cache:
   directories:
     - $HOME/.cache/pip
+
+env:
+  global:
+    - PIP_WHEEL_DIR=$HOME/.cache/pip/wheels
+    - PIP_FIND_LINKS=file://$HOME/.cache/pip/wheels
 
 before_script:
 - pip install -r requirements.txt
