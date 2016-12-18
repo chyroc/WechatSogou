@@ -4,17 +4,17 @@ import unittest
 from pprint import pprint
 
 import wechatsogou
-from test import config
+import env_variable
 
 
 class ApiTest(unittest.TestCase):
     def setUp(self):
         ocr_config = {
             'type': 'ruokuai',
-            'dama_name': config.username,
-            'dama_pswd': config.password,
-            'dama_soft_id': config.soft_id,
-            'dama_soft_key': config.soft_key
+            'dama_name': env_variable.username,
+            'dama_pswd': env_variable.password,
+            'dama_soft_id': env_variable.soft_id,
+            'dama_soft_key': env_variable.soft_key
         }
         self.api = wechatsogou.WechatSogouApi(ocr_config=ocr_config)
 

@@ -1,12 +1,13 @@
 import unittest
 
-from test import config
-from wechatsogou.ruokuaicode import RClient
+import env_variable
+from wechatsogou import RClient
 
 
 class RuokuaicodeTest(unittest.TestCase):
     def test_create(self):
-        rc = RClient(config.username, config.password, config.soft_id, config.soft_key)
+        s = env_variable
+        rc = RClient(env_variable.username, env_variable.password, env_variable.soft_id, env_variable.soft_key)
         with open('code.jpg', 'rb') as f:
             im = f.read()
         result = rc.create(im, '3060')
