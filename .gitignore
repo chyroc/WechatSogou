@@ -8,7 +8,6 @@ wechatsogou/ocr
 sprider
 wechatsogou.egg-info
 dist
-README.rst
 demo/yu_save.py
 demo/wechatsogou
 demo
