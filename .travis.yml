@@ -13,6 +13,10 @@ env:
     - PIP_WHEEL_DIR=$HOME/.cache/pip/wheels
     - PIP_FIND_LINKS=file://$HOME/.cache/pip/wheels
 
+install:
+  - pip wheel -r requirements.txt
+  - pip install -r requirements.txt
+
 before_script:
 - pip install -r requirements.txt
 
