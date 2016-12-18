@@ -1,12 +1,13 @@
+import sys
 import unittest
 
+sys.path.append('../')
 import env_variable
 from wechatsogou import RClient
 
 
 class RuokuaicodeTest(unittest.TestCase):
     def test_create(self):
-        s = env_variable
         rc = RClient(env_variable.username, env_variable.password, env_variable.soft_id, env_variable.soft_key)
         with open('code.jpg', 'rb') as f:
             im = f.read()
