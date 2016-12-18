@@ -42,6 +42,10 @@
 
 参见[test.py](https://github.com/Chyroc/WechatSogou/blob/master/test.py)
 
+## 安装
+
+    pip install wechatsogou
+    
 ## 日志
 
     import logging
