@@ -1,1 +1,1 @@
-print(System.getenv())
+print(ruokuai_name)
