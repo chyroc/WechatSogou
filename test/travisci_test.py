@@ -27,6 +27,7 @@ except Exception as e:
 try:
     print(4)
     import os
+    os.environ['']
     os.environ.get('ruokuai_name')
 except Exception as e:
     print(e)
