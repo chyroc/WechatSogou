@@ -4,8 +4,8 @@ import sys
 import unittest
 from pprint import pprint
 
-sys.path.append('../')
-import ..wechatsogou
+sys.path.append('..')
+import wechatsogou
 import env_variable
 
 

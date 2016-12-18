@@ -1,9 +1,9 @@
 import sys
 import unittest
 
-sys.path.append('../')
+sys.path.append('..')
 import env_variable
-from ..wechatsogou import RClient
+from wechatsogou import RClient
 
 
 class RuokuaicodeTest(unittest.TestCase):
