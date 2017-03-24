@@ -53,34 +53,6 @@
     logging.config.fileConfig('logging.conf')
     logger = logging.getLogger()
     
-## 测试
-
-测试必须使用若快打码，有两个环境可以选择。
-
-### 使用本地环境测试
-
-添加`test/config.py`文件：
-
-    # ruokuai
-    username = ''
-    password = ''
-    soft_id = ''
-    soft_key = ''
-
-### 使用travis-ci环境测试
-
-设置环境变量：
-
-    OCR_RUOKUAI : true
-
-    RUOKUAI_USERNAME : your_username
-
-    RUOKUAI_PASSWORD : your_password
-
-    RUOKUAI_SOFT_ID : your_soft_id
-
-    RUOKUAI_SOFT_KEY : your_soft_key
-
 ## 引用
 
     from wechatsogou import *
