@@ -1,8 +1,6 @@
 基于搜狗微信搜索的微信公众号爬虫接口
 ====================================
 
-.. image:: https://travis-ci.org/Chyroc/WechatSogou.svg?branch=master
-    :target: https://travis-ci.org/Chyroc/WechatSogou
 |py27| |py35|
 
 项目简介
