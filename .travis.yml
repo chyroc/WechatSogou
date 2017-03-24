@@ -1,0 +1,22 @@
+language: python
+
+python:
+- 3.6
+
+cache:
+  directories:
+    - $HOME/.cache/pip
+
+env:
+  global:
+    - PIP_WHEEL_DIR=$HOME/.cache/pip/wheels
+    - PIP_FIND_LINKS=file://$HOME/.cache/pip/wheels
+
+install:
+  - pip install -r requirements.txt
+
+before_script:
+  - export PYTHONPATH=$PYTHONPATH:$(pwd)
+
+script:
+  - python -m nose -vs
