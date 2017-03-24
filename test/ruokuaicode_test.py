@@ -1,9 +1,7 @@
-import sys
 import unittest
 
-sys.path.append('..')
-import env_variable
 from wechatsogou import RClient
+from test import env_variable
 
 
 class RuokuaicodeTest(unittest.TestCase):
