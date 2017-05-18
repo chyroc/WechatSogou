@@ -5,7 +5,11 @@ from lxml import etree
 from wechatsogou.tools import (
     list_or_empty,
     get_elem_text,
-    replace_html
+    replace_html,
+    str_to_dict,
+    replace_space,
+    get_url_param,
+    input
 )
 
 
@@ -39,6 +43,22 @@ class TestTools(unittest.TestCase):
 
         html = {'&#39;': '&quot;'}
         assert_equal(replace_html(html), {'\'': '"'})
+
+    def test_str_to_dict(self):
+        string = "{'a':'a'}"
+        assert_equal(str_to_dict(string), {'a': 'a'})
+
+    def test_replace_space(self):
+        string = 'ss ss'
+        assert_equal(replace_space(string), 'ssss')
+
+    def test_get_url_param(self):
+        url = 'http://example.com?a=1&b=2&a=3'
+        assert_equal(get_url_param(url), {'a': ['1', '3'], 'b': ['2']})
+
+    @unittest.skip
+    def test_input(self):
+        input('please input:')
 
 
 if __name__ == '__main__':

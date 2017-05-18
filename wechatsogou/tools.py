@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import ast
 import json
 
 import requests
@@ -91,7 +92,7 @@ def replace_html(data):
 
 
 def str_to_dict(json_str):
-    json_dict = eval(json_str)
+    json_dict = ast.literal_eval(json_str)
     return replace_html(json_dict)
 
 
