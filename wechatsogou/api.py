@@ -2,14 +2,23 @@
 
 import re
 import time
+import logging
+
 import requests
-from pprint import pprint
 from lxml import etree
 
 from .basic import WechatSogouBasic
-from .exceptions import *
-from .tools import *
-import logging
+from .exceptions import (
+    WechatSogouException,
+    WechatSogouEndException,
+    WechatSogouBreakException,
+    WechatSogouRequestsException,
+    WechatSogouHistoryMsgException
+)
+from .tools import (
+    get_elem_text,
+    list_or_empty
+)
 
 logger = logging.getLogger()
 
@@ -45,8 +54,8 @@ class WechatSogouApi(WechatSogouBasic):
         for li in lis:
             url = li.xpath('div/div[1]/a/@href')
             img = li.xpath('div/div[1]/a/img/@src')
-            name = self._get_elem_text(li.xpath('div/div[2]/p[1]')[0])
-            info = self._get_elem_text(li.xpath('div/div[2]/p[2]')[0])
+            name = get_elem_text(li.xpath('div/div[2]/p[1]')[0])
+            info = get_elem_text(li.xpath('div/div[2]/p[2]')[0])
             info = re.split('微信号:|月发文|篇|平均阅读', info)
             try:
                 wechatid = info[1]
@@ -61,7 +70,7 @@ class WechatSogouApi(WechatSogouBasic):
             except IndexError:
                 read_count = 0
             qrcode = li.xpath('div/div[3]/span/img[1]/@src')
-            jieshao = self._get_elem_text(li.xpath('dl[1]/dd')[0])
+            jieshao = get_elem_text(li.xpath('dl[1]/dd')[0])
             renzhen = li.xpath('dl[2]/dd/text()')
             relist.append({
                 'url': url[0],
@@ -142,11 +151,11 @@ class WechatSogouApi(WechatSogouBasic):
                 gzh_info = li.xpath('div/div[2]/a')[0]
 
             if title:
-                title = self._get_elem_text(title[0]).replace("red_beg", "").replace("red_end", "")
+                title = get_elem_text(title[0]).replace("red_beg", "").replace("red_end", "")
             else:
                 title = ''
             if abstract:
-                abstract = self._get_elem_text(abstract[0]).replace("red_beg", "").replace("red_end", "")
+                abstract = get_elem_text(abstract[0]).replace("red_beg", "").replace("red_end", "")
             else:
                 abstract = ''
             time = list_or_empty(time)
@@ -511,7 +520,6 @@ class WechatSogouApi(WechatSogouBasic):
         for k, v in data.items():
             url = url + k + '=' + v + '&'
         url = url[:-1]
-        # print(url)
 
         try:
             session = self._cache_history_session(wechatid)
