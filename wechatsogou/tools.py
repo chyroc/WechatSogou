@@ -102,10 +102,3 @@ def replace_space(s):
 def get_url_param(url):
     result = url_parse.urlparse(url)
     return url_parse.parse_qs(result.query, True)
-
-
-def input(msg=''):
-    try:
-        return raw_input(msg)
-    except NameError:
-        return input(msg)

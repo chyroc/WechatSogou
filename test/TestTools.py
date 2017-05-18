@@ -8,8 +8,7 @@ from wechatsogou.tools import (
     replace_html,
     str_to_dict,
     replace_space,
-    get_url_param,
-    input
+    get_url_param
 )
 
 
@@ -55,10 +54,6 @@ class TestTools(unittest.TestCase):
     def test_get_url_param(self):
         url = 'http://example.com?a=1&b=2&a=3'
         assert_equal(get_url_param(url), {'a': ['1', '3'], 'b': ['2']})
-
-    @unittest.skip
-    def test_input(self):
-        input('please input:')
 
 
 if __name__ == '__main__':

@@ -4,6 +4,7 @@ import re
 import time
 import random
 import logging
+from builtins import input
 
 import requests
 from lxml import etree
@@ -43,7 +44,6 @@ from .exceptions import (
 from .ruokuaicode import RClient
 from .filecache import WechatCache
 from .tools import (
-    input,
     replace_html,
     replace_space,
     get_encoding_from_reponse
