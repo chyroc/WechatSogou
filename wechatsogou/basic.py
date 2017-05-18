@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import logging
-import requests
-import random
-import time
 import re
+import time
+import random
+import logging
+
+import requests
 from lxml import etree
 from PIL import Image
 
@@ -32,25 +33,21 @@ except ImportError:
         f.write(content)
         return Image.open(f)
 
-try:
-    import urlparse as url_parse
-except ImportError:
-    import urllib.parse as url_parse
-
-
-def printf(msg=''):
-    try:
-        return raw_input(msg)
-    except NameError:
-        return input(msg)
-
-
 from . import config
-from .exceptions import *
+from .exceptions import (
+    WechatSogouException,
+    WechatSogouVcodeException,
+    WechatSogouRequestsException,
+    WechatSogouVcodeOcrException
+)
 from .ruokuaicode import RClient
 from .filecache import WechatCache
-
-import logging
+from .tools import (
+    input,
+    replace_all,
+    replace_space,
+    get_encoding_from_reponse
+)
 
 logger = logging.getLogger()
 
@@ -92,32 +89,6 @@ class WechatSogouBasic(object):
             "Opera/9.80 (Macintosh; Intel Mac OS X 10.6.8; U; fr) Presto/2.9.168 Version/11.52",
         ]
 
-    def _get_elem_text(self, elem):
-        """抽取lxml.etree库中elem对象中文字
-
-        Args:
-            elem: lxml.etree库中elem对象
-
-        Returns:
-            elem中文字
-        """
-        rc = []
-        for node in elem.itertext():
-            rc.append(node.strip())
-        return ''.join(rc)
-
-    def _get_encoding_from_reponse(self, r):
-        """获取requests库get或post返回的对象编码
-
-        Args:
-            r: requests库get或post返回的对象
-
-        Returns:
-            对象编码
-        """
-        encoding = requests.utils.get_encodings_from_content(r.text)
-        return encoding[0] if encoding else requests.utils.get_encoding_from_headers(r.headers)
-
     def _get(self, url, rtype='get', **kwargs):
         """封装request库get,post方法
 
@@ -151,7 +122,7 @@ class WechatSogouBasic(object):
             par_json = kwargs.get('json', None)
             r = self._session.post(url, data=data, json=par_json, headers=headers, **kwargs)
         if r.status_code == requests.codes.ok:
-            r.encoding = self._get_encoding_from_reponse(r)
+            r.encoding = get_encoding_from_reponse(r)
             if u'用户您好，您的访问过于频繁，为确认本次访问为正常用户行为，需要您协助验证' in r.text:
                 self._vcode_url = url
                 raise WechatSogouVcodeException('weixin.sogou.com verification code')
@@ -178,7 +149,7 @@ class WechatSogouBasic(object):
         else:
             im = readimg(coder.content)
             im.show()
-            img_code = printf("please input code: ")
+            img_code = input("please input code: ")
         post_url = 'http://weixin.sogou.com/antispider/thank.php'
         post_data = {
             'c': img_code,
@@ -212,7 +183,7 @@ class WechatSogouBasic(object):
             result = None
             im = readimg(coder.content)
             im.show()
-            img_code = printf("please input code: ")
+            img_code = input("please input code: ")
         post_url = 'http://mp.weixin.qq.com/mp/verifycode'
         post_data = {
             'cert': timever,
@@ -234,63 +205,6 @@ class WechatSogouBasic(object):
         logger.debug('ocr ', remsg['errmsg'])
         return result
 
-    def _replace_html(self, s):
-        """替换html‘&quot;’等转义内容为正常内容
-
-        Args:
-            s: 文字内容
-
-        Returns:
-            s: 处理反转义后的文字
-        """
-        s = s.replace('&#39;', '\'')
-        s = s.replace('&quot;', '"')
-        s = s.replace('&amp;', '&')
-        s = s.replace('&gt;', '>')
-        s = s.replace('&lt;', '<')
-        s = s.replace('&yen;', '¥')
-        s = s.replace('amp;', '')
-        s = s.replace('&lt;', '<')
-        s = s.replace('&gt;', '>')
-        s = s.replace('&nbsp;', ' ')
-        s = s.replace('\\', '')
-        return s
-
-    def _replace_dict(self, dicts):
-        retu_dict = dict()
-        for k, v in dicts.items():
-            retu_dict[self._replace_all(k)] = self._replace_all(v)
-        return retu_dict
-
-    def _replace_list(self, lists):
-        retu_list = list()
-        for l in lists:
-            retu_list.append(self._replace_all(l))
-        return retu_list
-
-    def _replace_all(self, data):
-        if isinstance(data, dict):
-            return self._replace_dict(data)
-        elif isinstance(data, list):
-            return self._replace_list(data)
-        elif isinstance(data, str):
-            return self._replace_html(data)
-        else:
-            return data
-
-    def _str_to_dict(self, json_str):
-        json_dict = eval(json_str)
-        return self._replace_all(json_dict)
-
-    def _replace_space(self, s):
-        s = s.replace(' ', '')
-        s = s.replace('\r\n', '')
-        return s
-
-    def _get_url_param(self, url):
-        result = url_parse.urlparse(url)
-        return url_parse.parse_qs(result.query, True)
-
     def _search_gzh_text(self, name, page=1):
         """通过搜狗搜索获取关键字返回的文本
 
@@ -301,8 +215,8 @@ class WechatSogouBasic(object):
         Returns:
             text: 返回的文本
         """
-        request_url = 'http://weixin.sogou.com/weixin?query=' + quote(
-            name) + '&_sug_type_=&_sug_=n&type=1&page=' + str(page) + '&ie=utf8'
+        request_url = 'http://weixin.sogou.com/weixin?query={}&_sug_type_=&_sug_=n&type=1&page={}&ie=utf8' \
+            .format(quote(name), page)
         try:
             text = self._get(request_url)
         except WechatSogouVcodeException:
@@ -381,7 +295,7 @@ class WechatSogouBasic(object):
         profile_info_area = page.xpath("//div[@class='profile_info_area']")[0]
         img = profile_info_area.xpath('div[1]/span/img/@src')[0]
         name = profile_info_area.xpath('div[1]/div/strong/text()')[0]
-        name = self._replace_space(name)
+        name = replace_space(name)
         wechatid = profile_info_area.xpath('div[1]/div/p/text()')
         if wechatid:
             wechatid = wechatid[0].replace(u'微信号: ', '')
@@ -414,7 +328,7 @@ class WechatSogouBasic(object):
         msglist = re.findall("var msgList =(.+?)};", text, re.S)[0]
         msglist = msglist + '}'
         msgdict = eval(msglist)
-        msgdict = self._replace_all(msgdict)
+        msgdict = replace_all(msgdict)
         return msgdict
 
     def _deal_gzh_article_dict(self, msgdict, **kwargs):
