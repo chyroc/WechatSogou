@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import ast
-import json
 
 import requests
 
@@ -97,9 +96,7 @@ def str_to_dict(json_str):
 
 
 def replace_space(s):
-    s = s.replace(' ', '')
-    s = s.replace('\r\n', '')
-    return s
+    return s.replace(' ', '').replace('\r\n', '')
 
 
 def get_url_param(url):
@@ -112,8 +109,3 @@ def input(msg=''):
         return raw_input(msg)
     except NameError:
         return input(msg)
-
-
-if __name__ == '__main__':
-    aa = list_or_empty(['list'])
-    print(aa, type(aa))
