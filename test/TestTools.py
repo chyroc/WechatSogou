@@ -4,8 +4,8 @@ from nose.tools import assert_raises, assert_equal
 from lxml import etree
 from wechatsogou.tools import (
     list_or_empty,
-    get_elem_text
-
+    get_elem_text,
+    _replace_html
 )
 
 
@@ -29,6 +29,10 @@ class TestTools(unittest.TestCase):
         '''
         elem = etree.HTML(html)
         assert_equal(get_elem_text(elem), '111222')
+
+    def test_replace_html(self):
+        html = '''&#39;&quot;&amp;&yen;amp;&lt;&gt;&nbsp;\\'''
+        assert_equal(_replace_html(html), '\'"&¥<> ')
 
 
 if __name__ == '__main__':

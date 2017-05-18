@@ -63,17 +63,19 @@ def _replace_html(s):
     Returns:
         s: 处理反转义后的文字
     """
-    s = s.replace('&#39;', '\'')
-    s = s.replace('&quot;', '"')
-    s = s.replace('&amp;', '&')
-    s = s.replace('&gt;', '>')
-    s = s.replace('&lt;', '<')
-    s = s.replace('&yen;', '¥')
-    s = s.replace('amp;', '')
-    s = s.replace('&lt;', '<')
-    s = s.replace('&gt;', '>')
-    s = s.replace('&nbsp;', ' ')
-    s = s.replace('\\', '')
+    html_str_list = [
+        ('&#39;', '\''),
+        ('&quot;', '"'),
+        ('&amp;', '&'),
+        ('&yen;', '¥'),
+        ('amp;', ''),
+        ('&lt;', '<'),
+        ('&gt;', '>'),
+        ('&nbsp;', ' '),
+        ('\\', '')
+    ]
+    for i in html_str_list:
+        s = s.replace(i[0], i[1])
     return s
 
 
