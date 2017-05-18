@@ -5,7 +5,7 @@ from lxml import etree
 from wechatsogou.tools import (
     list_or_empty,
     get_elem_text,
-    _replace_html
+    replace_html
 )
 
 
@@ -32,7 +32,13 @@ class TestTools(unittest.TestCase):
 
     def test_replace_html(self):
         html = '''&#39;&quot;&amp;&yen;amp;&lt;&gt;&nbsp;\\'''
-        assert_equal(_replace_html(html), '\'"&¥<> ')
+        assert_equal(replace_html(html), '\'"&¥<> ')
+
+        html = ['&#39;', '&quot;', '&amp;', '&yen;', 'amp;', '&lt;', '&gt;', '&nbsp;', '\\']
+        assert_equal(replace_html(html), ['\'', '"', '&', '¥', '', '<', '>', ' ', ''])
+
+        html = {'&#39;': '&quot;'}
+        assert_equal(replace_html(html), {'\'': '"'})
 
 
 if __name__ == '__main__':

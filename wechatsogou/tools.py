@@ -54,7 +54,7 @@ def get_encoding_from_reponse(r):
     return encoding[0] if encoding else requests.utils.get_encoding_from_headers(r.headers)
 
 
-def _replace_html(s):
+def _replace_str_html(s):
     """替换html‘&quot;’等转义内容为正常内容
 
     Args:
@@ -79,34 +79,20 @@ def _replace_html(s):
     return s
 
 
-def _replace_dict(dicts):
-    retu_dict = dict()
-    for k, v in dicts.items():
-        retu_dict[replace_all(k)] = replace_all(v)
-    return retu_dict
-
-
-def _replace_list(lists):
-    retu_list = list()
-    for l in lists:
-        retu_list.append(replace_all(l))
-    return retu_list
-
-
-def replace_all(data):
+def replace_html(data):
     if isinstance(data, dict):
-        return _replace_dict(data)
+        return dict([(replace_html(k), replace_html(v)) for k, v in data.items()])
     elif isinstance(data, list):
-        return _replace_list(data)
+        return [replace_html(l) for l in data]
     elif isinstance(data, str):
-        return _replace_html(data)
+        return _replace_str_html(data)
     else:
         return data
 
 
 def str_to_dict(json_str):
     json_dict = eval(json_str)
-    return replace_all(json_dict)
+    return replace_html(json_dict)
 
 
 def replace_space(s):
