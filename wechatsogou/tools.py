@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import json
+import ast
 
 import requests
 
@@ -10,29 +10,23 @@ except ImportError:
     import urllib.parse as url_parse
 
 
-def prdict(content):
-    msg = json.dumps(content, indent=1, ensure_ascii=False)
-    print(msg)
-
-
 def list_or_empty(content, contype=None):
-    if isinstance(content, list):
-        if content:
-            return contype(content[0]) if contype else content[0]
-        else:
-            if contype:
-                if contype == int:
-                    return 0
-                elif contype == str:
-                    return ''
-                elif contype == list:
-                    return []
-                else:
-                    raise Exception('only cna deal int str list')
-            else:
-                return ''
+    assert isinstance(content, list), 'content is not list: {}'.format(content)
+
+    if content:
+        return contype(content[0]) if contype else content[0]
     else:
-        raise Exception('need list')
+        if contype:
+            if contype == int:
+                return 0
+            elif contype == str:
+                return ''
+            elif contype == list:
+                return []
+            else:
+                raise Exception('only can deal int str list')
+        else:
+            return ''
 
 
 def get_elem_text(elem):
@@ -44,10 +38,7 @@ def get_elem_text(elem):
     Returns:
         elem中文字
     """
-    rc = []
-    for node in elem.itertext():
-        rc.append(node.strip())
-    return ''.join(rc)
+    return ''.join([node.strip() for node in elem.itertext()])
 
 
 def get_encoding_from_reponse(r):
@@ -63,7 +54,7 @@ def get_encoding_from_reponse(r):
     return encoding[0] if encoding else requests.utils.get_encoding_from_headers(r.headers)
 
 
-def _replace_html(s):
+def _replace_str_html(s):
     """替换html‘&quot;’等转义内容为正常内容
 
     Args:
@@ -72,68 +63,42 @@ def _replace_html(s):
     Returns:
         s: 处理反转义后的文字
     """
-    s = s.replace('&#39;', '\'')
-    s = s.replace('&quot;', '"')
-    s = s.replace('&amp;', '&')
-    s = s.replace('&gt;', '>')
-    s = s.replace('&lt;', '<')
-    s = s.replace('&yen;', '¥')
-    s = s.replace('amp;', '')
-    s = s.replace('&lt;', '<')
-    s = s.replace('&gt;', '>')
-    s = s.replace('&nbsp;', ' ')
-    s = s.replace('\\', '')
+    html_str_list = [
+        ('&#39;', '\''),
+        ('&quot;', '"'),
+        ('&amp;', '&'),
+        ('&yen;', '¥'),
+        ('amp;', ''),
+        ('&lt;', '<'),
+        ('&gt;', '>'),
+        ('&nbsp;', ' '),
+        ('\\', '')
+    ]
+    for i in html_str_list:
+        s = s.replace(i[0], i[1])
     return s
 
 
-def _replace_dict(dicts):
-    retu_dict = dict()
-    for k, v in dicts.items():
-        retu_dict[replace_all(k)] = replace_all(v)
-    return retu_dict
-
-
-def _replace_list(lists):
-    retu_list = list()
-    for l in lists:
-        retu_list.append(replace_all(l))
-    return retu_list
-
-
-def replace_all(data):
+def replace_html(data):
     if isinstance(data, dict):
-        return _replace_dict(data)
+        return dict([(replace_html(k), replace_html(v)) for k, v in data.items()])
     elif isinstance(data, list):
-        return _replace_list(data)
+        return [replace_html(l) for l in data]
     elif isinstance(data, str):
-        return _replace_html(data)
+        return _replace_str_html(data)
     else:
         return data
 
 
 def str_to_dict(json_str):
-    json_dict = eval(json_str)
-    return replace_all(json_dict)
+    json_dict = ast.literal_eval(json_str)
+    return replace_html(json_dict)
 
 
 def replace_space(s):
-    s = s.replace(' ', '')
-    s = s.replace('\r\n', '')
-    return s
+    return s.replace(' ', '').replace('\r\n', '')
 
 
 def get_url_param(url):
     result = url_parse.urlparse(url)
     return url_parse.parse_qs(result.query, True)
-
-
-def input(msg=''):
-    try:
-        return raw_input(msg)
-    except NameError:
-        return input(msg)
-
-
-if __name__ == '__main__':
-    aa = list_or_empty(['list'])
-    print(aa, type(aa))

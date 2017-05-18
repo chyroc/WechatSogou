@@ -4,6 +4,7 @@ import re
 import time
 import random
 import logging
+from builtins import input
 
 import requests
 from lxml import etree
@@ -43,8 +44,7 @@ from .exceptions import (
 from .ruokuaicode import RClient
 from .filecache import WechatCache
 from .tools import (
-    input,
-    replace_all,
+    replace_html,
     replace_space,
     get_encoding_from_reponse
 )
@@ -328,7 +328,7 @@ class WechatSogouBasic(object):
         msglist = re.findall("var msgList =(.+?)};", text, re.S)[0]
         msglist = msglist + '}'
         msgdict = eval(msglist)
-        msgdict = replace_all(msgdict)
+        msgdict = replace_html(msgdict)
         return msgdict
 
     def _deal_gzh_article_dict(self, msgdict, **kwargs):
