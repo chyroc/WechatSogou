@@ -1,10 +1,7 @@
-Flask==0.12.2
+future==0.16.0
 lxml==3.7.3
-MarkupSafe==1.0
-nose==1.3.7
 Pillow==4.1.1
 requests==2.14.2
 six==1.10.0
 Werkzeug==0.12.2
 xlrd==1.0.0
-zope.interface==4.4.1

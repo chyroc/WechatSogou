@@ -1,7 +1,9 @@
 language: python
 
 python:
-- 3.6
+  - "2.7.12"
+  - "3.5.3"
+  - "3.6.1"
 
 cache:
   directories:
@@ -13,10 +15,18 @@ env:
     - PIP_FIND_LINKS=file://$HOME/.cache/pip/wheels
 
 install:
+  - pip install tox tox-travis flake8
   - pip install -r requirements.txt
 
 before_script:
   - export PYTHONPATH=$PYTHONPATH:$(pwd)
 
 script:
-  - python -m nose -vs
+  - make flake8
+  - make dry_publish
+  - tox
+
+notifications:
+  email:
+    on_success: never
+    on_failure: never

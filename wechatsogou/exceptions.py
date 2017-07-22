@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 class WechatSogouException(Exception):
     """基于搜狗搜索的的微信公众号爬虫接口  异常基类
     """

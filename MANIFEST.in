@@ -1,10 +1,2 @@
 include LICENSE
-include README.rst
-include MANIFEST.in
-recursive-include * Makefile
-recursive-include * make.bat
-recursive-include test *
-recursive-include demo *
-recursive-exclude * __pycache__
-recursive-exclude screenshot *
-
+graft docs

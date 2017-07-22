@@ -8,8 +8,6 @@ wechatsogou/ocr
 sprider
 wechatsogou.egg-info
 dist
-demo/yu_save.py
-demo/wechatsogou
 demo
 log.txt
 web
@@ -17,3 +15,6 @@ wechatid.txt
 .DS_Store
 test/config.py
 .python-version
+*.pyc
+.tox/
+build/
