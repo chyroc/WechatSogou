@@ -15,7 +15,7 @@ env:
     - PIP_FIND_LINKS=file://$HOME/.cache/pip/wheels
 
 install:
-  - pip install tox-travis
+  - pip install tox tox-travis
   - pip install -r requirements.txt
 
 before_script:
