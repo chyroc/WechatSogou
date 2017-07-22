@@ -17,3 +17,5 @@ wechatid.txt
 .DS_Store
 test/config.py
 .python-version
+*.pyc
+.tox
