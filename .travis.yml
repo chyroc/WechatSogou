@@ -1,7 +1,9 @@
 language: python
 
 python:
-- 3.6
+  - "2.7.13"
+  - "3.5"
+  - "3.6"
 
 cache:
   directories:
