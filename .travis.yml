@@ -22,6 +22,7 @@ before_script:
   - export PYTHONPATH=$PYTHONPATH:$(pwd)
 
 script:
+  - make flake8
   - tox
 
 notifications:
