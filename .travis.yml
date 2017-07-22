@@ -22,4 +22,9 @@ before_script:
   - export PYTHONPATH=$PYTHONPATH:$(pwd)
 
 script:
-  - make tox
+  - tox
+
+notifications:
+  email:
+    on_success: never
+    on_failure: never
