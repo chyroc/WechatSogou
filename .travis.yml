@@ -23,6 +23,7 @@ before_script:
 
 script:
   - make flake8
+  - make dry_publish
   - tox
 
 notifications:

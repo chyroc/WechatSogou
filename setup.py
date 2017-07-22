@@ -3,8 +3,8 @@ from setuptools import setup
 
 import wechatsogou
 
-readme = codecs.open('README.md', encoding='utf-8').read()
-history = codecs.open('CHANGELOG.md', encoding='utf-8').read()
+readme = codecs.open('docs/README.rst', encoding='utf-8').read()
+history = codecs.open('docs/HISTORY.rst', encoding='utf-8').read()
 
 setup(
     name='wechatsogou',
@@ -39,4 +39,5 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Programming Language :: Python :: Implementation :: CPython',
-    ], )
+    ],
+)
