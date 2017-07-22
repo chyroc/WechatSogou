@@ -1,13 +1,24 @@
 # Change Log
 
-## [Unreleased](https://github.com/Chyroc/WechatSogou/tree/HEAD)
-
-[Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v2.0.3...HEAD)
+## [v2.0.4](https://github.com/Chyroc/WechatSogou/tree/v2.0.4) (2017-07-22)
+[Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v2.0.3...v2.0.4)
 
 **Closed issues:**
 
+- pip 安装 No module named requests 什么情况 [\#59](https://github.com/Chyroc/WechatSogou/issues/59)
 - 微信搜索公众号结果模版改变了 [\#51](https://github.com/Chyroc/WechatSogou/issues/51)
 -  ImportError: cannot import name config [\#40](https://github.com/Chyroc/WechatSogou/issues/40)
+
+**Merged pull requests:**
+
+- Makefile tox [\#74](https://github.com/Chyroc/WechatSogou/pull/74) ([Chyroc](https://github.com/Chyroc))
+- fix typo [\#69](https://github.com/Chyroc/WechatSogou/pull/69) ([Chyroc](https://github.com/Chyroc))
+- Add tools test [\#68](https://github.com/Chyroc/WechatSogou/pull/68) ([Chyroc](https://github.com/Chyroc))
+- fix import and mv tools function [\#67](https://github.com/Chyroc/WechatSogou/pull/67) ([Chyroc](https://github.com/Chyroc))
+- update package [\#66](https://github.com/Chyroc/WechatSogou/pull/66) ([Chyroc](https://github.com/Chyroc))
+- add ci icon [\#58](https://github.com/Chyroc/WechatSogou/pull/58) ([Chyroc](https://github.com/Chyroc))
+- Add travis ci [\#57](https://github.com/Chyroc/WechatSogou/pull/57) ([Chyroc](https://github.com/Chyroc))
+- release v2.0.3 [\#56](https://github.com/Chyroc/WechatSogou/pull/56) ([Chyroc](https://github.com/Chyroc))
 
 ## [v2.0.3](https://github.com/Chyroc/WechatSogou/tree/v2.0.3) (2016-12-18)
 **Closed issues:**
