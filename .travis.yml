@@ -1,7 +1,9 @@
 language: python
 
 python:
-- 3.6
+  - "2.7.12"
+  - "3.5.3"
+  - "3.6.1"
 
 cache:
   directories:
@@ -13,10 +15,11 @@ env:
     - PIP_FIND_LINKS=file://$HOME/.cache/pip/wheels
 
 install:
+  - pip install tox-travis
   - pip install -r requirements.txt
 
 before_script:
   - export PYTHONPATH=$PYTHONPATH:$(pwd)
 
 script:
-  - python -m nose -vs
+  - make tox
