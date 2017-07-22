@@ -286,14 +286,6 @@ reply|回复
 
 返回的是列表，每一项是不同公众号的的最近文章页
 
-# 打包
-- 打包上传到PyPI测试站点
-
-`python setup.py sdist --formats=gztar register -r pypitest upload -r pypitest`
-
-- 打包上传到PyPI正式站点
-`python setup.py sdist --formats=gztar register upload`
-
 ---
 
 # TODO
