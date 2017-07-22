@@ -12,6 +12,9 @@ dry_publish:
 	rm -rf dist/ build/
 	python setup.py sdist bdist_wheel
 
+publish: dry_publish
+	twine upload -s dist/*
+
 flake8:
 	flake8 --ignore=E501,F401,E128,E402,E731,F821 wechatsogou
 
