@@ -9,8 +9,3 @@ flake8:
 test:
 	pyenv local 2.7.12 3.5.3 3.6.1
 	tox
-
-
-ci:
-	make flake8
-	tox
