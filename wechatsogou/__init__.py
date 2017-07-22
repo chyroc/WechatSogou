@@ -6,4 +6,4 @@ from .ruokuaicode import RClient
 
 __all__ = ['WechatSogouApi', 'WechatCache', 'RClient']
 
-__version__ = "2.0.3"
+__version__ = "2.0.4"
