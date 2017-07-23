@@ -1,7 +1,6 @@
 .idea
 .git
 __pycache__
-ceshi.py
 cache
 wechatsogou/cache
 wechatsogou/ocr
@@ -18,3 +17,6 @@ test/config.py
 *.pyc
 .tox/
 build/
+test/.hypothesis/
+t.py
+y.py
