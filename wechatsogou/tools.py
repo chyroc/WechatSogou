@@ -9,6 +9,22 @@ try:
 except ImportError:
     import urllib.parse as url_parse
 
+try:
+    from urllib import urlencode
+    import sys
+
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
+except ImportError:
+    import urllib.parse
+
+    urlencode = urllib.parse.urlencode
+
+try:
+    from urllib import unquote
+except:
+    from urllib.parse import unquote
+
 
 def list_or_empty(content, contype=None):
     assert isinstance(content, list), 'content is not list: {}'.format(content)

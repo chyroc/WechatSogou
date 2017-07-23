@@ -1,23 +1,21 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import (
-    absolute_import,
-    unicode_literals,
-    print_function
-)
+from __future__ import (absolute_import, unicode_literals, print_function)
 
-try:
-    from urllib import urlencode
-    import sys
-
-    reload(sys)
-    sys.setdefaultencoding('utf-8')
-except ImportError:
-    import urllib.parse
-
-    urlencode = urllib.parse.urlencode
+import re
+from collections import OrderedDict
 
 import requests
+
+from wechatsogou.tools import urlencode
+
+re_timesn = re.compile('([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-'
+                       '(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8])))')
+
+TYPE_IMAGE = 'image'
+TYPE_VIDEO = 'video'
+TYPE_RICH = 'rich'
+TYPE_ALL = 'all'
 
 
 class WechatSogouBasic(object):
@@ -25,43 +23,92 @@ class WechatSogouBasic(object):
         pass
 
     @staticmethod
-    def _gen_search_url(query, type, page=1, timesn=None, interation=None, wxid=None, usip=None, ft=None):
-        """ 拼接搜索URL
+    def _gen_search_article_url(keyword, page=1, timesn=None, article_type=TYPE_ALL, wxid=None, usip=None, ft=None,
+                                et=None):
+        """ 拼接搜索 文章 URL
 
-        :param query:      搜索文字
-        :param type:       类型 1 是公号 2 是文章
-        :param timesn:     时间 1一天 / 2一周 / 3一月 / 4一年 / 5自定
-        :param ft:         当 tsn 是 5 时，本参数代表时间 ['', '']
-        :param interation: 含有内容的类型 458754 有图 / 458756 有视频
-        :param wxid
-        :param usip        联合起来就是账号内搜索
+        :param keyword:      搜索文字
+        :param page:         页数
+        :param timesn:       时间 1一天 / 2一周 / 3一月 / 4一年 / 5自定
+        :param ft:           当 tsn 是 5 时，本参数代表时间，如： 2017-07-01
+        :param et:           当 tsn 是 5 时，本参数代表时间，如： 2017-07-15
+        :param artilce_type: 含有内容的类型： TYPE_IMAGE 有图 / TYPE_VIDEO 有视频 / TYPE_RICH 有图和视频 / TYPE_ALL 啥都有
+        :param wxid:
+        :param usip:         wxid usip 联合起来就是账号内搜索
         :return:
         """
-        """
-        账号 http://weixin.sogou.com/weixin?type=2&ie=utf8&query=%E9%AB%98%E8%80%83&tsn=3&ft=&et=&interation=458754&wxid=oIWsFt1tmWoG6vO6BcsS7St61bRE&usip=nanhangqinggong
 
-        一天 http://weixin.sogou.com/weixin?type=2&ie=utf8&query=%E9%AB%98%E8%80%83&tsn=1&ft=&et=&interation=&wxid=&usip=
-        一周 http://weixin.sogou.com/weixin?type=2&ie=utf8&query=%E9%AB%98%E8%80%83&tsn=2&ft=&et=&interation=&wxid=&usip=
-        一月 http://weixin.sogou.com/weixin?type=2&ie=utf8&query=%E9%AB%98%E8%80%83&tsn=3&ft=&et=&interation=&wxid=&usip=
-        一年 http://weixin.sogou.com/weixin?type=2&ie=utf8&query=%E9%AB%98%E8%80%83&tsn=4&ft=&et=&interation=&wxid=&usip=
-        自定 http://weixin.sogou.com/weixin?type=2&ie=utf8&query=%E9%AB%98%E8%80%83&tsn=5&ft=2017-07-01&et=2017-07-15&interation=&wxid=&usip=
+        assert isinstance(page, int) and page > 0
+        assert timesn in [1, 2, 3, 4, 5, None]
 
-        类型
-            http://weixin.sogou.com/weixin?type=2&ie=utf8&query=%E9%AB%98%E8%80%83&tsn=3&ft=&et=&interation=&wxid=&usip=
-            http://weixin.sogou.com/weixin?type=2&ie=utf8&query=%E9%AB%98%E8%80%83&tsn=3&ft=&et=&interation=458754&wxid=&usip=
-            http://weixin.sogou.com/weixin?type=2&ie=utf8&query=%E9%AB%98%E8%80%83&tsn=3&ft=&et=&interation=458754%2C458756&wxid=&usip=
-        """
+        if timesn == 5:
+            assert len(re_timesn.findall(ft)) != 0
+            assert len(re_timesn.findall(et)) != 0
+        else:
+            ft = ''
+            et = ''
+
+        interation_image = 458754
+        interation_video = 458756
+        if article_type == 'rich':
+            interation = '{},{}'.format(interation_image, interation_video)
+        elif article_type == 'image':
+            interation = interation_image
+        elif article_type == 'video':
+            interation = interation_video
+        else:
+            interation = ''
+
+        qsDict = OrderedDict()
+        qsDict['type'] = 2  # 2 是文章
+        qsDict['page'] = page
+        qsDict['ie'] = 'utf8'
+        qsDict['query'] = keyword
+        if timesn is not None:
+            qsDict['tsn'] = timesn
+            qsDict['ft'] = ft
+            qsDict['et'] = et
+        qsDict['interation'] = interation
+
         # TODO 账号内搜索
-        assert type in [1, 2]
+        # '账号内 http://weixin.sogou.com/weixin?type=2&ie=utf8&query=%E9%AB%98%E8%80%83&tsn=3&ft=&et=&interation=458754
+        # &wxid=oIWsFt1tmWoG6vO6BcsS7St61bRE&usip=nanhangqinggong'
+        # qs['wxid'] = wxid
+        # qs['usip'] = usip
 
-        url = 'http://weixin.sogou.com/weixin?type={}&ie=utf8&{}'.format(type, urlencode({'query': query}))
+        return 'http://weixin.sogou.com/weixin?{}'.format(urlencode(qsDict))
 
-        if type == 1:
-            return url
-        return url
+    @staticmethod
+    def _gen_search_gzh_url(keyword, page=1):
+        """ 拼接搜索 公众号 URL
 
-    def _search(self, query, type, page=1, timesn=None, interation=None, wxid=None, usip=None, ft=None):
-        url = WechatSogouBasic._gen_search_url(query, type, page, timesn, interation, wxid, usip, ft)
+        :param keyword: 搜索文字
+        :param page:    页数
+        :return:
+        """
+
+        assert isinstance(page, int) and page > 0
+
+        qsDict = OrderedDict()
+        qsDict['type'] = 1  # 1 是公号
+        qsDict['page'] = page
+        qsDict['ie'] = 'utf8'
+        qsDict['query'] = keyword
+
+        return 'http://weixin.sogou.com/weixin?{}'.format(urlencode(qsDict))
+
+    @staticmethod
+    def _search_article(keyword, page=1, timesn=None, article_type=None, wxid=None, usip=None, ft=None, et=None):
+        url = WechatSogouBasic._gen_search_article_url(keyword, page, timesn, article_type, wxid, usip, ft, et)
+        r = requests.get(url)
+        if not r.ok:
+            # todo 错误处理
+            return None
+        return r.text
+
+    @staticmethod
+    def _search_gzh(keyword, page=1):
+        url = WechatSogouBasic._gen_search_gzh_url(keyword, page)
         r = requests.get(url)
         if not r.ok:
             # todo 错误处理
