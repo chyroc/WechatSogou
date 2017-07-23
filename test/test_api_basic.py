@@ -83,7 +83,7 @@ class TestBasicSearchArticle(unittest.TestCase):
     @httpretty.activate
     def test_search_article_keyword(self):
         url = WechatSogouBasic._gen_search_article_url(gaokao_keyword)
-        file_name = '{}/{}'.format(os.getcwd(), 'file/search-gaokao-article.html')
+        file_name = '{}/{}'.format(os.getcwd(), 'test/file/search-gaokao-article.html')
         with io.open(file_name, encoding='utf-8') as f:
             search_gaokao_article = f.read()
             httpretty.register_uri(httpretty.GET, url, body=search_gaokao_article)
@@ -99,7 +99,7 @@ class TestBasicSearchGzh(unittest.TestCase):
     @httpretty.activate
     def test_search_gzh_keyword(self):
         url = WechatSogouBasic._gen_search_gzh_url(gaokao_keyword)
-        file_name = '{}/{}'.format(os.getcwd(), 'file/search-gaokao-gzh.html')
+        file_name = '{}/{}'.format(os.getcwd(), 'test/file/search-gaokao-gzh.html')
         with io.open(file_name, encoding='utf-8') as f:
             search_gaokao_gzh = f.read()
             httpretty.register_uri(httpretty.GET, url, body=search_gaokao_gzh)
