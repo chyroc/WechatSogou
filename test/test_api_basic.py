@@ -13,7 +13,7 @@ from hypothesis import given, strategies as st
 from wechatsogou.refactor_basic import WechatSogouBasic
 
 
-class TestBasicGenURL(unittest.TestCase):
+class TestBasicGenSearchArticleURL(unittest.TestCase):
     def setUp(self):
         self.ws = WechatSogouBasic()
 
@@ -62,6 +62,24 @@ class TestBasicGenURL(unittest.TestCase):
 
         url = WechatSogouBasic._gen_search_article_url('高考', article_type=WechatSogouBasic.TYPE_RICH)
         assert_in('interation=458754%2C458756', url)
+
+
+class TestBasicGenSearchGzhURL(unittest.TestCase):
+    def setUp(self):
+        self.ws = WechatSogouBasic()
+
+    def test_gen_search_article_url_keyword(self):
+        url = WechatSogouBasic._gen_search_gzh_url('高考')
+        assert_equal('http://weixin.sogou.com/weixin?type=1&page=1&ie=utf8&query=%E9%AB%98%E8%80%83', url)
+
+    @given(st.integers(min_value=-20000, max_value=20000))
+    def test_gen_search_gzh_url_page(self, page):
+        if page > 0:
+            url = WechatSogouBasic._gen_search_gzh_url('高考', page)
+            assert_in('page={}'.format(page), url)
+        else:
+            with assert_raises(AssertionError):
+                WechatSogouBasic._gen_search_gzh_url('高考', page)
 
 
 @unittest.skip
