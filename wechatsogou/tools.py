@@ -4,10 +4,7 @@ import ast
 
 import requests
 
-try:
-    import urlparse as url_parse
-except ImportError:
-    import urllib.parse as url_parse
+from wechatsogou.pkgs import url_parse
 
 
 def list_or_empty(content, contype=None):
