@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import (
-    absolute_import,
-    unicode_literals,
-    print_function
-)
+from __future__ import (absolute_import, unicode_literals, print_function)
 
 import io
 import os
@@ -14,12 +10,12 @@ from nose.tools import assert_raises, assert_equal, assert_in
 import httpretty
 from hypothesis import given, strategies as st
 
-import wechatsogou.tools
-from wechatsogou.tools import unquote
+from wechatsogou import refactor_basic
+from wechatsogou.pkgs import unquote
 from wechatsogou.refactor_basic import WechatSogouBasic
 
 
-class TestBasic(unittest.TestCase):
+class TestBasicGenURL(unittest.TestCase):
     def setUp(self):
         self.ws = WechatSogouBasic()
 
@@ -36,42 +32,54 @@ class TestBasic(unittest.TestCase):
             with assert_raises(AssertionError):
                 WechatSogouBasic._gen_search_article_url('高考', page)
 
-    @given(st.integers(min_value=-50, max_value=50))
-    def test_gen_search_article_url_timesn(self, timesn):
+    @given(st.integers(min_value=-50, max_value=50), st.dates(), st.dates())
+    def test_gen_search_article_url_timesn(self, timesn, ft, et):
         if timesn in [1, 2, 3, 4]:
             url = WechatSogouBasic._gen_search_article_url('高考', timesn=timesn)
+            assert_in('tsn={}&ft=&et='.format(timesn), url)
+
+            url = WechatSogouBasic._gen_search_article_url('高考', timesn=timesn, ft=str(ft))
+            assert_in('tsn={}&ft=&et='.format(timesn), url)
         elif timesn == 5:
-            pass
+            if ft <= et:
+                url = WechatSogouBasic._gen_search_article_url('高考', timesn=timesn, ft=ft, et=et)
+                assert_in('tsn=5&ft={}&et={}'.format(ft, et), url)
+            else:
+                with assert_raises(AssertionError):
+                    WechatSogouBasic._gen_search_article_url('高考', timesn=timesn)
+                    WechatSogouBasic._gen_search_article_url('高考', timesn=timesn, ft=ft, et=et)
         else:
             with assert_raises(AssertionError):
                 WechatSogouBasic._gen_search_article_url('高考', timesn=timesn)
 
-        # assert_equal(url,
-        #              'http://weixin.sogou.com/weixin?type=2&page=1&ie=utf8&query=%E9%AB%98%E8%80%83&tsn=1&ft=&et=&interation=')
-        # assert_equal(WechatSogouBasic._gen_search_article_url('高考', timesn=1, ft='2017-01-32', et='2017-12-32'),
-        #              'http://weixin.sogou.com/weixin?type=2&page=1&ie=utf8&query=%E9%AB%98%E8%80%83&tsn=1&ft=&et=&interation=')
-        # with assert_raises(AssertionError):
-        #     WechatSogouBasic._gen_search_article_url('高考', timesn=5, ft='2017-01-32', et='2017-12-32')
-        #     WechatSogouBasic._gen_search_article_url('高考', timesn=6, ft='2017-01-32', et='2017-12-32')
-        #     WechatSogouBasic._gen_search_article_url('高考', timesn='', ft='2017-01-32', et='2017-12-32')
+    def test_gen_search_article_url_article_type(self):
+        url = WechatSogouBasic._gen_search_article_url('高考', article_type=refactor_basic.TYPE_ALL)
+        assert_equal('interation=', url[-11:])
 
-        # assert_equal(WechatSogouBasic._gen_search_url('高考', 2),
-        #              'http://weixin.sogou.com/weixin?type=2&ie=utf8&query=%E9%AB%98%E8%80%83')
-        # with assert_raises(AssertionError):
-        #     assert_equal(WechatSogouBasic._gen_search_url('高考', 3),
-        #                  'http://weixin.sogou.com/weixin?type=3&ie=utf8&query=%E9%AB%98%E8%80%83')
+        url = WechatSogouBasic._gen_search_article_url('高考', article_type=refactor_basic.TYPE_IMAGE)
+        assert_in('interation=458754', url)
 
-        """
-        @httpretty.activate
-        def test_search_article(self):
-            file = '{}/{}'.format(os.getcwd(), 'test/file/search-gaokao-article.html')
-            with io.open(file, encoding='utf-8') as f:
-                search_gaokao_article = f.read()
-                httpretty.register_uri(httpretty.GET, WechatSogouBasic._gen_search_url('高考', 2), body=search_gaokao_article)
-    
-            text = self.ws._search('高考', 2)
-            assert_equal(text, search_gaokao_article)
-        """
+        url = WechatSogouBasic._gen_search_article_url('高考', article_type=refactor_basic.TYPE_VIDEO)
+        assert_in('interation=458756', url)
+
+        url = WechatSogouBasic._gen_search_article_url('高考', article_type=refactor_basic.TYPE_RICH)
+        assert_in('interation=458754%2C458756', url)
+
+
+class TestBasicSearchArticle(unittest.TestCase):
+    def setUp(self):
+        self.ws = WechatSogouBasic()
+
+    @httpretty.activate
+    def test_search_article(self):
+        file = '{}/{}'.format(os.getcwd(), 'test/file/search-gaokao-article.html')
+        with io.open(file, encoding='utf-8') as f:
+            search_gaokao_article = f.read()
+            httpretty.register_uri(httpretty.GET, WechatSogouBasic._gen_search_article_url('高考'),
+                                   body=search_gaokao_article)
+
+        text = self.ws._search_article('高考')
+        assert_equal(text, search_gaokao_article)
 
 
 if __name__ == '__main__':

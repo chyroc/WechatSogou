@@ -2,15 +2,12 @@
 
 from __future__ import (absolute_import, unicode_literals, print_function)
 
-import re
+import datetime
 from collections import OrderedDict
 
 import requests
 
-from wechatsogou.tools import urlencode
-
-re_timesn = re.compile('([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-'
-                       '(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8])))')
+from wechatsogou.pkgs import urlencode
 
 TYPE_IMAGE = 'image'
 TYPE_VIDEO = 'video'
@@ -42,8 +39,9 @@ class WechatSogouBasic(object):
         assert timesn in [1, 2, 3, 4, 5, None]
 
         if timesn == 5:
-            assert len(re_timesn.findall(ft)) != 0
-            assert len(re_timesn.findall(et)) != 0
+            assert isinstance(ft, datetime.date)
+            assert isinstance(et, datetime.date)
+            assert ft <= et
         else:
             ft = ''
             et = ''
@@ -66,8 +64,8 @@ class WechatSogouBasic(object):
         qsDict['query'] = keyword
         if timesn is not None:
             qsDict['tsn'] = timesn
-            qsDict['ft'] = ft
-            qsDict['et'] = et
+            qsDict['ft'] = str(ft)
+            qsDict['et'] = str(et)
         qsDict['interation'] = interation
 
         # TODO 账号内搜索
