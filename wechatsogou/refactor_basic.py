@@ -1,13 +1,21 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import (
+    absolute_import,
+    unicode_literals,
+    print_function
+)
+
 try:
-    from urllib.request import quote as quote
-except ImportError:
-    from urllib import quote as quote
+    from urllib import urlencode
     import sys
 
     reload(sys)
     sys.setdefaultencoding('utf-8')
+except ImportError:
+    import urllib.parse
+
+    urlencode = urllib.parse.urlencode
 
 import requests
 
@@ -46,7 +54,7 @@ class WechatSogouBasic(object):
         # TODO 账号内搜索
         assert type in [1, 2]
 
-        url = 'http://weixin.sogou.com/weixin?type={}&ie=utf8&query={}'.format(type, quote(query))
+        url = 'http://weixin.sogou.com/weixin?type={}&ie=utf8&{}'.format(type, urlencode({'query': query}))
 
         if type == 1:
             return url

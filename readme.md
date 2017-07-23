@@ -3,7 +3,9 @@
 
 [![Build Status](https://travis-ci.org/Chyroc/WechatSogou.svg?branch=master)](https://github.com/Chyroc/WechatSogou)
 [![PyPI version](https://badge.fury.io/py/wechatsogou.svg)](https://github.com/Chyroc/WechatSogou)
+[![PyPI](https://img.shields.io/pypi/wheel/wechatsogou.svg)](https://github.com/Chyroc/WechatSogou)
 [![py27,py35,py36](https://img.shields.io/pypi/pyversions/wechatsogou.svg)](https://github.com/Chyroc/WechatSogou)
+[![PyPI](https://img.shields.io/pypi/l/wechatsogou.svg)](https://github.com/Chyroc/WechatSogou)
 
 # 项目简介
 基于搜狗微信搜索的微信公众号爬虫接口，可以扩展成基于搜狗搜索的爬虫
