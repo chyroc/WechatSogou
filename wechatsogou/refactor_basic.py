@@ -94,18 +94,36 @@ class WechatSogouBasic(object):
 
     @staticmethod
     def _search_article(keyword, page=1, timesn=None, article_type=None, wxid=None, usip=None, ft=None, et=None):
+        """搜索 文章 获取文本
+
+        :param keyword: 关键词
+        :param page: 页数
+        :param timesn: 时间 1一天 / 2一周 / 3一月 / 4一年 / 5自定
+        :param article_type: 含有内容的类型： TYPE_IMAGE 有图 / TYPE_VIDEO 有视频 / TYPE_RICH 有图和视频 / TYPE_ALL 啥都有
+        :param wxid:
+        :param usip: wxid usip 联合起来就是账号内搜索
+        :param ft: 当 tsn 是 5 时，本参数代表时间，如： 2017-07-01
+        :param et: 当 tsn 是 5 时，本参数代表时间，如： 2017-07-15
+        :return:
+        """
         url = WechatSogouBasic._gen_search_article_url(keyword, page, timesn, article_type, wxid, usip, ft, et)
         r = requests.get(url)
         if not r.ok:
             # todo 错误处理
             return None
-        return r.text
+        return r
 
     @staticmethod
     def _search_gzh(keyword, page=1):
+        """搜索 公众号 获取文本
+
+        :param keyword: 公众号关键词 / 微信号
+        :param page:    页数 1-n
+        :return:
+        """
         url = WechatSogouBasic._gen_search_gzh_url(keyword, page)
         r = requests.get(url)
         if not r.ok:
             # todo 错误处理
             return None
-        return r.text
+        return r
