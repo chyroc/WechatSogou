@@ -1,17 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from nose.tools import assert_raises, assert_equal
 
+from nose.tools import assert_raises, assert_equal
 from lxml import etree
-from wechatsogou.tools import (
-    list_or_empty,
-    get_elem_text,
-    replace_html,
-    str_to_dict,
-    replace_space,
-    get_url_param
-)
+
+from wechatsogou.tools import list_or_empty, get_elem_text, replace_html, str_to_dict, replace_space, get_url_param
 
 
 class TestTools(unittest.TestCase):

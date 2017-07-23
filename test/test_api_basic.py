@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import (absolute_import, unicode_literals, print_function)
+from __future__ import absolute_import, unicode_literals, print_function
 
 import io
 import os
@@ -10,8 +10,6 @@ from nose.tools import assert_raises, assert_equal, assert_in
 import httpretty
 from hypothesis import given, strategies as st
 
-from wechatsogou import refactor_basic
-from wechatsogou.pkgs import unquote
 from wechatsogou.refactor_basic import WechatSogouBasic
 
 
@@ -53,19 +51,20 @@ class TestBasicGenURL(unittest.TestCase):
                 WechatSogouBasic._gen_search_article_url('高考', timesn=timesn)
 
     def test_gen_search_article_url_article_type(self):
-        url = WechatSogouBasic._gen_search_article_url('高考', article_type=refactor_basic.TYPE_ALL)
+        url = WechatSogouBasic._gen_search_article_url('高考', article_type=WechatSogouBasic.TYPE_ALL)
         assert_equal('interation=', url[-11:])
 
-        url = WechatSogouBasic._gen_search_article_url('高考', article_type=refactor_basic.TYPE_IMAGE)
+        url = WechatSogouBasic._gen_search_article_url('高考', article_type=WechatSogouBasic.TYPE_IMAGE)
         assert_in('interation=458754', url)
 
-        url = WechatSogouBasic._gen_search_article_url('高考', article_type=refactor_basic.TYPE_VIDEO)
+        url = WechatSogouBasic._gen_search_article_url('高考', article_type=WechatSogouBasic.TYPE_VIDEO)
         assert_in('interation=458756', url)
 
-        url = WechatSogouBasic._gen_search_article_url('高考', article_type=refactor_basic.TYPE_RICH)
+        url = WechatSogouBasic._gen_search_article_url('高考', article_type=WechatSogouBasic.TYPE_RICH)
         assert_in('interation=458754%2C458756', url)
 
 
+@unittest.skip
 class TestBasicSearchArticle(unittest.TestCase):
     def setUp(self):
         self.ws = WechatSogouBasic()

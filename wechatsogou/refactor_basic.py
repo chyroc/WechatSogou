@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import (absolute_import, unicode_literals, print_function)
+from __future__ import absolute_import, unicode_literals, print_function
 
 import datetime
 from collections import OrderedDict
@@ -9,15 +9,12 @@ import requests
 
 from wechatsogou.pkgs import urlencode
 
-TYPE_IMAGE = 'image'
-TYPE_VIDEO = 'video'
-TYPE_RICH = 'rich'
-TYPE_ALL = 'all'
-
 
 class WechatSogouBasic(object):
-    def __init__(self):
-        pass
+    TYPE_IMAGE = 'image'
+    TYPE_VIDEO = 'video'
+    TYPE_RICH = 'rich'
+    TYPE_ALL = 'all'
 
     @staticmethod
     def _gen_search_article_url(keyword, page=1, timesn=None, article_type=TYPE_ALL, wxid=None, usip=None, ft=None,
