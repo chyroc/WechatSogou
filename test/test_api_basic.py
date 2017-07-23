@@ -99,5 +99,22 @@ class TestBasicSearchArticle(unittest.TestCase):
         assert_equal(text, search_gaokao_article)
 
 
+@unittest.skip
+class TestBasicSearchGzh(unittest.TestCase):
+    def setUp(self):
+        self.ws = WechatSogouBasic()
+
+    @httpretty.activate
+    def test_search_gzh_keyword(self):
+        file_name = '{}/{}'.format(os.getcwd(), 'test/file/search-gaokao-article.html')
+        with io.open(file_name, encoding='utf-8') as f:
+            search_gaokao_gzh = f.read()
+            httpretty.register_uri(httpretty.GET, WechatSogouBasic._gen_search_gzh_url('高考'),
+                                   body=search_gaokao_gzh)
+
+        text = self.ws._search_article('高考')
+        assert_equal(text, search_gaokao_gzh)
+
+
 if __name__ == '__main__':
     unittest.main()
