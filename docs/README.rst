@@ -1,7 +1,7 @@
 基于搜狗微信搜索的微信公众号爬虫接口
 ====================================
 
-|py27| |py35|
+|Build Status| |PyPI version| |py36|
 
 项目简介
 ========
@@ -17,6 +17,7 @@
 
 赞助作者
 ========
+
 甲鱼说，咖啡是灵魂的饮料，买点咖啡
 
 谢谢：
@@ -396,16 +397,6 @@
 
 返回的是列表，每一项是不同公众号的的最近文章页
 
-打包
-====
-
--  打包上传到PyPI测试站点
-
-``python setup.py sdist --formats=gztar register -r pypitest upload -r pypitest``
-
--  打包上传到PyPI正式站点
-   ``python setup.py sdist --formats=gztar register upload``
-
 --------------
 
 TODO
@@ -421,6 +412,9 @@ TODO
 
 --------------
 
-.. |py27| image:: https://camo.githubusercontent.com/392a32588691a8418368a51ff33a12d41f11f0a9/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f707974686f6e2d322e372d6666363962342e737667
-.. |py35| image:: https://camo.githubusercontent.com/633acad03f4dbbaa8cca6bee5902207fd3b27a34/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f707974686f6e2d332e352d7265642e737667
-
+.. |Build Status| image:: https://travis-ci.org/Chyroc/WechatSogou.svg?branch=master
+   :target: https://github.com/Chyroc/WechatSogou
+.. |PyPI version| image:: https://badge.fury.io/py/wechatsogou.svg
+   :target: https://github.com/Chyroc/WechatSogou
+.. |py36| image:: https://img.shields.io/pypi/pyversions/wechatsogou.svg
+   :target: https://github.com/Chyroc/WechatSogou

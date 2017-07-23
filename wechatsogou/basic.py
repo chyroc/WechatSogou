@@ -4,7 +4,7 @@ import re
 import time
 import random
 import logging
-from builtins import input
+from future.builtins.misc import input
 
 import requests
 from lxml import etree
@@ -22,12 +22,10 @@ except ImportError:
 try:
     import StringIO
 
-
     def readimg(content):
         return Image.open(StringIO.StringIO(content))
 except ImportError:
     import tempfile
-
 
     def readimg(content):
         f = tempfile.TemporaryFile()

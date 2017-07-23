@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import re
-import time
 import logging
 
 import requests
@@ -338,9 +337,8 @@ class WechatSogouApi(WechatSogouBasic):
         sg_data = re.findall(u'window.sg_data={(.*?)}', text, re.S)
         sg_data = '{' + sg_data[0].replace(u'\r\n', '').replace(' ', '') + '}'
         sg_data = re.findall(u'{src:"(.*?)",ver:"(.*?)",timestamp:"(.*?)",signature:"(.*?)"}', sg_data)[0]
-        comment_req_url = 'http://mp.weixin.qq.com/mp/getcomment?src=' + sg_data[0] + '&ver=' + sg_data[
-            1] + '&timestamp=' + sg_data[2] + '&signature=' + sg_data[
-                              3] + '&uin=&key=&pass_ticket=&wxtoken=&devicetype=&clientversion=0&x5=0'
+        comment_req_url = 'http://mp.weixin.qq.com/mp/getcomment?src={}&ver={}&timestamp={}&signature={}&uin=&key=&pass_ticket=&wxtoken=&devicetype=&clientversion=0&x5=0'.format(
+            *sg_data)
         comment_text = self._get(comment_req_url, 'get', host='mp.weixin.qq.com', referer='http://mp.weixin.qq.com')
         comment_dict = eval(comment_text)
         ret = comment_dict['base_resp']['ret']

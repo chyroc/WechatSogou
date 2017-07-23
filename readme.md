@@ -3,12 +3,14 @@
 
 [![Build Status](https://travis-ci.org/Chyroc/WechatSogou.svg?branch=master)](https://github.com/Chyroc/WechatSogou)
 [![PyPI version](https://badge.fury.io/py/wechatsogou.svg)](https://github.com/Chyroc/WechatSogou)
-[![py36](https://img.shields.io/pypi/pyversions/wechatsogou.svg)](https://github.com/Chyroc/WechatSogou)
+[![py27,py35,py36](https://img.shields.io/pypi/pyversions/wechatsogou.svg)](https://github.com/Chyroc/WechatSogou)
 
 # 项目简介
 基于搜狗微信搜索的微信公众号爬虫接口，可以扩展成基于搜狗搜索的爬虫
 
 如果有问题，请提issue
+
+[CHANGELOG](./CHANGELOG.md)
 
 # 交流QQ群
 <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=2c888d2a84978b1fe863482166b9fe5e6418ae72eb2bf727905734d6af654fa5"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Github搜狗微信爬虫交流" title="Github搜狗微信爬虫交流">132955136</a>
@@ -29,7 +31,7 @@
 - [微信] [谁认领一下] [8]
 - [微信] [谁认领一下] [1]
 
-## 问题集锦
+# 问题集锦
     Q:没有得到原始文章url？
     A:微信屏蔽此接口，请在临时链接有效期内保存文章内容。
 
@@ -285,14 +287,6 @@ reply|回复
 <img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_sugg.png" />
 
 返回的是列表，每一项是不同公众号的的最近文章页
-
-# 打包
-- 打包上传到PyPI测试站点
-
-`python setup.py sdist --formats=gztar register -r pypitest upload -r pypitest`
-
-- 打包上传到PyPI正式站点
-`python setup.py sdist --formats=gztar register upload`
 
 ---
 

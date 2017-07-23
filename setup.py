@@ -1,35 +1,43 @@
-# -*- coding: utf-8 -*-
+import codecs
+from setuptools import setup
 
-from setuptools import setup, find_packages
-from codecs import open
-from os import path
 import wechatsogou
 
-here = path.abspath(path.dirname(__file__))
-
-with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
-    long_description = f.read()
+readme = codecs.open('docs/README.rst', encoding='utf-8').read()
+history = codecs.open('docs/HISTORY.rst', encoding='utf-8').read()
 
 setup(
     name='wechatsogou',
-
     version=wechatsogou.__version__,
-
-    description='api for wechat mp with sogou.',
-    long_description=long_description,
-
-    url='https://github.com/Chyroc/WechatSogou',
-
-    author='Chyroc Chen',
+    description='Api for wechat mp with sogou',
+    long_description=u'\n\n'.join([readme, history]),
+    author='Chyroc',
     author_email='chen_yunpeng@foxmail.com',
-
-    license='MIT',
-
-    keywords='python web wechat sogou api weixin',
-
-    packages=find_packages(),
-
-    install_requires=['requests'],
-
-    extras_require={},
+    url='https://github.com/Chyroc/WechatSogou',
+    packages=[
+        'wechatsogou',
+    ],
+    setup_requires=[
+        # minimum version to use environment markers
+        'setuptools>=20.6.8',
+    ],
+    install_requires=[
+        'future', 'lxml', 'Pillow', 'requests', 'six', 'Werkzeug', 'xlrd'
+    ],
+    include_package_data=True,
+    license='MIT License',
+    classifiers=[
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: MacOS :: MacOS X',
+        'Operating System :: Microsoft :: Windows',
+        'Operating System :: POSIX',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        'Programming Language :: Python :: Implementation :: PyPy',
+        'Programming Language :: Python :: Implementation :: CPython',
+    ],
 )
