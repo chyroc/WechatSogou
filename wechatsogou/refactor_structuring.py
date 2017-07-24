@@ -202,24 +202,15 @@ class WechatSogouStructuring(object):
         profile_desc = profile_area.xpath('ul/li[1]/div/text()')
         profile_principal = profile_area.xpath('ul/li[2]/div/text()')
 
-        article_json = find_article_json_re.findall(text)
-        article_json = article_json[0] + '}}]}'
-        article_json = json.loads(article_json)
-
-        for i in article_json['list']:
-            print(i)
-
         return {
             'gzh_info': {
-                'name': profile_name[0].replace(' ', ''),
+                'name': profile_name[0].strip(),
                 'wechat_id': profile_wechat_id[0].replace('微信号: ', '').strip('\n'),
                 'desc': profile_desc[0],
                 'principal': profile_principal[0],
                 'img': profile_img[0]
             },
-            'articel': {
-
-            }
+            'article': WechatSogouStructuring.get_article_by_history_json(text)
         }
 
     def get_article_by_history(self, text):

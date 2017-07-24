@@ -213,13 +213,22 @@ class TestStructuringGzh(unittest.TestCase):
                       '昨晚看了电影《冈仁波齐》，我不喜欢。',
                       '如果你是厨艺初学者，忘掉火候，那不是你应该关心的事情。',
                       '野鸡给自己加戏，观众不说话，并不等于看不明白。', ], digests)
-        # def test_structuring_history(self):
-        #     file_name = '{}/{}'.format(os.getcwd(), 'file/bitsea-history.html')
-        #     with io.open(file_name, encoding='utf-8') as f:
-        #         gzh_history = f.read()
-        #
-        #     gzh_article_list = WechatSogouStructuring.get_gzh_and_article_by_history(gzh_history)
-        #     print(gzh_article_list)
+
+    def test_structuring_history(self):
+        file_name = '{}/{}/{}'.format(os.getcwd(), fake_data_path, 'bitsea-history.html')
+        with io.open(file_name, encoding='utf-8') as f:
+            gzh_history = f.read()
+
+        gzh_article_list = WechatSogouStructuring.get_gzh_and_article_by_history(gzh_history)
+        assert_in('article', gzh_article_list)
+        gzh_info = gzh_article_list['gzh_info']
+
+        assert_equal('槽边往事', gzh_info['name'])
+        assert_equal('bitsea', gzh_info['wechat_id'])
+        assert_equal('和菜头的微信Blog，用于分享各种新鲜资讯', gzh_info['principal'])
+        assert_equal('http://wx.qlogo.cn/mmhead/Q3auHgzwzM6zmSwQkvHdgXDtnpAyLYjuib8QdW6ibKKGo8zcZVbYxiaUw/0',
+                     gzh_info['img'])
+        assert_equal(' ', gzh_info['desc'])
 
 
 if __name__ == '__main__':
