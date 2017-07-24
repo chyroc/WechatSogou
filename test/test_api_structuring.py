@@ -12,11 +12,12 @@ from nose.tools import assert_equal, assert_in, assert_true, assert_greater_equa
 from wechatsogou.refactor_structuring import WechatSogouStructuring
 
 ws_structuring = WechatSogouStructuring()
+fake_data_path = 'test/file'
 
 
 class TestStructuringGzh(unittest.TestCase):
     def test_structuring_gzh(self):
-        file_name = '{}/{}'.format(os.getcwd(), 'file/search-gaokao-gzh.html')
+        file_name = '{}/{}/{}'.format(os.getcwd(), fake_data_path, 'search-gaokao-gzh.html')
         with io.open(file_name, encoding='utf-8') as f:
             search_gaokao_gzh = f.read()
 
@@ -87,7 +88,7 @@ class TestStructuringGzh(unittest.TestCase):
                      authentications)
 
     def test_structuring_article(self):
-        file_name = '{}/{}'.format(os.getcwd(), 'file/search-gaokao-article.html')
+        file_name = '{}/{}/{}'.format(os.getcwd(), fake_data_path, 'search-gaokao-article.html')
         with io.open(file_name, encoding='utf-8') as f:
             search_gaokao_article = f.read()
 
@@ -154,7 +155,7 @@ class TestStructuringGzh(unittest.TestCase):
         assert_in(0, isvs)
 
     def test_structuring_article_by_history_json(self):
-        file_name = '{}/{}'.format(os.getcwd(), 'file/bitsea-history.html')
+        file_name = '{}/{}/{}'.format(os.getcwd(), fake_data_path, 'bitsea-history.html')
         with io.open(file_name, encoding='utf-8') as f:
             gzh_history = f.read()
 
