@@ -10,5 +10,8 @@ class WechatSogouStructuring(object):
     def get_article_by_search(self, text):
         pass
 
+    def get_gzh_by_history(self, text):
+        pass
+
     def get_article_by_history(self, text):
         pass
