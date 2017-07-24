@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<!--headTrap<body></body><head></head><html></html>--><html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+
+
+        <script nonce="" type="text/javascript">
+            window.logs = {
+                pagetime: {}
+            };
+            window.logs.pagetime['html_begin'] = (+new Date());
+        </script>
+
+        <link rel="dns-prefetch" href="//res.wx.qq.com">
+<link rel="dns-prefetch" href="//mmbiz.qpic.cn">
+<link rel="shortcut icon" type="image/x-icon" href="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/images/icon/common/favicon22c41b.ico">
+<script nonce="" type="text/javascript">
+    String.prototype.html = function(encode) {
+        var replace =["&#39;", "'", "&quot;", '"', "&nbsp;", " ", "&gt;", ">", "&lt;", "<", "&amp;", "&", "&yen;", "¥"];
+        if (encode) {
+            replace.reverse();
+        }
+        for (var i=0,str=this;i< replace.length;i+= 2) {
+             str=str.replace(new RegExp(replace[i],'g'),replace[i+1]);
+        }
+        return str;
+    };
+
+    window.isInWeixinApp = function() {
+        return /MicroMessenger/.test(navigator.userAgent);
+    };
+
+    window.getQueryFromURL = function(url) {
+        url = url || 'http://qq.com/s?a=b#rd';
+        var tmp = url.split('?'),
+            query = (tmp[1] || "").split('#')[0].split('&'),
+            params = {};
+        for (var i=0; i<query.length; i++) {
+            var arg = query[i].split('=');
+            params[arg[0]] = arg[1];
+        }
+        if (params['pass_ticket']) {
+        	params['pass_ticket'] = encodeURIComponent(params['pass_ticket'].html(false).html(false).replace(/\s/g,"+"));
+        }
+        return params;
+    };
+
+    (function() {
+	    var params = getQueryFromURL(location.href);
+        window.uin = params['uin'] || "" || '';
+        window.key = params['key'] || "" || '';
+        window.wxtoken = params['wxtoken'] || '';
+        window.pass_ticket = params['pass_ticket'] || '';
+    })();
+
+    function wx_loaderror() {
+        if (location.pathname === '/bizmall/reward') {
+            new Image().src = '/mp/jsreport?key=96&content=reward_res_load_err&r=' + Math.random();
+        }
+    }
+
+</script>
+
+        <title>槽边往事 </title>
+
+<link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/0.2.0/weui.css">
+<link rel="stylesheet" href="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/style/page/profile/sougou_profile3717bc.css">
+<!--[if lt IE 9]>
+<link rel="stylesheet" type="text/css" href="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/style/page/profile/sougou_profile_pc34eb15.css">
+<![endif]-->
+
+    </head>
+    <body id="" class="zh_CN ">
+
+<div class="page_profile_info">
+    <div class="page_profile_info_inner">
+        <div class="profile_info_area">
+            <div class="profile_info_group">
+                <span class="radius_avatar profile_avatar">
+                                        <img src="http://wx.qlogo.cn/mmhead/Q3auHgzwzM6zmSwQkvHdgXDtnpAyLYjuib8QdW6ibKKGo8zcZVbYxiaUw/0">
+                                    </span>
+                <div class="profile_info">
+                    <strong class="profile_nickname">
+                      槽边往事
+                    </strong>
+                                        <p class="profile_account">微信号: bitsea</p>
+                                    </div>
+            </div>
+            <ul class="profile_desc">
+                <li>
+                    <label class="profile_desc_label" for="">功能介绍</label>
+                    <div class="profile_desc_value" title=" "> </div>
+                </li>
+                <li>
+                    <label class="profile_desc_label" for="">帐号主体</label>
+                    <div class="profile_desc_value"><img class="icon_verify success" src="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/images/icon/common/icon_verify_success.2x2a26bd.png">和菜头的微信Blog，用于分享各种新鲜资讯</div>
+                </li>
+            </ul>
+
+            <div class="profile_opr"  style="display:none">
+                            <a href="javascript:void(0);" id="copyBt" class="weui_btn weui_btn_plain_primary">复制微信号</a>
+                        </div>
+
+        </div>
+        <div class="weui_category_title">最近10条群发</div>
+        <div class="weui_msg_card_list" id="history">
+
+        </div>
+        <div class="msg_card_tips">仅显示最近10条群发</div>
+
+        <div class="loadmore" style="display:none;" id="js_loading">
+            <div class="tips_wrp"><i class="icon_loading"></i><span class="tips">正在加载</span></div>
+        </div>
+        <div class="loadmore with_line" style="display:none;" id="js_nomore">
+            <div class="tips_wrp"><span class="tips">已无更多</span></div>
+        </div>
+    </div>
+    <div id="js_pc_qr_code" class="qr_code_pc_outer">
+        <div class="qr_code_pc_inner">
+            <div class="qr_code_pc">
+                <img id="js_pc_qr_code_img" class="qr_code_pc_img" src="/rr?timestamp=1500903767&amp;src=3&amp;ver=1&amp;signature=j-UHOhMduo5k39YWLr7GAxmHnOc9h0H-7t-XeSOMbuouv5WV9REgo4gNCMydj*QT9GH5fjEpLxeF9azHw-hDXzbq54A8eRYdzUarlx93t0s=">
+                <p>微信扫一扫<br>关注该公众号</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+        <script nonce="">
+    var __DEBUGINFO = {
+        debug_js : "//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/biz_wap/debug/console34c264.js",
+        safe_js : "//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/biz_wap/safe/moonsafe34c264.js",
+        res_list: []
+    };
+</script>
+
+<script nonce="">
+(function() {
+	function _addVConsole(uri) {
+		var url = '//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/' + uri;
+		document.write('<script nonce="" type="text/javascript" src="' + url + '"><\/script>');
+	}
+	if (
+		(document.cookie && document.cookie.indexOf('vconsole_open=1') > -1)
+		|| location.href.indexOf('vconsole=1') > -1
+	) {
+		_addVConsole('2.5.1/vconsole.min.js');
+		_addVConsole('plugin/vconsole-elements/1.0.2/vconsole-elements.min.js');
+		_addVConsole('plugin/vconsole-sources/1.0.1/vconsole-sources.min.js');
+		_addVConsole('plugin/vconsole-resources/1.0.0/vconsole-resources.min.js');
+		_addVConsole('plugin/vconsole-mpopt/1.0.0/vconsole-mpopt.js');
+	}
+})();
+</script>
+
+        <script>window.__moon_host = 'res.wx.qq.com';window.moon_map = {"biz_common/utils/respTypes.js":"//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/biz_common/utils/respTypes3518c6.js","biz_common/utils/url/parse.js":"//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/biz_common/utils/url/parse36ebcf.js","biz_common/template-2.0.1-cmd.js":"//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/biz_common/template-2.0.1-cmd3518c6.js","biz_wap/jsapi/core.js":"//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/biz_wap/jsapi/core34c264.js","biz_common/dom/class.js":"//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/biz_common/dom/class3518c6.js","biz_common/utils/string/emoji.js":"//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/biz_common/utils/string/emoji3518c6.js","biz_wap/utils/ajax.js":"//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/biz_wap/utils/ajax34c264.js","history/profile_history.html.js":"//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/history/profile_history.html369557.js","biz_common/utils/string/html.js":"//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/biz_common/utils/string/html3518c6.js","history/template_helper.js":"//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/history/template_helper24f185.js","appmsg/cdn_img_lib.js":"//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/appmsg/cdn_img_lib373857.js","biz_common/dom/event.js":"//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/biz_common/dom/event36f1bb.js","history/profile_history.js":"//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/history/profile_history3602f0.js","sougou/profile.js":"//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/sougou/profile31dd7f.js"};</script><script type="text/javascript">window.__wxgspeeds={}; window.__wxgspeeds.moonloadtime=+new Date()</script><script  type="text/javascript" src="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/biz_wap/moon368f86.js"></script>
+<script type="text/javascript">
+    document.domain="qq.com";
+    var biz = "MjM5MjAzODU2MA==" || "";
+    var src = "3" ;
+    var ver = "1" ;
+    var timestamp = "1500903762" ;
+    var signature = "4SIcXV37PKLPGi6qTHfgZmtcgq8r7gu5lNANXqNCVwzTrQA7D6f7LAAbp-yyh0Ciec90f4WM55iU5YityS-Bdg==" ;
+    var name="bitsea"||"槽边往事";
+        var msgList = {"list":[{"app_msg_ext_info":{"author":"和菜头","content":"","content_url":"/s?timestamp=1500903767&amp;src=3&amp;ver=1&amp;signature=X4l0IQ091w0DY2ERU7fD*h0VUwBxeHPOJH-Uk-vAfaPamMl6ij7fqAIHomnXQ2X2*2J94H0pixVjsjEkL0TbILtKInZ4hqPp3-lC1nQZcN9Fd*BGbTQp7WlZyzLvCXy0Z8yFVF*lIDlo75pemv7kW8wov4Hz5-uiVzBT5q*Nwaw=","copyright_stat":11,"cover":"http://mmbiz.qpic.cn/mmbiz_jpg/Ia6gU9JNtkrppSAo5YB4DL4xbNSk3XXIlS2zugTKicrrzFeh5TicVye3aSqia0M23icfakiaQd1z8YKIumia0wgtV79Q/0?wx_fmt=jpeg","del_flag":1,"digest":"善哉，善哉！","fileid":0,"is_multi":0,"multi_app_msg_item_list":[],"source_url":"","subtype":9,"title":"帝都深处好修行"},"comm_msg_info":{"content":"","datetime":1500872686,"fakeid":"2392038560","id":1000000727,"status":2,"type":49}},{"app_msg_ext_info":{"author":"和菜头","content":"","content_url":"/s?timestamp=1500903767&amp;src=3&amp;ver=1&amp;signature=X4l0IQ091w0DY2ERU7fD*h0VUwBxeHPOJH-Uk-vAfaPamMl6ij7fqAIHomnXQ2X2*2J94H0pixVjsjEkL0TbIPsfeXemAw1IR5Pt5J*6JqjpgotoKPL*6eVHbdcbi4JCEfsnhbnsQUTLQWpBZe5UILx8062e6A2L00LyjQArkxU=","copyright_stat":11,"cover":"http://mmbiz.qpic.cn/mmbiz_jpg/Ia6gU9JNtkr8ot1QcKNGQdHvE4ocr5ibE8SBPkfjrdYQtNFicOdaMO07jVYtdq4z1lG9vakEWFS4EugCzYUSbgcw/0?wx_fmt=jpeg","del_flag":1,"digest":"说出来今天的人根本不会信，我的初中英文老师李女士在上课的时候打毛衣。","fileid":0,"is_multi":0,"multi_app_msg_item_list":[],"source_url":"","subtype":9,"title":"如果我有个好一点的初中英文老师"},"comm_msg_info":{"content":"","datetime":1500524747,"fakeid":"2392038560","id":1000000722,"status":2,"type":49}},{"app_msg_ext_info":{"author":"和菜头","content":"","content_url":"/s?timestamp=1500903767&amp;src=3&amp;ver=1&amp;signature=X4l0IQ091w0DY2ERU7fD*h0VUwBxeHPOJH-Uk-vAfaPamMl6ij7fqAIHomnXQ2X2*2J94H0pixVjsjEkL0TbIOVd*HwElAYiJum8Q6su3tILWksr-4u9WZPSrfT7A6nErJ3f0kW8V1Jv9evurTe5X4pQrjjCZcE6WeYGwDJIH0Q=","copyright_stat":100,"cover":"http://mmbiz.qpic.cn/mmbiz_jpg/Ia6gU9JNtkrBRUVGNia9UebaSUny3OMdmcTiatOChOaLhA5le3iaezZY0JibefFUvTunaJEfxJlWRIwDpic5hrpPQgg/0?wx_fmt=jpeg","del_flag":1,"digest":"奔走相告：过气网红接到新广告！请点击，请阅读，请留言！","fileid":0,"is_multi":0,"multi_app_msg_item_list":[],"source_url":"http://a.app.qq.com/o/simple.jsp?pkgname=com.clover.myweather","subtype":9,"title":"【广告】让手机清凉一哈"},"comm_msg_info":{"content":"","datetime":1500456932,"fakeid":"2392038560","id":1000000720,"status":2,"type":49}},{"app_msg_ext_info":{"author":"和菜头","content":"","content_url":"/s?timestamp=1500903767&amp;src=3&amp;ver=1&amp;signature=X4l0IQ091w0DY2ERU7fD*h0VUwBxeHPOJH-Uk-vAfaPamMl6ij7fqAIHomnXQ2X2*2J94H0pixVjsjEkL0TbIBtaRJpx-JbQsm-5X*GWfaS-jBtKyhOmAxio5OIROqwV71OrvtaxYq1oZG-WM9apKbLGDPIBc0sCFUB4WBOagwk=","copyright_stat":11,"cover":"http://mmbiz.qpic.cn/mmbiz_jpg/Ia6gU9JNtkrBRUVGNia9UebaSUny3OMdmpfXhUxuHaYM0hf0CFzJXtspymwbMvcjHnkDvpAyEj6ZM3cEhBv7EIA/0?wx_fmt=jpeg","del_flag":1,"digest":"陛下们！微臣有话要说！","fileid":0,"is_multi":0,"multi_app_msg_item_list":[],"source_url":"","subtype":9,"title":"写给各位陛下"},"comm_msg_info":{"content":"","datetime":1500437929,"fakeid":"2392038560","id":1000000719,"status":2,"type":49}},{"app_msg_ext_info":{"author":"和菜头","content":"","content_url":"/s?timestamp=1500903767&amp;src=3&amp;ver=1&amp;signature=X4l0IQ091w0DY2ERU7fD*h0VUwBxeHPOJH-Uk-vAfaPamMl6ij7fqAIHomnXQ2X2*2J94H0pixVjsjEkL0TbID-eM8BIKq1ef1ajiKO1jz1k0E6xa1ROpt2Eo3Af6OHQGfYIq-WrfEsn3jLwps1V*TXmP6443wUYgrrStzJwKPc=","copyright_stat":11,"cover":"http://mmbiz.qpic.cn/mmbiz_jpg/Ia6gU9JNtkos8B1VXHy0xztCnTZEXpPdoicBvymPHcIJbnZk1SYJsibG6ddzKicUyftDsks6AhsL7ickSkO2gwqd2Q/0?wx_fmt=jpeg","del_flag":1,"digest":"对，我就那么说了，不服来咬我啊？","fileid":0,"is_multi":0,"multi_app_msg_item_list":[],"source_url":"","subtype":9,"title":"可能是年度电影的《大护法》"},"comm_msg_info":{"content":"","datetime":1500263822,"fakeid":"2392038560","id":1000000716,"status":2,"type":49}},{"app_msg_ext_info":{"author":"和菜头","content":"","content_url":"/s?timestamp=1500903767&amp;src=3&amp;ver=1&amp;signature=X4l0IQ091w0DY2ERU7fD*h0VUwBxeHPOJH-Uk-vAfaPamMl6ij7fqAIHomnXQ2X2*2J94H0pixVjsjEkL0TbIJenG0s3GyCaMQIK18U3CHsWrrGwuL5Z0X*DSoztV49L-ZPrf39mbml1GBkZnX*gueDdUJBIHgvyFsaVCTePLrI=","copyright_stat":11,"cover":"http://mmbiz.qpic.cn/mmbiz_jpg/Ia6gU9JNtkqTjhTc9eiaUt0fvD9ibF8mryiavgLtDeicHZBFCFPd30qEkeBn6j5yCNcgan5DfX5kGbs29YDbQUUhPA/0?wx_fmt=jpeg","del_flag":1,"digest":"在一个现代商业社会里，如何决定要不要去相信一个人？如何把人际关系判定的时间精力节省下来？网络慈父和菜头是这么说的：","fileid":0,"is_multi":0,"multi_app_msg_item_list":[],"source_url":"","subtype":9,"title":"怎样决定要不要去相信一个人"},"comm_msg_info":{"content":"","datetime":1499939618,"fakeid":"2392038560","id":1000000711,"status":2,"type":49}},{"app_msg_ext_info":{"author":"和菜头","content":"","content_url":"/s?timestamp=1500903767&amp;src=3&amp;ver=1&amp;signature=X4l0IQ091w0DY2ERU7fD*h0VUwBxeHPOJH-Uk-vAfaPamMl6ij7fqAIHomnXQ2X2*2J94H0pixVjsjEkL0TbIE2LQ5dJqrG018DC4M7E5RQ3D4V1p*eBszVaqr2saxG864LssINc8RKcASbkdSDEMiguB9xwuMcJXgGANUpBjtg=","copyright_stat":100,"cover":"http://mmbiz.qpic.cn/mmbiz_jpg/Ia6gU9JNtkp6caJKWX1C0Cl6qLoelOCdahlSo8bg2wjnicx6dXxQp4icsN6dGINicGPtQ9eqgopeTkhml3YlzeQBg/0?wx_fmt=jpeg","del_flag":1,"digest":"在一名凡夫身上，我看到了菩萨那样的行止。","fileid":0,"is_multi":0,"multi_app_msg_item_list":[],"source_url":"","subtype":9,"title":"照亮世界的那个人"},"comm_msg_info":{"content":"","datetime":1499872172,"fakeid":"2392038560","id":1000000709,"status":2,"type":49}},{"app_msg_ext_info":{"author":"和菜头","content":"","content_url":"/s?timestamp=1500903767&amp;src=3&amp;ver=1&amp;signature=X4l0IQ091w0DY2ERU7fD*h0VUwBxeHPOJH-Uk-vAfaPamMl6ij7fqAIHomnXQ2X2*2J94H0pixVjsjEkL0TbINN4P-L*qGaX0SopEwmBNGbOUc*Ad5D8TKEUZOPNduI4uupwRQFL*I4r151vpRYSA92EYzb34uf82WZJMa5-kTU=","copyright_stat":11,"cover":"http://mmbiz.qpic.cn/mmbiz_jpg/Ia6gU9JNtkp6caJKWX1C0Cl6qLoelOCdPLPZGHSfYVlP72yIRX1o8FicldodZPwOylVL6iaEFhSulXVIMTspYNVg/0?wx_fmt=jpeg","del_flag":1,"digest":"昨晚看了电影《冈仁波齐》，我不喜欢。","fileid":0,"is_multi":0,"multi_app_msg_item_list":[],"source_url":"","subtype":9,"title":"《冈仁波齐》观后"},"comm_msg_info":{"content":"","datetime":1499834605,"fakeid":"2392038560","id":1000000708,"status":2,"type":49}},{"app_msg_ext_info":{"author":"和菜头","content":"","content_url":"/s?timestamp=1500903767&amp;src=3&amp;ver=1&amp;signature=X4l0IQ091w0DY2ERU7fD*h0VUwBxeHPOJH-Uk-vAfaPamMl6ij7fqAIHomnXQ2X2*2J94H0pixVjsjEkL0TbIEhfSajMgMm4uzkdEhe*6MP8H9YKg1q38xqFlBV3*sJxgwupUV8b1Q2c6OhhBEZgCTyKQvHWnGLDLBH0gvC10zQ=","copyright_stat":11,"cover":"http://mmbiz.qpic.cn/mmbiz_jpg/Ia6gU9JNtkoV4xEzc14YO7F3vwfCk212Y9W1h6F9gj17uojmydmccPNcEJZFrBPQb7JMBjGUSeOEFYdWymKWHQ/0?wx_fmt=jpeg","del_flag":1,"digest":"如果你是厨艺初学者，忘掉火候，那不是你应该关心的事情。","fileid":0,"is_multi":0,"multi_app_msg_item_list":[],"source_url":"","subtype":9,"title":"没有什么火候不火候的"},"comm_msg_info":{"content":"","datetime":1499748007,"fakeid":"2392038560","id":1000000706,"status":2,"type":49}},{"app_msg_ext_info":{"author":"和菜头","content":"","content_url":"/s?timestamp=1500903767&amp;src=3&amp;ver=1&amp;signature=X4l0IQ091w0DY2ERU7fD*h0VUwBxeHPOJH-Uk-vAfaPamMl6ij7fqAIHomnXQ2X2*2J94H0pixVjsjEkL0TbIBK5p9HtcN9dTEMbIU5Vspa3IaeGox55FYOfhNbWBL2Td4hxYt3GKGzRe-TlOPVlDWXuy8CvdD1ap1fmhNt9Cy0=","copyright_stat":11,"cover":"http://mmbiz.qpic.cn/mmbiz_jpg/Ia6gU9JNtkqxpjic9VG9UicZsAIKJkUgw3CNzpaIBp32hYZOWib03LS3JJ4oicsc5nhxKWRRVMeToWwpiabepCxicBaA/0?wx_fmt=jpeg","del_flag":1,"digest":"野鸡给自己加戏，观众不说话，并不等于看不明白。","fileid":0,"is_multi":0,"multi_app_msg_item_list":[],"source_url":"","subtype":9,"title":"完美受害人"},"comm_msg_info":{"content":"","datetime":1499484206,"fakeid":"2392038560","id":1000000702,"status":2,"type":49}}]};
+        seajs.use("sougou/profile.js");
+</script>
+
+    </body>
+    <script nonce="" type="text/javascript">document.addEventListener("touchstart", function() {},false);</script>
+</html>
+<!--tailTrap<body></body><head></head><html></html>-->

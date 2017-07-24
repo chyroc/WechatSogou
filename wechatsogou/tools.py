@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import, unicode_literals, print_function
+
 import ast
 
 import requests
@@ -81,7 +83,7 @@ def replace_html(data):
         return dict([(replace_html(k), replace_html(v)) for k, v in data.items()])
     elif isinstance(data, list):
         return [replace_html(l) for l in data]
-    elif isinstance(data, str):
+    elif isinstance(data, str) or isinstance(data, unicode):
         return _replace_str_html(data)
     else:
         return data
