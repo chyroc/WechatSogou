@@ -15,7 +15,7 @@ ws_structuring = WechatSogouStructuring()
 
 class TestStructuringGzh(unittest.TestCase):
     def test_structuring_gzh(self):
-        file_name = '{}/{}'.format(os.getcwd(), 'file/search-gaokao-gzh.html')
+        file_name = '{}/{}'.format(os.getcwd(), 'test/file/search-gaokao-gzh.html')
         with io.open(file_name, encoding='utf-8') as f:
             search_gaokao_gzh = f.read()
 
