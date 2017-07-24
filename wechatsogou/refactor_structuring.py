@@ -105,6 +105,25 @@ class WechatSogouStructuring(object):
         return articles
 
     @staticmethod
+    def get_gzh_info_by_history(text):
+        page = etree.HTML(text)
+        profile_area = page.xpath('//div[@class="profile_info_area"]')[0]
+
+        profile_img = profile_area.xpath('div[1]/span/img/@src')
+        profile_name = profile_area.xpath('div[1]/div/strong/text()')
+        profile_wechat_id = profile_area.xpath('div[1]/div/p/text()')
+        profile_desc = profile_area.xpath('ul/li[1]/div/text()')
+        profile_principal = profile_area.xpath('ul/li[2]/div/text()')
+
+        return {
+            'name': profile_name[0].strip(),
+            'wechat_id': profile_wechat_id[0].replace('微信号: ', '').strip('\n'),
+            'desc': profile_desc[0],
+            'principal': profile_principal[0],
+            'img': profile_img[0]
+        }
+
+    @staticmethod
     def get_article_by_history_json(text, article_json=None, **kwargs):
         if article_json is None:
             article_json = find_article_json_re.findall(text)
@@ -192,26 +211,8 @@ class WechatSogouStructuring(object):
         return items_new
 
     @staticmethod
-    def get_gzh_and_article_by_history(text):
-        page = etree.HTML(text)
-        profile_area = page.xpath('//div[@class="profile_info_area"]')[0]
-
-        profile_img = profile_area.xpath('div[1]/span/img/@src')
-        profile_name = profile_area.xpath('div[1]/div/strong/text()')
-        profile_wechat_id = profile_area.xpath('div[1]/div/p/text()')
-        profile_desc = profile_area.xpath('ul/li[1]/div/text()')
-        profile_principal = profile_area.xpath('ul/li[2]/div/text()')
-
+    def get_gzh_info_and_article_by_history(text):
         return {
-            'gzh_info': {
-                'name': profile_name[0].strip(),
-                'wechat_id': profile_wechat_id[0].replace('微信号: ', '').strip('\n'),
-                'desc': profile_desc[0],
-                'principal': profile_principal[0],
-                'img': profile_img[0]
-            },
+            'gzh_info': WechatSogouStructuring.get_gzh_info_by_history(text),
             'article': WechatSogouStructuring.get_article_by_history_json(text)
         }
-
-    def get_article_by_history(self, text):
-        pass
