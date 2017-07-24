@@ -17,6 +17,7 @@ test/config.py
 *.pyc
 .tox/
 build/
+.hypothesis/
 test/.hypothesis/
 t.py
 y.py

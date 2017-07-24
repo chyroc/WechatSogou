@@ -10,7 +10,7 @@ import requests
 from wechatsogou.pkgs import urlencode
 
 
-class WechatSogouBasic(object):
+class WechatSogouRequest(object):
     TYPE_IMAGE = 'image'
     TYPE_VIDEO = 'video'
     TYPE_RICH = 'rich'
@@ -106,7 +106,7 @@ class WechatSogouBasic(object):
         :param et: 当 tsn 是 5 时，本参数代表时间，如： 2017-07-15
         :return:
         """
-        url = WechatSogouBasic._gen_search_article_url(keyword, page, timesn, article_type, wxid, usip, ft, et)
+        url = WechatSogouRequest._gen_search_article_url(keyword, page, timesn, article_type, wxid, usip, ft, et)
         r = requests.get(url)
         if not r.ok:
             # todo 错误处理
@@ -121,7 +121,7 @@ class WechatSogouBasic(object):
         :param page:    页数 1-n
         :return:
         """
-        url = WechatSogouBasic._gen_search_gzh_url(keyword, page)
+        url = WechatSogouRequest._gen_search_gzh_url(keyword, page)
         r = requests.get(url)
         if not r.ok:
             # todo 错误处理
