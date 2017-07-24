@@ -49,12 +49,3 @@ class WechatCache(object):
         删除键值key存储的缓存
         """
         return self.cache.delete(key)
-
-
-if __name__ == '__main__':
-    cache = WechatCache()
-    import requests
-
-    r = requests.session()
-    print(cache.set('1', r))
-    print(cache.get('1'), type(cache.get('1')))

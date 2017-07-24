@@ -1,51 +1,27 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import, unicode_literals, print_function
+
 import re
 import time
 import random
 import logging
-from future.builtins.misc import input
 
+from future.builtins.misc import input
 import requests
 from lxml import etree
-from PIL import Image
 
-try:
-    from urllib.request import quote as quote
-except ImportError:
-    from urllib import quote as quote
-    import sys
-
-    reload(sys)
-    sys.setdefaultencoding('utf-8')
-
-try:
-    import StringIO
-
-    def readimg(content):
-        return Image.open(StringIO.StringIO(content))
-except ImportError:
-    import tempfile
-
-    def readimg(content):
-        f = tempfile.TemporaryFile()
-        f.write(content)
-        return Image.open(f)
-
-from . import config
-from .exceptions import (
+from wechatsogou.pkgs import quote, readimg
+from wechatsogou import config
+from wechatsogou.exceptions import (
     WechatSogouException,
     WechatSogouVcodeException,
     WechatSogouRequestsException,
     WechatSogouVcodeOcrException
 )
-from .ruokuaicode import RClient
-from .filecache import WechatCache
-from .tools import (
-    replace_html,
-    replace_space,
-    get_encoding_from_reponse
-)
+from wechatsogou.ruokuaicode import RClient
+from wechatsogou.filecache import WechatCache
+from wechatsogou.tools import replace_html, replace_space, get_encoding_from_reponse
 
 logger = logging.getLogger()
 

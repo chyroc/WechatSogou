@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from PIL import Image
+
 # url_parse
 try:
     import urlparse as url_parse
@@ -23,3 +25,25 @@ try:
     from urllib import unquote
 except:
     from urllib.parse import unquote
+
+# quote
+try:
+    from urllib.request import quote as quote
+except ImportError:
+    from urllib import quote as quote
+
+# readimg
+try:
+    import StringIO
+
+
+    def readimg(content):
+        return Image.open(StringIO.StringIO(content))
+except ImportError:
+    import tempfile
+
+
+    def readimg(content):
+        f = tempfile.TemporaryFile()
+        f.write(content)
+        return Image.open(f)
