@@ -36,12 +36,10 @@ except ImportError:
 try:
     import StringIO
 
-
     def readimg(content):
         return Image.open(StringIO.StringIO(content))
 except ImportError:
     import tempfile
-
 
     def readimg(content):
         f = tempfile.TemporaryFile()
