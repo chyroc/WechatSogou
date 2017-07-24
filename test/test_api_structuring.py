@@ -11,6 +11,8 @@ from nose.tools import assert_equal, assert_in, assert_true, assert_greater_equa
 
 from wechatsogou.refactor_structuring import WechatSogouStructuring
 
+assert_equal.__self__.maxDiff = None
+
 ws_structuring = WechatSogouStructuring()
 fake_data_path = 'test/file'
 
