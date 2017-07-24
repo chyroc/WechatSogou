@@ -10,7 +10,7 @@ from nose.tools import assert_raises, assert_equal, assert_in, assert_not_equal
 import httpretty
 from hypothesis import given, strategies as st
 
-from wechatsogou.refactor_basic import WechatSogouBasic
+from wechatsogou.refactor_request import WechatSogouBasic
 
 gaokao_keyword = '高考'
 ws = WechatSogouBasic()
