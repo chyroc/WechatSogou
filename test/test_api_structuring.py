@@ -5,6 +5,7 @@ from __future__ import absolute_import, unicode_literals, print_function
 import io
 import os
 import unittest
+import datetime
 
 from nose.tools import assert_equal, assert_in, assert_true, assert_greater_equal
 
@@ -15,7 +16,7 @@ ws_structuring = WechatSogouStructuring()
 
 class TestStructuringGzh(unittest.TestCase):
     def test_structuring_gzh(self):
-        file_name = '{}/{}'.format(os.getcwd(), 'test/file/search-gaokao-gzh.html')
+        file_name = '{}/{}'.format(os.getcwd(), 'file/search-gaokao-gzh.html')
         with io.open(file_name, encoding='utf-8') as f:
             search_gaokao_gzh = f.read()
 
@@ -86,7 +87,7 @@ class TestStructuringGzh(unittest.TestCase):
                      authentications)
 
     def test_structuring_article(self):
-        file_name = '{}/{}'.format(os.getcwd(), 'test/file/search-gaokao-article.html')
+        file_name = '{}/{}'.format(os.getcwd(), 'file/search-gaokao-article.html')
         with io.open(file_name, encoding='utf-8') as f:
             search_gaokao_article = f.read()
 
@@ -151,6 +152,71 @@ class TestStructuringGzh(unittest.TestCase):
                      gzh_names)
         assert_in(1, isvs)
         assert_in(0, isvs)
+
+    def test_structuring_article_by_history_json(self):
+        file_name = '{}/{}'.format(os.getcwd(), 'file/bitsea-history.html')
+        with io.open(file_name, encoding='utf-8') as f:
+            gzh_history = f.read()
+
+        article_list = WechatSogouStructuring.get_article_by_history_json(gzh_history)
+        titles = []
+        urls = []
+        digests = []
+        for i in article_list:
+            assert_equal('和菜头', i['author'])
+            assert_equal('49', i['type'])
+            assert_in('mp.weixin.qq.com/s?timestamp=', i['content_url'])
+            assert_in(i['copyright_stat'], [11, 100])
+            assert_in('mmbiz.qpic.cn/mmbiz_jpg/', i['cover'])
+            assert_greater_equal(datetime.datetime.fromtimestamp(i['datetime']), datetime.datetime(2000, 1, 1))
+
+            urls.append(i['content_url'])
+            titles.append(i['title'])
+            digests.append(i['digest'])
+
+        assert_equal(
+            ['帝都深处好修行',
+             '如果我有个好一点的初中英文老师',
+             '【广告】让手机清凉一哈',
+             '写给各位陛下',
+             '可能是年度电影的《大护法》',
+             '怎样决定要不要去相信一个人',
+             '照亮世界的那个人',
+             '《冈仁波齐》观后',
+             '没有什么火候不火候的',
+             '完美受害人', ],
+            titles)
+
+        assert_equal([
+            'http://mp.weixin.qq.com/s?timestamp=1500903767&src=3&ver=1&signature=X4l0IQ091w0DY2ERU7fD*h0VUwBxeHPOJH-Uk-vAfaPamMl6ij7fqAIHomnXQ2X2*2J94H0pixVjsjEkL0TbILtKInZ4hqPp3-lC1nQZcN9Fd*BGbTQp7WlZyzLvCXy0Z8yFVF*lIDlo75pemv7kW8wov4Hz5-uiVzBT5q*Nwaw=',
+            'http://mp.weixin.qq.com/s?timestamp=1500903767&src=3&ver=1&signature=X4l0IQ091w0DY2ERU7fD*h0VUwBxeHPOJH-Uk-vAfaPamMl6ij7fqAIHomnXQ2X2*2J94H0pixVjsjEkL0TbIPsfeXemAw1IR5Pt5J*6JqjpgotoKPL*6eVHbdcbi4JCEfsnhbnsQUTLQWpBZe5UILx8062e6A2L00LyjQArkxU=',
+            'http://mp.weixin.qq.com/s?timestamp=1500903767&src=3&ver=1&signature=X4l0IQ091w0DY2ERU7fD*h0VUwBxeHPOJH-Uk-vAfaPamMl6ij7fqAIHomnXQ2X2*2J94H0pixVjsjEkL0TbIOVd*HwElAYiJum8Q6su3tILWksr-4u9WZPSrfT7A6nErJ3f0kW8V1Jv9evurTe5X4pQrjjCZcE6WeYGwDJIH0Q=',
+            'http://mp.weixin.qq.com/s?timestamp=1500903767&src=3&ver=1&signature=X4l0IQ091w0DY2ERU7fD*h0VUwBxeHPOJH-Uk-vAfaPamMl6ij7fqAIHomnXQ2X2*2J94H0pixVjsjEkL0TbIBtaRJpx-JbQsm-5X*GWfaS-jBtKyhOmAxio5OIROqwV71OrvtaxYq1oZG-WM9apKbLGDPIBc0sCFUB4WBOagwk=',
+            'http://mp.weixin.qq.com/s?timestamp=1500903767&src=3&ver=1&signature=X4l0IQ091w0DY2ERU7fD*h0VUwBxeHPOJH-Uk-vAfaPamMl6ij7fqAIHomnXQ2X2*2J94H0pixVjsjEkL0TbID-eM8BIKq1ef1ajiKO1jz1k0E6xa1ROpt2Eo3Af6OHQGfYIq-WrfEsn3jLwps1V*TXmP6443wUYgrrStzJwKPc=',
+            'http://mp.weixin.qq.com/s?timestamp=1500903767&src=3&ver=1&signature=X4l0IQ091w0DY2ERU7fD*h0VUwBxeHPOJH-Uk-vAfaPamMl6ij7fqAIHomnXQ2X2*2J94H0pixVjsjEkL0TbIJenG0s3GyCaMQIK18U3CHsWrrGwuL5Z0X*DSoztV49L-ZPrf39mbml1GBkZnX*gueDdUJBIHgvyFsaVCTePLrI=',
+            'http://mp.weixin.qq.com/s?timestamp=1500903767&src=3&ver=1&signature=X4l0IQ091w0DY2ERU7fD*h0VUwBxeHPOJH-Uk-vAfaPamMl6ij7fqAIHomnXQ2X2*2J94H0pixVjsjEkL0TbIE2LQ5dJqrG018DC4M7E5RQ3D4V1p*eBszVaqr2saxG864LssINc8RKcASbkdSDEMiguB9xwuMcJXgGANUpBjtg=',
+            'http://mp.weixin.qq.com/s?timestamp=1500903767&src=3&ver=1&signature=X4l0IQ091w0DY2ERU7fD*h0VUwBxeHPOJH-Uk-vAfaPamMl6ij7fqAIHomnXQ2X2*2J94H0pixVjsjEkL0TbINN4P-L*qGaX0SopEwmBNGbOUc*Ad5D8TKEUZOPNduI4uupwRQFL*I4r151vpRYSA92EYzb34uf82WZJMa5-kTU=',
+            'http://mp.weixin.qq.com/s?timestamp=1500903767&src=3&ver=1&signature=X4l0IQ091w0DY2ERU7fD*h0VUwBxeHPOJH-Uk-vAfaPamMl6ij7fqAIHomnXQ2X2*2J94H0pixVjsjEkL0TbIEhfSajMgMm4uzkdEhe*6MP8H9YKg1q38xqFlBV3*sJxgwupUV8b1Q2c6OhhBEZgCTyKQvHWnGLDLBH0gvC10zQ=',
+            'http://mp.weixin.qq.com/s?timestamp=1500903767&src=3&ver=1&signature=X4l0IQ091w0DY2ERU7fD*h0VUwBxeHPOJH-Uk-vAfaPamMl6ij7fqAIHomnXQ2X2*2J94H0pixVjsjEkL0TbIBK5p9HtcN9dTEMbIU5Vspa3IaeGox55FYOfhNbWBL2Td4hxYt3GKGzRe-TlOPVlDWXuy8CvdD1ap1fmhNt9Cy0=']
+            , urls)
+
+        assert_equal(['善哉，善哉！',
+                      '说出来今天的人根本不会信，我的初中英文老师李女士在上课的时候打毛衣。',
+                      '奔走相告：过气网红接到新广告！请点击，请阅读，请留言！',
+                      '陛下们！微臣有话要说！',
+                      '对，我就那么说了，不服来咬我啊？',
+                      '在一个现代商业社会里，如何决定要不要去相信一个人？如何把人际关系判定的时间精力节省下来？网络慈父和菜头是这么说的：',
+                      '在一名凡夫身上，我看到了菩萨那样的行止。',
+                      '昨晚看了电影《冈仁波齐》，我不喜欢。',
+                      '如果你是厨艺初学者，忘掉火候，那不是你应该关心的事情。',
+                      '野鸡给自己加戏，观众不说话，并不等于看不明白。', ], digests)
+        # def test_structuring_history(self):
+        #     file_name = '{}/{}'.format(os.getcwd(), 'file/bitsea-history.html')
+        #     with io.open(file_name, encoding='utf-8') as f:
+        #         gzh_history = f.read()
+        #
+        #     gzh_article_list = WechatSogouStructuring.get_gzh_and_article_by_history(gzh_history)
+        #     print(gzh_article_list)
 
 
 if __name__ == '__main__':
