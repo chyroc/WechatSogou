@@ -138,7 +138,7 @@ class WechatSogouRequest(object):
 
         Returns
         -------
-        requests
+        requests.models.Response
             return of requests
         """
 
@@ -162,7 +162,7 @@ class WechatSogouRequest(object):
 
         Returns
         -------
-        requests
+        requests.models.Response
             return of requests
         """
         url = WechatSogouRequest._gen_search_gzh_url(keyword, page)

@@ -2,12 +2,9 @@
 
 from __future__ import absolute_import, unicode_literals, print_function
 
-import io
-import os
 import unittest
-from nose.tools import assert_raises, assert_equal, assert_in, assert_not_equal, assert_not_in
+from nose.tools import assert_raises, assert_equal, assert_in, assert_not_in
 
-import httpretty
 from hypothesis import given, strategies as st
 
 from wechatsogou.refactor_request import WechatSogouRequest
@@ -37,14 +34,14 @@ class TestBasicGenSearchArticleURL(unittest.TestCase):
             assert_in('type=2&page=1&ie=utf8&query=', url)
             assert_not_in('ft=&et=', url)
 
-            url = WechatSogouRequest._gen_search_article_url(gaokao_keyword, timesn=timesn, ft=str(ft))
+            url = WechatSogouRequest._gen_search_article_url(gaokao_keyword, timesn=timesn, ft=ft)
             assert_in('type=2&page=1&ie=utf8&query=', url)
             assert_not_in('ft=&et=', url)
         elif timesn in [1, 2, 3, 4]:
             url = WechatSogouRequest._gen_search_article_url(gaokao_keyword, timesn=timesn)
             assert_in('tsn={}&ft=&et='.format(timesn), url)
 
-            url = WechatSogouRequest._gen_search_article_url(gaokao_keyword, timesn=timesn, ft=str(ft))
+            url = WechatSogouRequest._gen_search_article_url(gaokao_keyword, timesn=timesn, ft=ft)
             assert_in('tsn={}&ft=&et='.format(timesn), url)
         elif timesn == 5:
             if ft <= et:
@@ -70,54 +67,3 @@ class TestBasicGenSearchArticleURL(unittest.TestCase):
 
         url = WechatSogouRequest._gen_search_article_url(gaokao_keyword, article_type=WechatSogouRequest.TYPE_RICH)
         assert_in('interation=458754%2C458756', url)
-
-
-class TestBasicGenSearchGzhURL(unittest.TestCase):
-    def test_gen_search_article_url_keyword(self):
-        url = WechatSogouRequest._gen_search_gzh_url(gaokao_keyword)
-        assert_equal('http://weixin.sogou.com/weixin?type=1&page=1&ie=utf8&query=%E9%AB%98%E8%80%83', url)
-
-    @given(st.integers(min_value=-20000, max_value=20000))
-    def test_gen_search_gzh_url_page(self, page):
-        if page > 0:
-            url = WechatSogouRequest._gen_search_gzh_url(gaokao_keyword, page)
-            assert_in('page={}'.format(page), url)
-        else:
-            with assert_raises(AssertionError):
-                WechatSogouRequest._gen_search_gzh_url(gaokao_keyword, page)
-
-
-class TestBasicSearchArticle(unittest.TestCase):
-    @httpretty.activate
-    def test_search_article_keyword(self):
-        url = WechatSogouRequest._gen_search_article_url(gaokao_keyword)
-        file_name = '{}/{}'.format(os.getcwd(), 'test/file/search-gaokao-article.html')
-        with io.open(file_name, encoding='utf-8') as f:
-            search_gaokao_article = f.read()
-            httpretty.register_uri(httpretty.GET, url, body=search_gaokao_article)
-
-        r = WechatSogouRequest._search_article(gaokao_keyword)
-        assert_equal(search_gaokao_article, r.text)
-        assert_equal(url, r.url)
-        assert_not_equal(WechatSogouRequest._gen_search_article_url(gaokao_keyword, 2), r.url)
-        assert_not_equal(WechatSogouRequest._search_gzh(gaokao_keyword), r.url)
-
-
-class TestBasicSearchGzh(unittest.TestCase):
-    @httpretty.activate
-    def test_search_gzh_keyword(self):
-        url = WechatSogouRequest._gen_search_gzh_url(gaokao_keyword)
-        file_name = '{}/{}'.format(os.getcwd(), 'test/file/search-gaokao-gzh.html')
-        with io.open(file_name, encoding='utf-8') as f:
-            search_gaokao_gzh = f.read()
-            httpretty.register_uri(httpretty.GET, url, body=search_gaokao_gzh)
-
-        r = WechatSogouRequest._search_gzh(gaokao_keyword)
-        assert_equal(search_gaokao_gzh, r.text)
-        assert_equal(url, r.url)
-        assert_not_equal(WechatSogouRequest._search_gzh(gaokao_keyword, 2), r.url)
-        assert_not_equal(WechatSogouRequest._search_article(gaokao_keyword), r.url)
-
-
-if __name__ == '__main__':
-    unittest.main()
