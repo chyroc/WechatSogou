@@ -8,9 +8,7 @@ from nose.tools import assert_raises, assert_equal, assert_in
 from hypothesis import given, strategies as st
 
 from wechatsogou.refactor_request import WechatSogouRequest
-
-gaokao_keyword = '高考'
-ws = WechatSogouRequest()
+from test.test_main import gaokao_keyword
 
 
 class TestBasicGenSearchGzhURL(unittest.TestCase):
