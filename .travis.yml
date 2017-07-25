@@ -1,5 +1,7 @@
 language: python
 
+dist: precise
+
 python:
   - "2.7.12"
   - "3.5.3"
