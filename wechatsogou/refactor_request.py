@@ -17,23 +17,37 @@ class WechatSogouRequest(object):
     TYPE_ALL = 'all'
 
     @staticmethod
-    def _gen_search_article_url(keyword, page=1, timesn=None, article_type=TYPE_ALL, wxid=None, usip=None, ft=None,
+    def _gen_search_article_url(keyword, page=1, timesn=0, article_type=TYPE_ALL, wxid=None, usip=None, ft=None,
                                 et=None):
-        """ 拼接搜索 文章 URL
+        """拼接搜索 文章 URL
 
-        :param keyword:      搜索文字
-        :param page:         页数
-        :param timesn:       时间 1一天 / 2一周 / 3一月 / 4一年 / 5自定
-        :param ft:           当 tsn 是 5 时，本参数代表时间，如： 2017-07-01
-        :param et:           当 tsn 是 5 时，本参数代表时间，如： 2017-07-15
-        :param artilce_type: 含有内容的类型： TYPE_IMAGE 有图 / TYPE_VIDEO 有视频 / TYPE_RICH 有图和视频 / TYPE_ALL 啥都有
-        :param wxid:
-        :param usip:         wxid usip 联合起来就是账号内搜索
-        :return:
+        Parameters
+        ----------
+        keyword : str or unicode
+            搜索文字
+        page : int, optional
+            页数 the default is 1
+        timesn : {0, 1, 2, 3, 4, 5}
+            时间 0 没有限制 / 1一天 / 2一周 / 3一月 / 4一年 / 5自定
+            the default is 0
+        article_type : {'image', 'video', 'rich', 'all'}
+            含有内容的类型 TYPE_IMAGE 有图 / TYPE_VIDEO 有视频 / TYPE_RICH 有图和视频 / TYPE_ALL 啥都有
+        wxid : None
+            wxid usip 联合起来就是账号内搜索
+        usip : None
+            wxid usip 联合起来就是账号内搜索
+        ft, et : datetime.date
+            当 tsn 是 5 时，ft 代表开始时间，如： 2017-07-01
+            当 tsn 是 5 时，et 代表结束时间，如： 2017-07-15
+
+        Returns
+        -------
+        str
+            search_article_url
         """
 
         assert isinstance(page, int) and page > 0
-        assert timesn in [1, 2, 3, 4, 5, None]
+        assert timesn in [0, 1, 2, 3, 4, 5]
 
         if timesn == 5:
             assert isinstance(ft, datetime.date)
@@ -59,7 +73,7 @@ class WechatSogouRequest(object):
         qsDict['page'] = page
         qsDict['ie'] = 'utf8'
         qsDict['query'] = keyword
-        if timesn is not None:
+        if timesn != 0:
             qsDict['tsn'] = timesn
             qsDict['ft'] = str(ft)
             qsDict['et'] = str(et)
@@ -75,13 +89,20 @@ class WechatSogouRequest(object):
 
     @staticmethod
     def _gen_search_gzh_url(keyword, page=1):
-        """ 拼接搜索 公众号 URL
+        """拼接搜索 公众号 URL
 
-        :param keyword: 搜索文字
-        :param page:    页数
-        :return:
+        Parameters
+        ----------
+        keyword : str or unicode
+            搜索文字
+        page : int, optional
+            页数 the default is 1
+
+        Returns
+        -------
+        str
+            search_gzh_url
         """
-
         assert isinstance(page, int) and page > 0
 
         qsDict = OrderedDict()
@@ -93,19 +114,34 @@ class WechatSogouRequest(object):
         return 'http://weixin.sogou.com/weixin?{}'.format(urlencode(qsDict))
 
     @staticmethod
-    def _search_article(keyword, page=1, timesn=None, article_type=None, wxid=None, usip=None, ft=None, et=None):
+    def _search_article(keyword, page=1, timesn=0, article_type=None, wxid=None, usip=None, ft=None, et=None):
         """搜索 文章 获取文本
 
-        :param keyword: 关键词
-        :param page: 页数
-        :param timesn: 时间 1一天 / 2一周 / 3一月 / 4一年 / 5自定
-        :param article_type: 含有内容的类型： TYPE_IMAGE 有图 / TYPE_VIDEO 有视频 / TYPE_RICH 有图和视频 / TYPE_ALL 啥都有
-        :param wxid:
-        :param usip: wxid usip 联合起来就是账号内搜索
-        :param ft: 当 tsn 是 5 时，本参数代表时间，如： 2017-07-01
-        :param et: 当 tsn 是 5 时，本参数代表时间，如： 2017-07-15
-        :return:
+        Parameters
+        ----------
+        keyword : str or unicode
+            搜索文字
+        page : int, optional
+            页数 the default is 1
+        timesn : {0, 1, 2, 3, 4, 5}
+            时间 0 没有限制 / 1一天 / 2一周 / 3一月 / 4一年 / 5自定
+            the default is 0
+        article_type : {'image', 'video', 'rich', 'all'}
+            含有内容的类型 TYPE_IMAGE 有图 / TYPE_VIDEO 有视频 / TYPE_RICH 有图和视频 / TYPE_ALL 啥都有
+        wxid : None
+            wxid usip 联合起来就是账号内搜索
+        usip : None
+            wxid usip 联合起来就是账号内搜索
+        ft, et : datetime.date
+            当 tsn 是 5 时，ft 代表开始时间，如： 2017-07-01
+            当 tsn 是 5 时，et 代表结束时间，如： 2017-07-15
+
+        Returns
+        -------
+        requests
+            return of requests
         """
+
         url = WechatSogouRequest._gen_search_article_url(keyword, page, timesn, article_type, wxid, usip, ft, et)
         r = requests.get(url)
         if not r.ok:
@@ -117,9 +153,17 @@ class WechatSogouRequest(object):
     def _search_gzh(keyword, page=1):
         """搜索 公众号 获取文本
 
-        :param keyword: 公众号关键词 / 微信号
-        :param page:    页数 1-n
-        :return:
+        Parameters
+        ----------
+        keyword : str or unicode
+            搜索文字
+        page : int, optional
+            页数 the default is 1
+
+        Returns
+        -------
+        requests
+            return of requests
         """
         url = WechatSogouRequest._gen_search_gzh_url(keyword, page)
         r = requests.get(url)

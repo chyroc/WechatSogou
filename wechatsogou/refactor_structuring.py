@@ -17,8 +17,14 @@ class WechatSogouStructuring(object):
     def get_gzh_by_search(text):
         """从搜索公众号获得的文本 提取公众号信息
 
-        :param text: 搜索公众号获得的文本
-        :return: list of dict:
+        Parameters
+        ----------
+        text : str or unicode
+            搜索公众号获得的文本
+
+        Returns
+        -------
+        list of dict
             {
                 'url': '',
                 'img': '',
@@ -58,8 +64,14 @@ class WechatSogouStructuring(object):
     def get_article_by_search(text):
         """从搜索文章获得的文本 提取章列表信息
 
-        :param text: 搜索文章获得的文本
-        :return: list of dict:
+        Parameters
+        ----------
+        text : str or unicode
+            搜索文章获得的文本
+
+        Returns
+        -------
+        list of dict
             {
                 'article': {
                     'title': '',
@@ -143,8 +155,14 @@ class WechatSogouStructuring(object):
     def get_gzh_info_by_history(text):
         """从 历史消息页的文本 提取公众号信息
 
-        :param text: 历史消息页的文本
-        :return: dict:
+        Parameters
+        ----------
+        text : str or unicode
+            历史消息页的文本
+
+        Returns
+        -------
+        dict
             {
                 'name': '',
                 'wechat_id': '',
@@ -174,10 +192,21 @@ class WechatSogouStructuring(object):
     def get_article_by_history_json(text, article_json=None, **kwargs):
         """从 历史消息页的文本 提取文章列表信息
 
-        :param text: 历史消息页的文本
-        :param article_json: 历史消息页的文本 提取出来的文章json
-        :param kwargs: ？？
-        :return: （注：目前只能获得49 文章 类型 的数据了）
+        Parameters
+        ----------
+        text : str or unicode
+            历史消息页的文本
+        article_json : dict
+            历史消息页的文本 提取出来的文章json dict
+        kwargs
+            ??
+
+        Returns
+        -------
+        list of dict
+            {
+                ??
+            }
         """
         # TODO 加上返回的数据的文档
         if article_json is None:
@@ -269,8 +298,14 @@ class WechatSogouStructuring(object):
     def get_gzh_info_and_article_by_history(text):
         """从 历史消息页的文本 提取公众号信息 和 文章列表信息
 
-        :param text: 历史消息页的文本
-        :return: dict:
+        Parameters
+        ----------
+        text : str or unicode
+            历史消息页的文本
+
+        Returns
+        -------
+        dict
             {
                 'gzh_info': WechatSogouStructuring.get_gzh_info_by_history 函数返回值,
                 'article': WechatSogouStructuring.get_article_by_history_json 函数返回值
