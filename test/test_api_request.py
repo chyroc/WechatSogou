@@ -5,7 +5,7 @@ from __future__ import absolute_import, unicode_literals, print_function
 import io
 import os
 import unittest
-from nose.tools import assert_raises, assert_equal, assert_in, assert_not_equal
+from nose.tools import assert_raises, assert_equal, assert_in, assert_not_equal, assert_not_in
 
 import httpretty
 from hypothesis import given, strategies as st
@@ -32,7 +32,15 @@ class TestBasicGenSearchArticleURL(unittest.TestCase):
 
     @given(st.integers(min_value=-50, max_value=50), st.dates(), st.dates())
     def test_gen_search_article_url_timesn(self, timesn, ft, et):
-        if timesn in [1, 2, 3, 4]:
+        if timesn == 0:
+            url = WechatSogouRequest._gen_search_article_url(gaokao_keyword, timesn=timesn)
+            assert_in('type=2&page=1&ie=utf8&query=', url)
+            assert_not_in('ft=&et=', url)
+
+            url = WechatSogouRequest._gen_search_article_url(gaokao_keyword, timesn=timesn, ft=str(ft))
+            assert_in('type=2&page=1&ie=utf8&query=', url)
+            assert_not_in('ft=&et=', url)
+        elif timesn in [1, 2, 3, 4]:
             url = WechatSogouRequest._gen_search_article_url(gaokao_keyword, timesn=timesn)
             assert_in('tsn={}&ft=&et='.format(timesn), url)
 

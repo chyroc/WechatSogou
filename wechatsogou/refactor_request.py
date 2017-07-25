@@ -114,7 +114,7 @@ class WechatSogouRequest(object):
         return 'http://weixin.sogou.com/weixin?{}'.format(urlencode(qsDict))
 
     @staticmethod
-    def _search_article(keyword, page=1, timesn=None, article_type=None, wxid=None, usip=None, ft=None, et=None):
+    def _search_article(keyword, page=1, timesn=0, article_type=None, wxid=None, usip=None, ft=None, et=None):
         """搜索 文章 获取文本
 
         Parameters
