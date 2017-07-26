@@ -10,7 +10,7 @@ import datetime
 from nose.tools import assert_equal, assert_in, assert_true, assert_greater_equal
 
 from wechatsogou.refactor_structuring import WechatSogouStructuring
-from test.test_main import fake_data_path
+from test import fake_data_path
 
 assert_equal.__self__.maxDiff = None
 

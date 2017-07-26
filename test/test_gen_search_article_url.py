@@ -8,7 +8,7 @@ from nose.tools import assert_raises, assert_equal, assert_in, assert_not_in
 from hypothesis import given, strategies as st
 
 from wechatsogou.refactor_request import WechatSogouRequest
-from test.test_main import gaokao_keyword
+from test import gaokao_keyword
 
 
 class TestBasicGenSearchArticleURL(unittest.TestCase):

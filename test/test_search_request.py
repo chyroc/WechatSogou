@@ -10,7 +10,7 @@ from nose.tools import assert_equal, assert_not_equal
 import httpretty
 
 from wechatsogou.refactor_request import WechatSogouRequest
-from test.test_main import gaokao_keyword, fake_data_path
+from test import gaokao_keyword, fake_data_path
 
 
 class TestBasicSearchArticle(unittest.TestCase):

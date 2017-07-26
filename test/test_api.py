@@ -11,7 +11,7 @@ import httpretty
 
 from wechatsogou.refactor_request import WechatSogouRequest
 from wechatsogou.refactor_api import WechatSogouAPI
-from test.test_main import fake_data_path, gaokao_keyword
+from test import fake_data_path, gaokao_keyword
 
 ws_api = WechatSogouAPI()
 
