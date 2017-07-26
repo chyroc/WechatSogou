@@ -151,9 +151,9 @@ class WechatSogouAPI(object):
         """
         req = requests.session()
 
-        url = WechatSogouRequest._gen_search_article_url(keyword, page, timesn, article_type, ft, et)
+        url = WechatSogouRequest._gen_search_article_url(keyword, page, timesn=timesn, article_type=article_type, ft=ft,
+                                                         et=et)
         url_referer = WechatSogouRequest._gen_search_article_url(keyword)
-        print(url)
 
         resp = WechatSogouRequest.get(url, req=req, headers=self.__set_cookie(referer=url_referer))
 
