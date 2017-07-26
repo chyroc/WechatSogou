@@ -133,7 +133,5 @@ class WechatSogouRequest(object):
             r = req.get(url, **kwargs)
         else:
             r = requests.get(url, **kwargs)
-        if not r.ok:
-            # todo 错误处理
-            return None
+
         return r
