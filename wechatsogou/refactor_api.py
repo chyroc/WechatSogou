@@ -9,7 +9,10 @@ import requests
 from wechatsogou.pkgs import readimg, input, quote
 from wechatsogou.refactor_request import WechatSogouRequest
 from wechatsogou.refactor_structuring import WechatSogouStructuring
+from wechatsogou.filecache import WechatCache
 from wechatsogou.exceptions import WechatSogouRequestsExceptionRefactor
+
+ws_cache = WechatCache()
 
 
 def deblocking_search(url, req, r, img):
@@ -68,6 +71,16 @@ def deblocking_search(url, req, r, img):
 
 
 class WechatSogouAPI(object):
+    def __set_cookie(self, suv=None, snuid=None):
+        suv = ws_cache.get('suv') if suv is None else suv
+        snuid = ws_cache.get('snuid') if snuid is None else snuid
+
+        return {'Cookie': 'SUV={};SNUID={};'.format(suv, snuid)}
+
+    def __set_cache(self, suv, snuid):
+        ws_cache.set('suv', suv)
+        ws_cache.set('snuid', snuid)
+
     def search_gzh(self, keyword, page=1, callback=None):
         """搜索 公众号
 
@@ -77,6 +90,8 @@ class WechatSogouAPI(object):
             搜索文字
         page : int, optional
             页数 the default is 1
+        callback : function
+            处理验证码的函数，参见 deblocking_search
 
         Returns
         -------
@@ -100,12 +115,11 @@ class WechatSogouAPI(object):
         req = requests.session()
 
         url = WechatSogouRequest._gen_search_gzh_url(keyword, page)
-        r = WechatSogouRequest.get(url, req=req)
+        r = WechatSogouRequest.get(url, req=req, headers=self.__set_cookie())
 
         if not r.ok:
             raise WechatSogouRequestsExceptionRefactor('WechatSogouAPI.search_gzh', r)
 
-        # if '用户您好，您的访问过于频繁，为确认本次访问为正常用户行为，需要您协助验证' in r.text:
         if 'antispider' in r.url:
             millis = int(round(time.time() * 1000))
             r_img = req.get('http://weixin.sogou.com/antispider/util/seccode.php?tc={}'.format(millis))
@@ -117,23 +131,12 @@ class WechatSogouAPI(object):
             else:
                 j = deblocking_search(url, req, r, r_img.content)
                 if j['code'] != 0:
-                    print(j)
+                    raise WechatSogouRequestsExceptionRefactor('WechatSogouAPI.search_gzh', r)
+                else:
+                    self.__set_cache(req.cookies.get('SUID'), j['id'])
 
-        headers = {
-            # 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            'Host': 'weixin.sogou.com',
-            'Referer': r.url,
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36',
-            'Upgrade-Insecure-Requests': '1'
-        }
-        print(url)
-        # r = WechatSogouRequest.get(url, req=req, headers=headers)
-        r = req.get(url, headers=headers)
-        print('返回')
-        print(r)
+        headers = self.__set_cookie()
+        r = WechatSogouRequest.get(url, headers=headers)  # req=req
         print(r.url)
-        print(r.history)
-        print(r.encoding)
-        print(r.headers)
 
         return WechatSogouStructuring.get_gzh_by_search(r.text)
