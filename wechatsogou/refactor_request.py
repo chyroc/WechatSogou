@@ -114,70 +114,6 @@ class WechatSogouRequest(object):
         return 'http://weixin.sogou.com/weixin?{}'.format(urlencode(qs_dict))
 
     @staticmethod
-    def _search_article(keyword, page=1, timesn=0, article_type=None, wxid=None, usip=None, ft=None, et=None):
-        """搜索 文章 获取文本
-
-        Parameters
-        ----------
-        keyword : str or unicode
-            搜索文字
-        page : int, optional
-            页数 the default is 1
-        timesn : {0, 1, 2, 3, 4, 5}
-            时间 0 没有限制 / 1一天 / 2一周 / 3一月 / 4一年 / 5自定
-            the default is 0
-        article_type : {'image', 'video', 'rich', 'all'}
-            含有内容的类型 TYPE_IMAGE 有图 / TYPE_VIDEO 有视频 / TYPE_RICH 有图和视频 / TYPE_ALL 啥都有
-        wxid : None
-            wxid usip 联合起来就是账号内搜索
-        usip : None
-            wxid usip 联合起来就是账号内搜索
-        ft, et : datetime.date
-            当 tsn 是 5 时，ft 代表开始时间，如： 2017-07-01
-            当 tsn 是 5 时，et 代表结束时间，如： 2017-07-15
-
-        Returns
-        -------
-        requests.models.Response
-            return of requests
-        """
-
-        url = WechatSogouRequest._gen_search_article_url(keyword, page, timesn, article_type, wxid, usip, ft, et)
-        r = requests.get(url)
-        if not r.ok:
-            # todo 错误处理
-            return None
-        return r
-
-    @staticmethod
-    def _search_gzh(keyword, page=1, req=None):
-        """搜索 公众号 获取文本
-
-        Parameters
-        ----------
-        keyword : str or unicode
-            搜索文字
-        page : int, optional
-            页数 the default is 1
-        req : requests.sessions.Session
-            requests.Session()
-
-        Returns
-        -------
-        requests.models.Response
-            return of requests
-        """
-        url = WechatSogouRequest._gen_search_gzh_url(keyword, page)
-        if isinstance(req, requests.sessions.Session):
-            r = req.get(url)
-        else:
-            r = requests.get(url)
-        if not r.ok:
-            # todo 错误处理
-            return None
-        return r
-
-    @staticmethod
     def get(url, req=None, **kwargs):
         """搜索 公众号 获取文本
 
@@ -197,7 +133,5 @@ class WechatSogouRequest(object):
             r = req.get(url, **kwargs)
         else:
             r = requests.get(url, **kwargs)
-        if not r.ok:
-            # todo 错误处理
-            return None
+
         return r

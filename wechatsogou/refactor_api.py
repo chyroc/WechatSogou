@@ -9,7 +9,11 @@ import requests
 from wechatsogou.exceptions import WechatSogouRequestsExceptionRefactor, WechatSogouVcodeOcrException
 from wechatsogou.refactor_request import WechatSogouRequest
 from wechatsogou.refactor_structuring import WechatSogouStructuring
-from wechatsogou.identify_image import ws_cache, identify_image_callback_example, deblocking_callback_example
+from wechatsogou.identify_image import (
+    ws_cache,
+    identify_image_callback_example,
+    deblocking_callback_search_example,
+    deblocking_callback_history_example)
 
 
 class WechatSogouAPI(object):
@@ -33,18 +37,32 @@ class WechatSogouAPI(object):
         if callable(deblocking_callback):
             r_deblocking = deblocking_callback(req, resp, r_img.content)
         else:
-            if callable(identify_image_callback):
-                r_deblocking = deblocking_callback_example(url, req, resp, r_img.content,
-                                                           identify_image_callback=identify_image_callback)
-            else:
-                r_deblocking = deblocking_callback_example(url, req, resp, r_img.content,
-                                                           identify_image_callback=identify_image_callback_example)
+            identify_image_callback = identify_image_callback if callable(
+                identify_image_callback) else identify_image_callback_example
+            r_deblocking = deblocking_callback_search_example(url, req, resp, r_img.content, identify_image_callback)
 
         if r_deblocking['code'] != 0:
             raise WechatSogouVcodeOcrException(
                 '[WechatSogouAPI identify image] code: {code}, msg: {msg}'.format(**r_deblocking))
         else:
             self.__set_cache(req.cookies.get('SUID'), r_deblocking['id'])
+
+    def __deblocking_history(self, url, resp, req, deblocking_callback, identify_image_callback):
+        r_img = req.get('https://mp.weixin.qq.com/mp/verifycode?cert={}'.format(time.time() * 1000))
+        if not r_img.ok:
+            raise WechatSogouRequestsExceptionRefactor('WechatSogouAPI deblocking_history get img', resp)
+
+        if callable(deblocking_callback):
+            r_deblocking = deblocking_callback(req, resp, r_img.content)
+        else:
+            identify_image_callback = identify_image_callback if callable(
+                identify_image_callback) else identify_image_callback_example
+            r_deblocking = deblocking_callback_history_example(url, req, resp, r_img.content, identify_image_callback)
+
+        if r_deblocking['ret'] != 0:
+            raise WechatSogouVcodeOcrException(
+                '[WechatSogouAPI identify image] code: {ret}, msg: {errmsg}, cookie_count: {cookie_count}'.format(
+                    **r_deblocking))
 
     def get_gzh_info(self, wecgat_id_or_name, deblocking_callback=None, identify_image_callback=None):
         """获取公众号微信号 wechatid 的信息
@@ -126,11 +144,9 @@ class WechatSogouAPI(object):
 
         if 'antispider' in resp.url:
             self.__deblocking_search(url, resp, req, deblocking_callback, identify_image_callback)
+            resp = WechatSogouRequest.get(url, req=req, headers=self.__set_cookie())  # req=req
 
-        headers = self.__set_cookie()
-        r = WechatSogouRequest.get(url, req=req, headers=headers)  # req=req
-
-        return WechatSogouStructuring.get_gzh_by_search(r.text)
+        return WechatSogouStructuring.get_gzh_by_search(resp.text)
 
     def search_article(self, keyword, page=1, timesn=0, article_type=WechatSogouRequest.TYPE_ALL, ft=None, et=None,
                        deblocking_callback=None, identify_image_callback=None):
@@ -193,7 +209,29 @@ class WechatSogouAPI(object):
 
         if 'antispider' in resp.url:
             self.__deblocking_search(url, resp, req, deblocking_callback, identify_image_callback)
+            resp = WechatSogouRequest.get(url, req=req, headers=self.__set_cookie(referer=url_referer))  # req=req
 
-        r = WechatSogouRequest.get(url, req=req, headers=self.__set_cookie(referer=url_referer))  # req=req
+        return WechatSogouStructuring.get_article_by_search(resp.text)
 
-        return WechatSogouStructuring.get_article_by_search(r.text)
+    def get_gzh_artilce_by_history(self, keyword=None, url=None, deblocking_callback=None,
+                                   identify_image_callback=None):
+        if url is None:
+            gzh_list = self.search_gzh(keyword, deblocking_callback=deblocking_callback,
+                                       identify_image_callback=identify_image_callback)
+            if gzh_list:
+                url = gzh_list[0]['url']
+            else:
+                raise Exception()  # todo use ws exception
+
+        req = requests.session()
+
+        resp = WechatSogouRequest.get(url, req=req)  # headers=self.__set_cookie()
+
+        if not resp.ok:
+            raise WechatSogouRequestsExceptionRefactor('WechatSogouAPI get_gzh_artilce_by_history', resp)
+
+        if '请输入验证码' in resp.text:
+            self.__deblocking_history(url, resp, req, deblocking_callback, identify_image_callback)
+            resp = WechatSogouRequest.get(url, req=req)  # req=req headers=self.__set_cookie()
+
+        return WechatSogouStructuring.get_gzh_info_and_article_by_history(resp.text)
