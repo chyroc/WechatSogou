@@ -166,3 +166,14 @@ class WechatSogouAPI(object):
         r = WechatSogouRequest.get(url, req=req, headers=self.__set_cookie(referer=url_referer))  # req=req
 
         return WechatSogouStructuring.get_article_by_search(r.text)
+
+    def get_gzh_artilce_by_history(self, keyword, url=None, deblocking_callback=None, identify_image_callback=None):
+        if url is None:
+            gzh_list = self.search_gzh(keyword, deblocking_callback=deblocking_callback,
+                                       identify_image_callback=identify_image_callback)
+            if gzh_list:
+                url = gzh_list[0]['url']
+            else:
+                raise Exception()  # todo use ws exception
+
+        url = ''
