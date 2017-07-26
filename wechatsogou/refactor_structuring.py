@@ -24,7 +24,7 @@ class WechatSogouStructuring(object):
 
         Returns
         -------
-        list of dict
+        list[dict]
             {
                 'url': '',
                 'img': '',

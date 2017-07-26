@@ -6,7 +6,6 @@
 [![PyPI](https://img.shields.io/pypi/wheel/wechatsogou.svg)](https://github.com/Chyroc/WechatSogou)
 [![py27,py35,py36](https://img.shields.io/pypi/pyversions/wechatsogou.svg)](https://github.com/Chyroc/WechatSogou)
 [![PyPI](https://img.shields.io/pypi/l/wechatsogou.svg)](https://github.com/Chyroc/WechatSogou)
-[![codebeat badge](https://codebeat.co/badges/45119f66-fca7-4f0e-bd0e-35c0dd60a11e)](https://codebeat.co/projects/github-com-chyroc-wechatsogou-master)
 
 # 项目简介
 基于搜狗微信搜索的微信公众号爬虫接口，可以扩展成基于搜狗搜索的爬虫

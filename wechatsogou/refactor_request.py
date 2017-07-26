@@ -150,7 +150,7 @@ class WechatSogouRequest(object):
         return r
 
     @staticmethod
-    def _search_gzh(keyword, page=1):
+    def _search_gzh(keyword, page=1, req=None):
         """搜索 公众号 获取文本
 
         Parameters
@@ -159,6 +159,8 @@ class WechatSogouRequest(object):
             搜索文字
         page : int, optional
             页数 the default is 1
+        req : requests.sessions.Session
+            requests.Session()
 
         Returns
         -------
@@ -166,7 +168,35 @@ class WechatSogouRequest(object):
             return of requests
         """
         url = WechatSogouRequest._gen_search_gzh_url(keyword, page)
-        r = requests.get(url)
+        if isinstance(req, requests.sessions.Session):
+            r = req.get(url)
+        else:
+            r = requests.get(url)
+        if not r.ok:
+            # todo 错误处理
+            return None
+        return r
+
+    @staticmethod
+    def get(url, req=None, **kwargs):
+        """搜索 公众号 获取文本
+
+        Parameters
+        ----------
+        url : str or unicode
+            url
+        req : requests.sessions.Session
+            requests.Session()
+
+        Returns
+        -------
+        requests.models.Response
+            return of requests
+        """
+        if isinstance(req, requests.sessions.Session):
+            r = req.get(url, **kwargs)
+        else:
+            r = requests.get(url, **kwargs)
         if not r.ok:
             # todo 错误处理
             return None

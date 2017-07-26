@@ -56,3 +56,19 @@ class WechatSogouRequestsException(WechatSogouException):
     def __init__(self, errmsg, status_code):
         WechatSogouException(errmsg)
         self.status_code = status_code
+
+
+class WechatSogouRequestsExceptionRefactor(WechatSogouException):
+    """基于搜狗搜索的的微信公众号爬虫接口 抓取 异常类
+
+    Parameters
+    ----------
+    errmsg : str or unicode
+        msg
+    r : requests.models.Response
+        return of requests
+    """
+
+    def __init__(self, errmsg, r):
+        WechatSogouException('{} [url {}] [content {}]'.format(errmsg, r.url, r.content))
+        self.status_code = r.status_code
