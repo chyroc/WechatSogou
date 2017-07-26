@@ -45,3 +45,8 @@ except ImportError:
         f = tempfile.TemporaryFile()
         f.write(content)
         return Image.open(f)
+
+try:
+    input = raw_input
+except NameError:
+    input = input

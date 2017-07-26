@@ -9,4 +9,5 @@ ws = WechatSogouRequest()
 ws_structuring = WechatSogouStructuring()
 
 gaokao_keyword = '高考'
-fake_data_path = 'test/file'
+fake_data_path = 'file'
+# fake_data_path = 'test/file'
