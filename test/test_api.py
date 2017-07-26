@@ -39,16 +39,9 @@ class TestAPI(unittest.TestCase):
                       '新东方在线高考辅导'],
                      [i['name'] for i in gzh_list])
 
-    @httpretty.activate
+    @unittest.skip
     def test_search_gzh_error(self):
-        url = WechatSogouRequest._gen_search_gzh_url(gaokao_keyword)
-        file_name = '{}/{}/{}'.format(os.getcwd(), fake_data_path, 'search-gaokao-gzh-error.html')
-        with io.open(file_name, encoding='utf-8') as f:
-            search_gaokao_gzh_error = f.read()
-            httpretty.register_uri(httpretty.GET, url, body=search_gaokao_gzh_error)
-
-        gzh_list = ws_api.search_gzh(gaokao_keyword)
-        print(gzh_list)
+        pass  # todo
 
 
 if __name__ == '__main__':

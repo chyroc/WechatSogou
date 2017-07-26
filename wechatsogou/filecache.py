@@ -13,4 +13,4 @@ class WechatCache(FileSystemCache):
 
         cache_dir是缓存目录
         """
-        super().__init__(cache_dir, default_timeout)
+        super(WechatCache, self).__init__(cache_dir, default_timeout)
