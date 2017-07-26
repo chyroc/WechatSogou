@@ -105,13 +105,13 @@ class WechatSogouRequest(object):
         """
         assert isinstance(page, int) and page > 0
 
-        qsDict = OrderedDict()
-        qsDict['type'] = 1  # 1 是公号
-        qsDict['page'] = page
-        qsDict['ie'] = 'utf8'
-        qsDict['query'] = keyword
+        qs_dict = OrderedDict()
+        qs_dict['type'] = 1  # 1 是公号
+        qs_dict['page'] = page
+        qs_dict['ie'] = 'utf8'
+        qs_dict['query'] = keyword
 
-        return 'http://weixin.sogou.com/weixin?{}'.format(urlencode(qsDict))
+        return 'http://weixin.sogou.com/weixin?{}'.format(urlencode(qs_dict))
 
     @staticmethod
     def _search_article(keyword, page=1, timesn=0, article_type=None, wxid=None, usip=None, ft=None, et=None):
