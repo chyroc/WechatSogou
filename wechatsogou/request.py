@@ -17,8 +17,8 @@ class WechatSogouRequest(object):
     TYPE_ALL = 'all'
 
     @staticmethod
-    def _gen_search_article_url(keyword, page=1, timesn=0, article_type=TYPE_ALL, wxid=None, usip=None, ft=None,
-                                et=None):
+    def gen_search_article_url(keyword, page=1, timesn=0, article_type=TYPE_ALL, wxid=None, usip=None, ft=None,
+                               et=None):
         """拼接搜索 文章 URL
 
         Parameters
@@ -88,7 +88,7 @@ class WechatSogouRequest(object):
         return 'http://weixin.sogou.com/weixin?{}'.format(urlencode(qsDict))
 
     @staticmethod
-    def _gen_search_gzh_url(keyword, page=1):
+    def gen_search_gzh_url(keyword, page=1):
         """拼接搜索 公众号 URL
 
         Parameters
