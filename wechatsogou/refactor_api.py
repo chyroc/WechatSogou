@@ -37,12 +37,9 @@ class WechatSogouAPI(object):
         if callable(deblocking_callback):
             r_deblocking = deblocking_callback(req, resp, r_img.content)
         else:
-            if callable(identify_image_callback):
-                r_deblocking = deblocking_callback_search_example(url, req, resp, r_img.content,
-                                                                  identify_image_callback=identify_image_callback)
-            else:
-                r_deblocking = deblocking_callback_search_example(url, req, resp, r_img.content,
-                                                                  identify_image_callback=identify_image_callback_example)
+            identify_image_callback = identify_image_callback if callable(
+                identify_image_callback) else identify_image_callback_example
+            r_deblocking = deblocking_callback_search_example(url, req, resp, r_img.content, identify_image_callback)
 
         if r_deblocking['code'] != 0:
             raise WechatSogouVcodeOcrException(
@@ -58,19 +55,14 @@ class WechatSogouAPI(object):
         if callable(deblocking_callback):
             r_deblocking = deblocking_callback(req, resp, r_img.content)
         else:
-            if callable(identify_image_callback):
-                r_deblocking = deblocking_callback_history_example(url, req, resp, r_img.content,
-                                                                   identify_image_callback=identify_image_callback)
-            else:
-                r_deblocking = deblocking_callback_history_example(url, req, resp, r_img.content,
-                                                                   identify_image_callback=identify_image_callback_example)
+            identify_image_callback = identify_image_callback if callable(
+                identify_image_callback) else identify_image_callback_example
+            r_deblocking = deblocking_callback_history_example(url, req, resp, r_img.content, identify_image_callback)
 
-        # if r_deblocking['code'] != 0:
-        #     raise WechatSogouVcodeOcrException(
-        #         '[WechatSogouAPI identify image] code: {code}, msg: {msg}'.format(**r_deblocking))
-        # else:
-        #     self.__set_cache(req.cookies.get('SUID'), r_deblocking['id'])
-        print(r_deblocking)
+        if r_deblocking['ret'] != 0:
+            raise WechatSogouVcodeOcrException(
+                '[WechatSogouAPI identify image] code: {ret}, msg: {errmsg}, cookie_count: {cookie_count}'.format(
+                    **r_deblocking))
 
     def get_gzh_info(self, wecgat_id_or_name, deblocking_callback=None, identify_image_callback=None):
         """获取公众号微信号 wechatid 的信息
