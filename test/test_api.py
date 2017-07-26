@@ -9,8 +9,8 @@ from nose.tools import assert_equal, assert_not_equal
 
 import httpretty
 
-from wechatsogou.refactor_request import WechatSogouRequest
-from wechatsogou.refactor_api import WechatSogouAPI
+from wechatsogou.request import WechatSogouRequest
+from wechatsogou.api import WechatSogouAPI
 from test import fake_data_path, gaokao_keyword
 
 ws_api = WechatSogouAPI()
@@ -19,7 +19,7 @@ ws_api = WechatSogouAPI()
 class TestAPI(unittest.TestCase):
     @httpretty.activate
     def test_search_gzh(self):
-        url = WechatSogouRequest._gen_search_gzh_url(gaokao_keyword)
+        url = WechatSogouRequest.gen_search_gzh_url(gaokao_keyword)
         file_name = '{}/{}/{}'.format(os.getcwd(), fake_data_path, 'search-gaokao-gzh.html')
         with io.open(file_name, encoding='utf-8') as f:
             search_gaokao_gzh_error = f.read()
