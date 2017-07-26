@@ -117,6 +117,37 @@ class WechatSogouAPI(object):
         else:
             self.__set_cache(req.cookies.get('SUID'), r_deblocking['id'])
 
+    def get_gzh_info(self, wecgat_id_or_name, deblocking_callback=None, identify_image_callback=None):
+        """获取公众号微信号 wechatid 的信息
+
+        因为wechatid唯一确定，所以第一个就是要搜索的公众号
+
+        Parameters
+        ----------
+        wecgat_id_or_name : str or unicode
+            wechat_id or wechat_name
+        deblocking_callback : callable
+            处理出现验证码页面的函数，参见 deblocking_callback_example
+        identify_image_callback : callable
+            处理验证码函数，输入验证码二进制数据，输出文字，参见 identify_image_callback_example
+
+        Returns
+        -------
+        dict or None
+            {
+                'url': '',
+                'img': '',
+                'name': '',
+                'wechat_id': '',
+                'post_perm': '',
+                'qrcode': '',
+                'introduction': '',
+                'authentication': ''
+            }
+        """
+        info = self.search_gzh(wecgat_id_or_name)
+        return info[0] if info else None
+
     def search_gzh(self, keyword, page=1, deblocking_callback=None, identify_image_callback=None):
         """搜索 公众号
 
