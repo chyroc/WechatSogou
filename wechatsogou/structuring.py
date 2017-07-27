@@ -26,14 +26,14 @@ class WechatSogouStructuring(object):
         -------
         list[dict]
             {
-                'url': '',
-                'img': '',
-                'name': '',
-                'wechat_id': '',
-                'post_perm': '',
-                'qrcode': '',
-                'introduction': '',
-                'authentication': ''
+                'profile_url': '',  # 最近10条群发页链接
+                'headimage': '',  # 头像
+                'wechat_name': '',  # 名称
+                'wechat_id': '',  # 微信id
+                'post_perm': '',  # 最近一月群发数
+                'qrcode': '',  # 二维码
+                'introduction': '',  # 介绍
+                'authentication': ''  # 认证
             }
         """
         page = etree.HTML(text)
@@ -41,17 +41,17 @@ class WechatSogouStructuring(object):
         relist = []
         for li in lis:
             url = li.xpath('div/div[1]/a/@href')
-            img = li.xpath('div/div[1]/a/img/@src')
-            name = get_elem_text(li.xpath('div/div[2]/p[1]')[0])
+            headimage = li.xpath('div/div[1]/a/img/@src')
+            wechat_name = get_elem_text(li.xpath('div/div[2]/p[1]')[0])
             info = get_elem_text(li.xpath('div/div[2]/p[2]')[0])
             post_perm = 0  # TODO 月发文 <script>var account_anti_url = "/websearch/weixin/pc/anti_account.jsp?.......";</script>
             qrcode = li.xpath('div/div[3]/span/img[1]/@src')
             introduction = get_elem_text(li.xpath('dl[1]/dd')[0])
             authentication = li.xpath('dl[2]/dd/text()')
             relist.append({
-                'url': url[0],
-                'img': img[0],
-                'name': name.replace('red_beg', '').replace('red_end', ''),
+                'profile_url': url[0],
+                'headimage': headimage[0],
+                'wechat_name': wechat_name.replace('red_beg', '').replace('red_end', ''),
                 'wechat_id': info.replace('微信号：', ''),
                 'post_perm': post_perm,
                 'qrcode': qrcode[0] if qrcode else '',
@@ -74,17 +74,17 @@ class WechatSogouStructuring(object):
         list of dict
             {
                 'article': {
-                    'title': '',
-                    'url': '',
-                    'imgs': '',
-                    'abstract': '',
-                    'time': ''
+                    'title': '',  # 文章标题
+                    'url': '',  # 文章链接
+                    'imgs': '',  # 文章图片list
+                    'abstract': '',  # 文章摘要
+                    'time': ''  # 文章推送时间
                 },
                 'gzh': {
-                    'article_list_url': '',
-                    'headimage': '',
-                    'name': '',
-                    'isv': '',
+                    'profile_url': '',  # 公众号最近10条群发页链接
+                    'headimage': '',  # 头像
+                    'wechat_name': '',  # 名称
+                    'isv': '',  # 是否加v
                 }
             }
         """
@@ -125,14 +125,10 @@ class WechatSogouStructuring(object):
             time = list_or_empty(time)
             time = re.findall('timeConvert\(\'(.*?)\'\)', time)
             time = list_or_empty(time, int)
-            gzh_article_url = gzh_info.xpath('@href')
-            gzh_headimage = gzh_info.xpath('@data-headimage')
-            # gzh_qrcodeurl = gzh_info.xpath('@data-encqrcodeurl')
-            gzh_name = gzh_info.xpath('text()')  # gzh_info.xpath('@data-sourcename')
-            # gzh_wechatid = gzh_info.xpath('@data-username')
+            profile_url = gzh_info.xpath('@href')
+            headimage = gzh_info.xpath('@data-headimage')
+            wechat_name = gzh_info.xpath('text()')
             gzh_isv = gzh_info.xpath('@data-isv')
-            # gzh_avgpublish = gzh_info.xpath('@data-avgpublish')
-            # gzh_avgread = gzh_info.xpath('@data-avgread')
 
             articles.append({
                 'article': {
@@ -143,9 +139,9 @@ class WechatSogouStructuring(object):
                     'time': time
                 },
                 'gzh': {
-                    'article_list_url': list_or_empty(gzh_article_url),
-                    'headimage': list_or_empty((gzh_headimage)),
-                    'name': list_or_empty(gzh_name),
+                    'profile_url': list_or_empty(profile_url),
+                    'headimage': list_or_empty(headimage),
+                    'wechat_name': list_or_empty(wechat_name),
                     'isv': list_or_empty(gzh_isv, int),
                 }
             })
@@ -164,13 +160,14 @@ class WechatSogouStructuring(object):
         -------
         dict
             {
-                'name': '',
-                'wechat_id': '',
-                'desc': '',
-                'principal': '',
-                'img': ''
+                'wechat_name': '',  # 名称
+                'wechat_id': '',  # 微信id
+                'introduction': '',  # 描述
+                'authentication': '',  # 认证
+                'headimage': ''  # 头像
             }
         """
+
         page = etree.HTML(text)
         profile_area = page.xpath('//div[@class="profile_info_area"]')[0]
 
@@ -181,11 +178,11 @@ class WechatSogouStructuring(object):
         profile_principal = profile_area.xpath('ul/li[2]/div/text()')
 
         return {
-            'name': profile_name[0].strip(),
+            'wechat_name': profile_name[0].strip(),
             'wechat_id': profile_wechat_id[0].replace('微信号: ', '').strip('\n'),
-            'desc': profile_desc[0],
-            'principal': profile_principal[0],
-            'img': profile_img[0]
+            'introduction': profile_desc[0],
+            'authentication': profile_principal[0],
+            'headimage': profile_img[0]
         }
 
     @staticmethod
