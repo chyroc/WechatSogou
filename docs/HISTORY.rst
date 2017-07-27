@@ -1,6 +1,21 @@
 Change Log
 ==========
 
+`v2.0.5 <https://github.com/Chyroc/WechatSogou/tree/v2.0.5>`__ (2017-07-22)
+---------------------------------------------------------------------------
+
+`Full
+Changelog <https://github.com/Chyroc/WechatSogou/compare/v2.0.4...v2.0.5>`__
+
+**Merged pull requests:**
+
+-  fix setup python version name
+   `#76 <https://github.com/Chyroc/WechatSogou/pull/76>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  Release/v2.0.4
+   `#75 <https://github.com/Chyroc/WechatSogou/pull/75>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+
 `v2.0.4 <https://github.com/Chyroc/WechatSogou/tree/v2.0.4>`__ (2017-07-22)
 ---------------------------------------------------------------------------
 

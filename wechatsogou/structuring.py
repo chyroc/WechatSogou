@@ -77,7 +77,7 @@ class WechatSogouStructuring(object):
 
         Returns
         -------
-        listdict[]
+        list[dict]
             {
                 'article': {
                     'title': '',  # 文章标题
