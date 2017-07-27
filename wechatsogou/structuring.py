@@ -178,7 +178,7 @@ class WechatSogouStructuring(object):
         profile_principal = profile_area.xpath('ul/li[2]/div/text()')
 
         return {
-            'name': profile_name[0].strip(),
+            'wechat_name': profile_name[0].strip(),
             'wechat_id': profile_wechat_id[0].replace('微信号: ', '').strip('\n'),
             'introduction': profile_desc[0],
             'authentication': profile_principal[0],
