@@ -82,14 +82,14 @@ class WechatSogouAPI(object):
         -------
         dict or None
             {
-                'url': '',
-                'img': '',
-                'name': '',
-                'wechat_id': '',
-                'post_perm': '',
-                'qrcode': '',
-                'introduction': '',
-                'authentication': ''
+                'profile_url': '',  # 最近10条群发页链接
+                'headimage': '',  # 头像
+                'wechat_name': '',  # 名称
+                'wechat_id': '',  # 微信id
+                'post_perm': '',  # 最近一月群发数
+                'qrcode': '',  # 二维码
+                'introduction': '',  # 介绍
+                'authentication': ''  # 认证
             }
         """
         info = self.search_gzh(wecgat_id_or_name)
@@ -119,14 +119,14 @@ class WechatSogouAPI(object):
         -------
         list[dict]
             {
-                'url': '',
-                'img': '',
-                'name': '',
-                'wechat_id': '',
-                'post_perm': '',
-                'qrcode': '',
-                'introduction': '',
-                'authentication': ''
+                'profile_url': '',  # 最近10条群发页链接
+                'headimage': '',  # 头像
+                'wechat_name': '',  # 名称
+                'wechat_id': '',  # 微信id
+                'post_perm': '',  # 最近一月群发数
+                'qrcode': '',  # 二维码
+                'introduction': '',  # 介绍
+                'authentication': ''  # 认证
             }
 
         Raises
@@ -181,14 +181,19 @@ class WechatSogouAPI(object):
         -------
         list[dict]
             {
-                'url': '',
-                'img': '',
-                'name': '',
-                'wechat_id': '',
-                'post_perm': '',
-                'qrcode': '',
-                'introduction': '',
-                'authentication': ''
+                'article': {
+                    'title': '',  # 文章标题
+                    'url': '',  # 文章链接
+                    'imgs': '',  # 文章图片list
+                    'abstract': '',  # 文章摘要
+                    'time': ''  # 文章推送时间
+                },
+                'gzh': {
+                    'profile_url': '',  # 公众号最近10条群发页链接
+                    'headimage': '',  # 头像
+                    'wechat_name': '',  # 名称
+                    'isv': '',  # 是否加v
+                }
             }
 
         Raises
@@ -215,11 +220,66 @@ class WechatSogouAPI(object):
 
     def get_gzh_artilce_by_history(self, keyword=None, url=None, deblocking_callback=None,
                                    identify_image_callback=None):
+        """从 公众号的最近10条群发页面 提取公众号信息 和 文章列表信息
+
+        对于出现验证码的情况，可以由使用者自己提供：
+            1、函数 deblocking_callback ，这个函数 handle 出现验证码到解决的整个流程
+            2、也可以 只提供函数 identify_image_callback，这个函数输入验证码二进制数据，输出验证码文字，剩下的由 wechatsogou 包来解决
+        注意：
+            函数 deblocking_callback 和 identify_image_callback 只需要提供一个，如果都提供了，那么 identify_image_callback 不起作用
+
+        Parameters
+        ----------
+        keyword : str or unicode
+            公众号的id 或者name
+        url : str or unicode
+            群发页url，如果不提供url，就先去搜索一遍拿到url
+        deblocking_callback : callable
+            处理出现验证码页面的函数，参见 deblocking_callback_example
+        identify_image_callback : callable
+            处理验证码函数，输入验证码二进制数据，输出文字，参见 identify_image_callback_example
+
+        Returns
+        -------
+        dict
+            {
+                'gzh_info': {
+                    'wechat_name': '',  # 名称
+                    'wechat_id': '',  # 微信id
+                    'introduction': '',  # 描述
+                    'authentication': '',  # 认证
+                    'headimage': ''  # 头像
+                },
+                'article': [
+                    {
+                        'send_id': '',  # 群发id，注意不唯一，因为同一次群发多个消息，而群发id一致
+                        'datetime': '',  # 群发datatime
+                        'type': '',  # 消息类型，均是49，表示图文
+                        'main': 0,  # 是否是一次群发的第一次消息
+                        'title': '',  # 文章标题
+                        'abstract': '',  # 摘要
+                        'fileid': '',  #
+                        'content_url': '',  # 文章链接
+                        'source_url': '',  # 阅读原文的链接
+                        'cover': '',  # 封面图
+                        'author': '',  # 作者
+                        'copyright_stat': '',  # 文章类型，例如：原创啊
+                    },
+                    ...
+                ]
+            }
+
+
+        Raises
+        ------
+        WechatSogouRequestsException
+            requests error
+        """
         if url is None:
-            gzh_list = self.search_gzh(keyword, deblocking_callback=deblocking_callback,
-                                       identify_image_callback=identify_image_callback)
+            gzh_list = self.get_gzh_info(keyword, deblocking_callback=deblocking_callback,
+                                         identify_image_callback=identify_image_callback)
             if gzh_list:
-                url = gzh_list[0]['url']
+                url = gzh_list['profile_url']
             else:
                 raise Exception()  # todo use ws exception
 

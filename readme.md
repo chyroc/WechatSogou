@@ -43,252 +43,211 @@
     Q:使用的是python 2 还是 3？
     A:都支持，若出错，请报BUG。
 
-# 项目使用
-
-参见[test.py](https://github.com/Chyroc/WechatSogou/blob/master/test.py)
-
 ## 安装
 
     pip install wechatsogou
-    
+
 ## 日志
 
     import logging
     import logging.config
     logging.config.fileConfig('logging.conf')
     logger = logging.getLogger()
-    
+
 ## 引用
 
-    from wechatsogou import *
-    wechats = WechatSogouApi()
+```python
+import wechatsogou
 
-## 搜索公众号 - search_gzh_info
+wechats = wechatsogou.WechatSogouAPI()
+```
 
-    name = '南京航空航天大学'
-    wechat_infos = wechats.search_gzh_info(name)
+## 获取特定公众号信息 - get_gzh_info
 
-<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/search_gzh_info.png" />
+![ws_api.get_gzh_info('南航青年志愿者')](./screenshot/get_gzh_info.png)
 
-返回结果是列表，每一项均是公众号具体信息字典，具体如下
+- 使用
+```
+In [5]: import wechatsogou
+  ...:
+  ...: ws_api =wechatsogou.WechatSogouAPI()
+  ...: ws_api.get_gzh_info('南航青年志愿者')
+  ...:
+Out[5]:
+{'authentication': '南京航空航天大学',
+'headimage': 'http://img01.sogoucdn.com/app/a/100520090/oIWsFt1tmWoG6vO6BcsS7St61bRE',
+'introduction': '南航大志愿活动的领跑者,为你提供校内外的志愿资源和精彩消息.',
+'post_perm': 0,
+'profile_url': 'http://mp.weixin.qq.com/profile?src=3&timestamp=1501140102&ver=1&signature=OpcTZp20TUdKHjSqWh7m73RWBIzwYwINpib2ZktBkLG8NyHamTvK2jtzl7mf-VdpE246zXAq18GNm*S*bq4klw==',
+'qrcode': 'http://mp.weixin.qq.com/rr?src=3&timestamp=1501140102&ver=1&signature=-DnFampQflbiOadckRJaTaDRzGSNfisIfECELSo-lN-GeEOH8-XTtM*ASdavl0xuavw-bmAEQXOa1T39*EIsjzxz30LjyBNkjmgbT6bGnZM=',
+'wechat_id': 'nanhangqinggong',
+'wechat_name': '南航青年志愿者'}
+```
 
-字段|含义
----|---
-name|公众号名称
-wechatid|公众号ID
-jieshao|介绍
-renzhen|认证信息，为空表示未认证
-qrcode|二维码图片地址
-img|头像地址
-url|最近文章地址
-post_perm|月发文篇数
-read_count|平均阅读
+- 返回数据结构
+```python
+{
+    'profile_url': '',  # 最近10条群发页链接
+    'headimage': '',  # 头像
+    'wechat_name': '',  # 名称
+    'wechat_id': '',  # 微信id
+    'post_perm': '',  # 最近一月群发数
+    'qrcode': '',  # 二维码
+    'introduction': '',  # 介绍
+    'authentication': ''  # 认证
+}
+```
 
-## 获取公众号
-对于一个已知`wechatid`的公众号
+## 搜索公众号
 
-    wechat_id = 'nanhangqinggong'
-    wechat_info = wechats.get_gzh_info(wechat_id)
+![ws_api.search_gzh('南京航空航天大学')](./screenshot/search_gzh.png)
 
-<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_info.png" />
+- 使用
+```
+In [6]: import wechatsogou
+   ...:
+   ...: ws_api =wechatsogou.WechatSogouAPI()
+   ...: ws_api.search_gzh('南京航空航天大学')
+   ...:
+Out[6]:
+[{'authentication': '南京航空航天大学',
+  'headimage': 'http://img01.sogoucdn.com/app/a/100520090/oIWsFt1MvjqspMDVvZjpmxyo36sU',
+  'introduction': '南京航空航天大学官方微信',
+  'post_perm': 0,
+  'profile_url': 'http://mp.weixin.qq.com/profile?src=3&timestamp=1501141990&ver=1&signature=S-7U131D3eQERC8yJGVAg2edySXn*qGVi5uE8QyQU034di*2mS6vGJVnQBRB0It9t9M-Qn7ynvjRKZNQrjBMEg==',
+  'qrcode': 'http://mp.weixin.qq.com/rr?src=3&timestamp=1501141990&ver=1&signature=Tlp-r0AaBRxtx3TuuyjdxmjiR4aEJY-hjh0kmtV6byVu3QIQYiMlJttJgGu0hwtZMZCCntdfaP5jD4JXipTwoGecAze8ycEF5KYZqtLSsNE=',
+  'wechat_id': 'NUAA_1952',
+  'wechat_name': '南京航空航天大学'},
+ {'authentication': '南京航空航天大学',
+  'headimage': 'http://img01.sogoucdn.com/app/a/100520090/oIWsFtwVmjdK_57vIKeMceGXF5BQ',
+  'introduction': '南京航空航天大学团委官方微信平台',
+  'post_perm': 0,
+  'profile_url': 'http://mp.weixin.qq.com/profile?src=3&timestamp=1501141990&ver=1&signature=aXFQrSDOiZJHedlL7vtAkvFMckxBmubE9VGrVczTwS601bOIT5Nrr8Pcgs6bQ-oEd6jdQ0aK5WCQjNwMAhJnyQ==',
+  'qrcode': 'http://mp.weixin.qq.com/rr?src=3&timestamp=1501141990&ver=1&signature=7Cpbd9CVQsXJkExRcU5VM6NuyoxDQQfVfF7*CGI-PTR0y6stHPtdSDqzAzvPMWz67Xz9IMF2TDfu4Cndj5bKxlsFh6wGhiLH0b9ZKqgCW5k=',
+  'wechat_id': 'nuaa_tw',
+  'wechat_name': '南京航空航天大学团委'},
+ ...]
+```
 
-返回结果与上述search_gzh_info返回结果一致
+- 数据结构
 
+list of dict, dict:
+
+```python
+{
+    'profile_url': '',  # 最近10条群发页链接
+    'headimage': '',  # 头像
+    'wechat_name': '',  # 名称
+    'wechat_id': '',  # 微信id
+    'post_perm': '',  # 最近一月群发数
+    'qrcode': '',  # 二维码
+    'introduction': '',  # 介绍
+    'authentication': ''  # 认证
+}
+```
 
 ## 搜索微信文章
 
-    keywords = '傅里叶变换'
-    wechat_articles = wechats.search_article_info(keywords)
+![ws_api.search_article('南京航空航天大学')](./screenshot/search_article.png)
 
-<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/search_article_info.png" />
+- 使用
+```
+In [7]: import wechatsogou
+   ...:
+   ...: ws_api =wechatsogou.WechatSogouAPI()
+   ...: ws_api.search_article('南京航空航天大学')
+   ...:
+Out[7]:
+[{'article': {'abstract': '【院校省份】江苏【报名时间】4月5日截止【考试时间】6月10日-11日南京航空航天大学2017年自主招生简章南京航空航天大学2017...',
+   'imgs': ['http://img01.sogoucdn.com/net/a/04/link?appid=100520033&url=http://mmbiz.qpic.cn/mmbiz_png/P07yicBRJfC71QB3lREx4J4x34QOibGaia5BkiaaiaiaibicWkTBULou9R08K6FaxlUA1RFBFWCmpO1Lepk7ZcXK45vguQ/0?wx_fmt=png'],
+   'time': 1490270644,
+   'title': '南京航空航天大学2017年自主招生简章',
+   'url': 'http://mp.weixin.qq.com/s?src=3&timestamp=1501142580&ver=1&signature=hRMlQOLQpu4BNhBACavusZdmk**D65qHyz5LWDq1lPjVcm7*iiBS0l7Pq40h0fiCX*bZ8vSMLzAMDNzELYFKIQ7mND0-7cQi-N0BtfTBql*CQdsHun-GtaYEqRva6Ukwce3gZh46SXJzo90kyZ3dwVYl6*589bGDIzG6JTGfpxI='},
+  'gzh': {'headimage': 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5kiawibor6ABhnibMYnOADvqdcrl5XWiaFfM5mGYZ8cUica6A/0',
+   'isv': 0,
+   'profile_url': 'http://mp.weixin.qq.com/profile?src=3&timestamp=1501142580&ver=1&signature=dVkDdcFr1suL1WHdCOJj7pwZhG9W*APi-j5kRtS09ccv-WID-zNs0ecDiiz1wwE7qbNSk5HBL*ffpyVXcF0fFQ==',
+   'wechat_name': '自主招生在线'}},
+ ...]
+```
 
-返回结果是列表，每一项均是文章信息字典，具体如下
+- 数据结构
 
-字段|含义
----|---
-name|文章标题
-url|文章链接
-img|文章封面图片缩略图，可转为高清大图
-zhaiyao|文章摘要
-time|文章推送时间，10位时间戳
-gzhname|公众号名称
-gzhqrcodes|公众号二维码
-gzhurl|公众号最近文章地址
+list of dict, dict:
+```python
+{
+    'article': {
+        'title': '',  # 文章标题
+        'url': '',  # 文章链接
+        'imgs': '',  # 文章图片list
+        'abstract': '',  # 文章摘要
+        'time': ''  # 文章推送时间
+    },
+    'gzh': {
+        'profile_url': '',  # 公众号最近10条群发页链接
+        'headimage': '',  # 头像
+        'wechat_name': '',  # 名称
+        'isv': '',  # 是否加v
+    }
+}
+```
 
+## 解析最近文章页 - get_gzh_artilce_by_history
 
-## 解析最近文章页  或  解析历史消息记录 - get_gzh_message
-
-    data = wechats.get_gzh_message(url=url)
-    # 或者 data = wechats.get_gzh_message(wechatid=wechatid)
-    # 或者（不推荐） data = wechats.get_gzh_message(wechat_name=wechat_name)
-
-<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_message.png" />
-
-返回的是 列表，每一项均是字典，一定含有字段qunfa_id,datetime,type
-
-字段|含义
----|---
-qunfa_id|群发消息id
-datetime|群发10位时间戳
-type|群发消息类型
-
-下面是type不同的值时的其他字段
-
-字段|含义
----|---
-type|1,表示文字
-content|文字内容
-
-字段|含义
----|---
-type|3,表示图片
-img_url|图片链接
-
-字段|含义
----|---
-type|34,表示音频
-play_length|长度
-fileid|id
-audio_src|音频地址
-
-字段|含义
----|---
-type|49,表示图文
-main|是否是一次推送中第一篇文章，1则是
-is_multi|本图文所属推送是否是多图文
-title|文章标题
-digest|摘要
-fileid|id
-content_url|文章地址
-source_url|原文地址
-cover|封面图片
-author|作者
-copyright_stat|文章内容版权性
-
-字段|含义
----|---
-type|62,表示视频
-cdn_videoid|id
-thumb|缩略图
-video_src|视频地址
-
-## 解析公众号信息  和  最近群发文章 - get_gzh_message_and_info
-
-    data = wechats.get_gzh_message_and_info(url=url)
-    # 或者 data = wechats.get_gzh_message_and_info(wechatid=wechatid)
-    # 或者（不推荐） data = wechats.get_gzh_message_and_info(wechat_name=wechat_name)
-
-<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_message_and_info.png" />
-
-返回的是字典{'gzh_info':gzh_info, 'gzh_messages':gzh_messages}
-
-字段|含义
----|---
-gzh_info|公众号信息字典
-gzh_messages|群发消息列表
-
-其中`gzh_info`的具体如下
-
-字段|含义
----|---
-name|公众号名称
-wechatid|公众号id
-jieshao|介绍
-renzhen|认证，为空表示未认证
-qrcode|二维码
-img|头像图片
-url|最近文章地址
-
-`gzh_messages`一定含有字段qunfa_id,datetime,type
-具体见上一项
-
-## 获取文章内容 - deal_article_content
-
-    article_content = wechats.deal_article_content(text=text)
-    # 或 article_content = wechats.deal_article_content(url=url)
-
-`text`是文章页文本，`url`是文章页链接
-
-返回是文章内容（含有html格式）
-
-## 获取相似文章 - deal_article_related
-
-    article_related = wechats.deal_article_related(url, title)
-
-`url`: 文章链接,`title`: 文章标题
-
-## 获取文章评论 - deal_article_comment
-
-    article_comment = wechats.deal_article_comment(text=text)
-    # 或 article_comment = wechats.deal_article_comment(url=url)
-
-`text`是文章页文本，`url`是文章页链接
-
-## 获取文章以上三项信息 - deal_article
-
-一般需要处理，因为需要在这一步获取固定的而不是临时的文章链接
-
-    article_info = wechats.deal_article(url)
-
-<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/deal_article.png" />
-
-返回字典，具体如下
-
-字段|含义
----|---
-yuan|文章固定地址
-related|相似文章信息字典
-comment|评论信息字典
-content_html|文章内容
+![ws_api.search_article('南京航空航天大学')](./screenshot/search_article.png)
 
 
-`comment`是评论以及阅读量，字典
+- 使用
+```
+In [1]: import wechatsogou
+   ...:
+   ...: ws_api =wechatsogou.WechatSogouAPI()
+   ...: ws_api.get_gzh_artilce_by_history('南航青年志愿者')
+   ...:
+Out[1]:
+{'article': [{'abstract': '我们所做的，并不能立马去改变什么——\n但千里之行，绿勤行永不止步。\n我们不会就此止步，之后我们又将再出发。\n 民勤，再见。\n绿勤行，不再见。',
+   'author': '',
+   'content_url': 'http://mp.weixin.qq.com/s?timestamp=1501143158&src=3&ver=1&signature=B-*tqUrFyO7OqpFeJZwTA7JJtsHpz6BgC8ugyfgpOnyWLtPb85R5Zmu0JuZRbZKG72x4bQjMCcsfA5mC3GSSOPbYd-9tzvTgmroGRmc4Tzk8090KCiEu6EjA0YMHeytWJWpxr51M2FUYQhTWJ01pTmNnXLVAG6Ex6AG52uvvmQA=',
+   'copyright_stat': 100,
+   'cover': 'http://mmbiz.qpic.cn/mmbiz_jpg/icFYWMxnmxHDYgXNjAle7szYLgQmicbaQlb1eVFuwp2vxEu5eNVwYacaHah2N5W8dKAm725vxv5aM6DFlM59Wftg/0?wx_fmt=jpeg',
+   'datetime': 1501072594,
+   'fileid': 502326199,
+   'main': 1,
+   'send_id': 1000000306,
+   'source_url': '',
+   'title': '绿勤行——不说再见',
+   'type': '49'},
+   ...]
+```
+- 数据结构
+```python
+{
+    'gzh_info': {
+        'wechat_name': '',  # 名称
+        'wechat_id': '',  # 微信id
+        'introduction': '',  # 描述
+        'authentication': '',  # 认证
+        'headimage': ''  # 头像
+    },
+    'article': [
+        {
+            'send_id': '',  # 群发id，注意不唯一，因为同一次群发多个消息，而群发id一致
+            'datetime': '',  # 群发datatime
+            'type': '',  # 消息类型，均是49，表示图文
+            'main': 0,  # 是否是一次群发的第一次消息
+            'title': '',  # 文章标题
+            'abstract': '',  # 摘要
+            'fileid': '',  #
+            'content_url': '',  # 文章链接
+            'source_url': '',  # 阅读原文的链接
+            'cover': '',  # 封面图
+            'author': '',  # 作者
+            'copyright_stat': '',  # 文章类型，例如：原创啊
+        },
+        ...
+    ]
+}
 
-字段|含义
----|---
-base_resp|返回码，字典，包含下面两项
-base_resp->ret|返回码
-base_resp->errmsg|返回错误信息
-read_num|阅读量
-like_num|点赞数
-elected_comment_total_cnt|评论数
-comment|具体评论数据，每一项均是一个列表，设为comment_comment
-
-`comment_comment`是一项评论
-
-字段|含义
----|---
-content|评论内容
-like_num|点赞数
-nick_name|评论者昵称
-logo_url|评论者头像
-reply|回复
-其余字典未说明，请打印自行查看|...
-
-## 获取首页推荐文章公众号最近文章地址 - get_recent_article_url_by_index_single
-
-    articles_single = wechats.get_recent_article_url_by_index_single()
-
-<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_recent_article_url_by_index_single.png" />
-
-返回的是列表，每一项是不同公众号的的最近文章页
-
-## 获取首页推荐文章公众号最近文章地址  所有分类 - get_recent_article_url_by_index_all
-
-    articles_all = wechats.get_recent_article_url_by_index_all()
-
-<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_recent_article_url_by_index_all.png" />
-
-
-返回的是列表，每一项是不同公众号的的最近文章页
-
-## 获取微信搜狗搜索关键词联想 - get_sugg
-
-    sugg_keyword = wechats.get_sugg('中国梦')
-
-<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_sugg.png" />
-
-返回的是列表，每一项是不同公众号的的最近文章页
+```
 
 ---
 
