@@ -187,7 +187,7 @@ class TestStructuringGzh(unittest.TestCase):
 
             urls.append(i['content_url'])
             titles.append(i['title'])
-            digests.append(i['digest'])
+            digests.append(i['abstract'])
 
         assert_equal(
             ['帝都深处好修行',

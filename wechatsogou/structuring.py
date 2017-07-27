@@ -14,6 +14,12 @@ find_article_json_re = re.compile('var msgList = (.*?)}}]};')
 
 class WechatSogouStructuring(object):
     @staticmethod
+    def __handle_content_url(content_url):
+        content_url = replace_html(content_url)
+        return ('http://mp.weixin.qq.com{}'.format(
+            content_url) if 'http://mp.weixin.qq.com' not in content_url else content_url) if content_url else ''
+
+    @staticmethod
     def get_gzh_by_search(text):
         """从搜索公众号获得的文本 提取公众号信息
 
@@ -186,7 +192,7 @@ class WechatSogouStructuring(object):
         }
 
     @staticmethod
-    def get_article_by_history_json(text, article_json=None, **kwargs):
+    def get_article_by_history_json(text, article_json=None):
         """从 历史消息页的文本 提取文章列表信息
 
         Parameters
@@ -195,101 +201,74 @@ class WechatSogouStructuring(object):
             历史消息页的文本
         article_json : dict
             历史消息页的文本 提取出来的文章json dict
-        kwargs
-            ??
 
         Returns
         -------
-        list of dict
+        list[dict]
             {
-                ??
+                'send_id': '',  # 群发id，注意不唯一，因为同一次群发多个消息，而群发id一致
+                'datetime': '',  # 群发datatime
+                'type': '',  # 消息类型，均是49，表示图文
+                'main': 0,  # 是否是一次群发的第一次消息
+                'title': '',  # 文章标题
+                'abstract': '',  # 摘要
+                'fileid': '',  #
+                'content_url': '',  # 文章链接
+                'source_url': '',  # 阅读原文的链接
+                'cover': '',  # 封面图
+                'author': '',  # 作者
+                'copyright_stat': '',  # 文章类型，例如：原创啊
             }
+
         """
-        # TODO 加上返回的数据的文档
         if article_json is None:
             article_json = find_article_json_re.findall(text)
             article_json = article_json[0] + '}}]}'
             article_json = json.loads(article_json)
 
-        biz = kwargs.get('biz', '')
-        uin = kwargs.get('uin', '')
-        key = kwargs.get('key', '')
         items = list()
-        for listdic in article_json['list']:
-            item = dict()
-            comm_msg_info = listdic['comm_msg_info']
-            item['send_id'] = comm_msg_info.get('id', '')  # 不可判重，一次群发的消息的id是一样的
-            item['datetime'] = comm_msg_info.get('datetime', '')
-            item['type'] = str(comm_msg_info.get('type', ''))
-            if item['type'] == '1':
-                # 文字
-                item['content'] = comm_msg_info.get('content', '')
-            elif item['type'] == '3':
-                # 图片
-                item[
-                    'img_url'] = 'https://mp.weixin.qq.com/mp/getmediadata?__biz=' + biz + '&type=img&mode=small&msgid=' + \
-                                 str(item['qunfa_id']) + '&uin=' + uin + '&key=' + key
-            elif item['type'] == '34':
-                # 音频
-                item['play_length'] = listdic['voice_msg_ext_info'].get('play_length', '')
-                item['fileid'] = listdic['voice_msg_ext_info'].get('fileid', '')
-                item['audio_src'] = 'https://mp.weixin.qq.com/mp/getmediadata?__biz=' + biz + '&type=voice&msgid=' + \
-                                    str(item['qunfa_id']) + '&uin=' + uin + '&key=' + key
-            elif item['type'] == '49':
-                # 图文
-                app_msg_ext_info = listdic['app_msg_ext_info']
-                url = app_msg_ext_info.get('content_url')
-                url = replace_html(url)
-                if url:
-                    url = 'http://mp.weixin.qq.com' + url if 'http://mp.weixin.qq.com' not in url else url
-                else:
-                    url = ''
-                item['main'] = 1
-                item['title'] = app_msg_ext_info.get('title', '')
-                item['digest'] = app_msg_ext_info.get('digest', '')
-                item['fileid'] = app_msg_ext_info.get('fileid', '')
-                item['content_url'] = url
-                item['source_url'] = app_msg_ext_info.get('source_url', '')
-                item['cover'] = app_msg_ext_info.get('cover', '')
-                item['author'] = app_msg_ext_info.get('author', '')
-                item['copyright_stat'] = app_msg_ext_info.get('copyright_stat', '')
-                items.append(item)
-                if app_msg_ext_info.get('is_multi', 0) == 1:
-                    for multidic in app_msg_ext_info['multi_app_msg_item_list']:
-                        url = multidic.get('content_url')
-                        if url:
-                            url = 'http://mp.weixin.qq.com' + url if 'http://mp.weixin.qq.com' not in url else url
-                        else:
-                            url = ''
-                        itemnew = dict()
-                        itemnew['send_id'] = item['send_id']  # TODO send_id 和 qunfa_id 只有一个可以通过测试
-                        itemnew['datetime'] = item['datetime']
-                        itemnew['type'] = item['type']
-                        itemnew['main'] = 0
-                        itemnew['title'] = multidic.get('title', '')
-                        itemnew['digest'] = multidic.get('digest', '')
-                        itemnew['fileid'] = multidic.get('fileid', '')
-                        itemnew['content_url'] = url.replace('&amp;', '&')
-                        itemnew['source_url'] = multidic.get('source_url', '')
-                        itemnew['cover'] = multidic.get('cover', '')
-                        itemnew['author'] = multidic.get('author', '')
-                        itemnew['copyright_stat'] = multidic.get('copyright_stat', '')
-                        items.append(itemnew)
-                continue
-            elif item['type'] == '62':
-                item['cdn_videoid'] = listdic['video_msg_ext_info'].get('cdn_videoid', '')
-                item['thumb'] = listdic['video_msg_ext_info'].get('thumb', '')
-                item['video_src'] = 'https://mp.weixin.qq.com/mp/getcdnvideourl?__biz=' + biz + '&cdn_videoid=' + item[
-                    'cdn_videoid'] + '&thumb=' + item['thumb'] + '&uin=' + uin + '&key=' + key
-            items.append(item)
 
-        items_new = []  # 删除搜狗本身携带的空数据
-        for item in items:
-            if (int(item['type']) == 49) and (not item['content_url']):
-                pass
-            else:
-                items_new.append(item)
-        return items_new
+        for listdic in article_json['list']:
+            if str(listdic['comm_msg_info'].get('type', '')) != '49':
+                continue
+
+            comm_msg_info = listdic['comm_msg_info']
+            app_msg_ext_info = listdic['app_msg_ext_info']
+            send_id = comm_msg_info.get('id', '')
+            msg_datetime = comm_msg_info.get('datetime', '')
+            msg_type = str(comm_msg_info.get('type', ''))
+
+            items.append({
+                'send_id': send_id,
+                'datetime': msg_datetime,
+                'type': msg_type,
+                'main': 1, 'title': app_msg_ext_info.get('title', ''),
+                'abstract': app_msg_ext_info.get('digest', ''),
+                'fileid': app_msg_ext_info.get('fileid', ''),
+                'content_url': WechatSogouStructuring.__handle_content_url(app_msg_ext_info.get('content_url')),
+                'source_url': app_msg_ext_info.get('source_url', ''),
+                'cover': app_msg_ext_info.get('cover', ''),
+                'author': app_msg_ext_info.get('author', ''),
+                'copyright_stat': app_msg_ext_info.get('copyright_stat', '')
+            })
+
+            if app_msg_ext_info.get('is_multi', 0) == 1:
+                for multi_dict in app_msg_ext_info['multi_app_msg_item_list']:
+                    items.append({
+                        'send_id': send_id,
+                        'datetime': msg_datetime,
+                        'type': msg_type,
+                        'main': 0, 'title': multi_dict.get('title', ''),
+                        'abstract': multi_dict.get('digest', ''),
+                        'fileid': multi_dict.get('fileid', ''),
+                        'content_url': WechatSogouStructuring.__handle_content_url(multi_dict.get('content_url')),
+                        'source_url': multi_dict.get('source_url', ''),
+                        'cover': multi_dict.get('cover', ''),
+                        'author': multi_dict.get('author', ''),
+                        'copyright_stat': multi_dict.get('copyright_stat', '')
+                    })
+
+        return list(filter(lambda x: x['content_url'], items))  # 删除搜狗本身携带的空数据
 
     @staticmethod
     def get_gzh_info_and_article_by_history(text):
