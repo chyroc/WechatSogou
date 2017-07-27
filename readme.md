@@ -22,8 +22,7 @@
 # 赞助作者
 甲鱼说，咖啡是灵魂的饮料，买点咖啡
 
-<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/pay_wx.jpg" width="250" />
-<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/pay_zfb.jpg" width="250" />
+<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/pay_wx.jpg" width="250" /><img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/pay_zfb.jpg" width="250" />
 
 谢谢：
 
@@ -45,12 +44,12 @@
     Q:使用的是python 2 还是 3？
     A:都支持，若出错，请报BUG。
 
-## 安装
+# 安装
 ```
-pip install wechatsogou
+pip install wechatsogou --upgrade
 ```
 
-## 使用
+# 使用
 
 ### 引用
 
@@ -91,9 +90,9 @@ Out[5]:
     'headimage': '',  # 头像
     'wechat_name': '',  # 名称
     'wechat_id': '',  # 微信id
-    'post_perm': '',  # 最近一月群发数
+    'post_perm': int,  # 最近一月群发数
     'qrcode': '',  # 二维码
-    'introduction': '',  # 介绍
+    'introduction': '',  # 简介
     'authentication': ''  # 认证
 }
 ```
@@ -145,7 +144,7 @@ list of dict, dict:
     'headimage': '',  # 头像
     'wechat_name': '',  # 名称
     'wechat_id': '',  # 微信id
-    'post_perm': '',  # 最近一月群发数
+    'post_perm': int,  # 最近一月群发数
     'qrcode': '',  # 二维码
     'introduction': '',  # 介绍
     'authentication': ''  # 认证
@@ -194,13 +193,13 @@ list of dict, dict:
         'url': '',  # 文章链接
         'imgs': '',  # 文章图片list
         'abstract': '',  # 文章摘要
-        'time': ''  # 文章推送时间
+        'time': int  # 文章推送时间 10位时间戳
     },
     'gzh': {
         'profile_url': '',  # 公众号最近10条群发页链接
         'headimage': '',  # 头像
         'wechat_name': '',  # 名称
-        'isv': '',  # 是否加v
+        'isv': int,  # 是否加v 1 or 0
     }
 }
 ```
@@ -250,11 +249,11 @@ Out[1]:
   ...
   ],
   'gzh_info': {
-  'authentication': '南京航空航天大学',
-  'headimage': 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM4xV5PgPjK5XoPaaQoxnWJAFicibMvPAnsoybawMBFxua1g/0',
-  'introduction': '南航大志愿活动的领跑者，为你提供校内外的志愿资源和精彩消息。',
-  'wechat_id': 'nanhangqinggong',
-  'wechat_name': '南航青年志愿者'
+    'authentication': '南京航空航天大学',
+    'headimage': 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM4xV5PgPjK5XoPaaQoxnWJAFicibMvPAnsoybawMBFxua1g/0',
+    'introduction': '南航大志愿活动的领跑者，为你提供校内外的志愿资源和精彩消息。',
+    'wechat_id': 'nanhangqinggong',
+    'wechat_name': '南航青年志愿者'
   }
 }
 ```
@@ -264,24 +263,24 @@ Out[1]:
     'gzh_info': {
         'wechat_name': '',  # 名称
         'wechat_id': '',  # 微信id
-        'introduction': '',  # 描述
+        'introduction': '',  # 简介
         'authentication': '',  # 认证
         'headimage': ''  # 头像
     },
     'article': [
         {
-            'send_id': '',  # 群发id，注意不唯一，因为同一次群发多个消息，而群发id一致
-            'datetime': '',  # 群发datatime
-            'type': '',  # 消息类型，均是49，表示图文
-            'main': 0,  # 是否是一次群发的第一次消息
+            'send_id': int,  # 群发id，注意不唯一，因为同一次群发多个消息，而群发id一致
+            'datetime': int,  # 群发datatime 10位时间戳
+            'type': '',  # 消息类型，均是49（在手机端历史消息页有其他类型，网页端最近10条消息页只有49），表示图文
+            'main': int,  # 是否是一次群发的第一次消息 1 or 0
             'title': '',  # 文章标题
             'abstract': '',  # 摘要
-            'fileid': '',  #
+            'fileid': int,  #
             'content_url': '',  # 文章链接
             'source_url': '',  # 阅读原文的链接
             'cover': '',  # 封面图
             'author': '',  # 作者
-            'copyright_stat': '',  # 文章类型，例如：原创啊
+            'copyright_stat': int,  # 文章类型，例如：原创啊
         },
         ...
     ]
@@ -289,6 +288,33 @@ Out[1]:
 
 ```
 
+### 获取关键字联想词
+- 使用
+```
+In [1]: import wechatsogou
+   ...:
+   ...: ws_api =wechatsogou.WechatSogouAPI()
+   ...: ws_api.get_sugg('高考')
+   ...:
+Out[1]:
+['高考e通',
+ '高考专业培训',
+ '高考地理俱乐部',
+ '高考志愿填报咨讯',
+ '高考报考资讯',
+ '高考教育',
+ '高考早知道',
+ '高考服务志愿者',
+ '高考机构',
+ '高考福音']
+```
+
+- 数据结构
+
+关键词列表
+```python
+['a', 'b', ...]
+```
 ---
 
 # TODO
