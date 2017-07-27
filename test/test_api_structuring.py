@@ -161,7 +161,7 @@ class TestStructuringGzh(unittest.TestCase):
 
         gzh_info = WechatSogouStructuring.get_gzh_info_by_history(gzh_history)
 
-        assert_equal('槽边往事', gzh_info['name'])
+        assert_equal('槽边往事', gzh_info['wechat_name'])
         assert_equal('bitsea', gzh_info['wechat_id'])
         assert_equal('和菜头的微信Blog，用于分享各种新鲜资讯', gzh_info['authentication'])
         assert_equal('http://wx.qlogo.cn/mmhead/Q3auHgzwzM6zmSwQkvHdgXDtnpAyLYjuib8QdW6ibKKGo8zcZVbYxiaUw/0',
