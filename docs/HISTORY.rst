@@ -1,6 +1,125 @@
 Change Log
 ==========
 
+`v3.0.0 <https://github.com/Chyroc/WechatSogou/tree/v3.0.0>`__ (2017-07-27)
+---------------------------------------------------------------------------
+
+`Full
+Changelog <https://github.com/Chyroc/WechatSogou/compare/v2.0.5...v3.0.0>`__
+
+**Closed issues:**
+
+-  解封成功，正在为您跳转来源地址...
+   `#72 <https://github.com/Chyroc/WechatSogou/issues/72>`__
+-  列表页验证码有办法绕过吗？
+   `#71 <https://github.com/Chyroc/WechatSogou/issues/71>`__
+-  无法正确解析wechatid
+   `#70 <https://github.com/Chyroc/WechatSogou/issues/70>`__
+-  貌似抓不到点赞数和阅读数
+   `#65 <https://github.com/Chyroc/WechatSogou/issues/65>`__
+-  badge issue `#64 <https://github.com/Chyroc/WechatSogou/issues/64>`__
+-  目前getcomment接口已报错，显示 404了，何解？
+   `#63 <https://github.com/Chyroc/WechatSogou/issues/63>`__
+-  调用方法search\_gzh\_info()搜索公众号时，获取到的结果中wechatid为‘’
+   `#62 <https://github.com/Chyroc/WechatSogou/issues/62>`__
+-  跳出来验证码之后输入，报错
+   `#61 <https://github.com/Chyroc/WechatSogou/issues/61>`__
+-  请问logging.config.fileConfig('logging.conf')出错如何解决
+   `#60 <https://github.com/Chyroc/WechatSogou/issues/60>`__
+-  可否增加验证码输入错误，能再次重新输入的机制
+   `#54 <https://github.com/Chyroc/WechatSogou/issues/54>`__
+-  调用get\_gzh\_message返回{"ret":0,"errmsg":""}
+   `#52 <https://github.com/Chyroc/WechatSogou/issues/52>`__
+-  输入验证码后报错
+   `#32 <https://github.com/Chyroc/WechatSogou/issues/32>`__
+-  作者：对于本项目的类及方法命名，有什么建议？
+   `#30 <https://github.com/Chyroc/WechatSogou/issues/30>`__
+-  文章列表页也可能出现验证码
+   `#29 <https://github.com/Chyroc/WechatSogou/issues/29>`__
+-  功能与意见反馈，报bug可以另开issue
+   `#28 <https://github.com/Chyroc/WechatSogou/issues/28>`__
+-  调试几次后，开始无法爬取，是因为搜狗的反爬虫策略吗？
+   `#26 <https://github.com/Chyroc/WechatSogou/issues/26>`__
+-  对时间的支持
+   `#19 <https://github.com/Chyroc/WechatSogou/issues/19>`__
+
+**Merged pull requests:**
+
+-  add get sugg
+   `#102 <https://github.com/Chyroc/WechatSogou/pull/102>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  Fix readme `#101 <https://github.com/Chyroc/WechatSogou/pull/101>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  modify the readme file
+   `#100 <https://github.com/Chyroc/WechatSogou/pull/100>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  add doc for refactored api
+   `#99 <https://github.com/Chyroc/WechatSogou/pull/99>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  refactor get info from history
+   `#98 <https://github.com/Chyroc/WechatSogou/pull/98>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  remove unused file / fix name / add comment
+   `#97 <https://github.com/Chyroc/WechatSogou/pull/97>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  merge 原来的api 和 重构后的api
+   `#96 <https://github.com/Chyroc/WechatSogou/pull/96>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  Add get gzh and article by history
+   `#95 <https://github.com/Chyroc/WechatSogou/pull/95>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  Add get gzh by id or name
+   `#94 <https://github.com/Chyroc/WechatSogou/pull/94>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  add search article api
+   `#93 <https://github.com/Chyroc/WechatSogou/pull/93>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  add callback func
+   `#92 <https://github.com/Chyroc/WechatSogou/pull/92>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  split test / add error html
+   `#91 <https://github.com/Chyroc/WechatSogou/pull/91>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  Add annotation and remove all type from history page
+   `#89 <https://github.com/Chyroc/WechatSogou/pull/89>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  Add annotation and fix
+   `#88 <https://github.com/Chyroc/WechatSogou/pull/88>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  split test get gzh\_info and articel
+   `#87 <https://github.com/Chyroc/WechatSogou/pull/87>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  add structuring-gzh-article-from-history
+   `#86 <https://github.com/Chyroc/WechatSogou/pull/86>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  Structuring gzh from history
+   `#85 <https://github.com/Chyroc/WechatSogou/pull/85>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  test struct article list
+   `#84 <https://github.com/Chyroc/WechatSogou/pull/84>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  Structuring gzh by search
+   `#83 <https://github.com/Chyroc/WechatSogou/pull/83>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  fix repo language
+   `#82 <https://github.com/Chyroc/WechatSogou/pull/82>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  fix repo language
+   `#81 <https://github.com/Chyroc/WechatSogou/pull/81>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  Search gzh article text
+   `#80 <https://github.com/Chyroc/WechatSogou/pull/80>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  add test gen search gzh url
+   `#79 <https://github.com/Chyroc/WechatSogou/pull/79>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  Refactor gen search url
+   `#78 <https://github.com/Chyroc/WechatSogou/pull/78>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  release v2.0.4 -> v2.0.5
+   `#77 <https://github.com/Chyroc/WechatSogou/pull/77>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+
 `v2.0.5 <https://github.com/Chyroc/WechatSogou/tree/v2.0.5>`__ (2017-07-22)
 ---------------------------------------------------------------------------
 

@@ -7,10 +7,15 @@ from wechatsogou.request import WechatSogouRequest
 from wechatsogou.structuring import WechatSogouStructuring
 from wechatsogou.exceptions import WechatSogouException, WechatSogouVcodeOcrException, WechatSogouRequestsException
 
-__all__ = ['WechatSogouAPI', 'WechatSogouRequest', 'WechatSogouStructuring', 'WechatSogouException',
-           'WechatSogouVcodeOcrException', 'WechatSogouRequestsException']
+__all__ = [
+    'WechatSogouAPI',
+    'WechatSogouRequest',
+    'WechatSogouStructuring',
+    'WechatSogouException',
+    'WechatSogouVcodeOcrException',
+    'WechatSogouRequestsException']
 
-__version__ = "2.0.5"
+__version__ = "3.0.0"
 
 """doc string
 
