@@ -247,8 +247,8 @@ class WechatSogouStructuring(object):
                 'main': 1, 'title': app_msg_ext_info.get('title', ''),
                 'abstract': app_msg_ext_info.get('digest', ''),
                 'fileid': app_msg_ext_info.get('fileid', ''),
-                'content_url': app_msg_ext_info.get('content_url'),
-                'source_url': WechatSogouStructuring.__handle_content_url(app_msg_ext_info.get('source_url', '')),
+                'content_url': WechatSogouStructuring.__handle_content_url(app_msg_ext_info.get('content_url')),
+                'source_url': app_msg_ext_info.get('source_url', ''),
                 'cover': app_msg_ext_info.get('cover', ''),
                 'author': app_msg_ext_info.get('author', ''),
                 'copyright_stat': app_msg_ext_info.get('copyright_stat', '')
