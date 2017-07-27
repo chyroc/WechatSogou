@@ -16,10 +16,8 @@ class WechatSogouStructuring(object):
     @staticmethod
     def __handle_content_url(content_url):
         content_url = replace_html(content_url)
-        if content_url:
-            return 'http://mp.weixin.qq.com' + content_url if 'http://mp.weixin.qq.com' not in content_url else content_url
-        else:
-            return ''
+        return ('http://mp.weixin.qq.com{}'.format(
+            content_url) if 'http://mp.weixin.qq.com' not in content_url else content_url) if content_url else ''
 
     @staticmethod
     def get_gzh_by_search(text):
