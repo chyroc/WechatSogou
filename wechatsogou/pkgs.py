@@ -18,7 +18,6 @@ try:
 except ImportError:
     import urllib.parse
 
-
     urlencode = urllib.parse.urlencode
 
 # unquote
