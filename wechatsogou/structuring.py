@@ -77,7 +77,7 @@ class WechatSogouStructuring(object):
 
         Returns
         -------
-        list of dict
+        list[dict]
             {
                 'article': {
                     'title': '',  # 文章标题
@@ -283,8 +283,30 @@ class WechatSogouStructuring(object):
         -------
         dict
             {
-                'gzh_info': WechatSogouStructuring.get_gzh_info_by_history 函数返回值,
-                'article': WechatSogouStructuring.get_article_by_history_json 函数返回值
+                'gzh_info': {
+                    'wechat_name': '',  # 名称
+                    'wechat_id': '',  # 微信id
+                    'introduction': '',  # 描述
+                    'authentication': '',  # 认证
+                    'headimage': ''  # 头像
+                },
+                'article': [
+                    {
+                        'send_id': '',  # 群发id，注意不唯一，因为同一次群发多个消息，而群发id一致
+                        'datetime': '',  # 群发datatime
+                        'type': '',  # 消息类型，均是49，表示图文
+                        'main': 0,  # 是否是一次群发的第一次消息
+                        'title': '',  # 文章标题
+                        'abstract': '',  # 摘要
+                        'fileid': '',  #
+                        'content_url': '',  # 文章链接
+                        'source_url': '',  # 阅读原文的链接
+                        'cover': '',  # 封面图
+                        'author': '',  # 作者
+                        'copyright_stat': '',  # 文章类型，例如：原创啊
+                    },
+                    ...
+                ]
             }
         """
         return {
