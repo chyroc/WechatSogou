@@ -37,7 +37,7 @@ class TestAPI(unittest.TestCase):
                       '专业中高考教育',
                       '晟嘉高考',
                       '新东方在线高考辅导'],
-                     [i['name'] for i in gzh_list])
+                     [i['wechat_name'] for i in gzh_list])
 
     @unittest.skip
     def test_search_gzh_error(self):

@@ -30,15 +30,15 @@ class TestStructuringGzh(unittest.TestCase):
         authentications = []
         assert_equal(10, len(gzh_list))
         for gzh in gzh_list:
-            names.append(gzh['name'])
+            names.append(gzh['wechat_name'])
             wechat_ids.append(gzh['wechat_id'])
             post_perms.append(gzh['post_perm'])
             introductions.append(gzh['introduction'])
             authentications.append(gzh['authentication'])
 
-            assert_in('mp.weixin.qq.com/profile?src=3&timestamp=', gzh['url'])
+            assert_in('mp.weixin.qq.com/profile?src=3&timestamp=', gzh['profile_url'])
             assert_in('mp.weixin.qq.com/rr?src=', gzh['qrcode'])
-            assert_in('img01.sogoucdn.com/', gzh['img'])
+            assert_in('img01.sogoucdn.com/', gzh['headimage'])
 
         assert_equal(['山东高考指南',
                       '高考家长圈',
@@ -110,9 +110,9 @@ class TestStructuringGzh(unittest.TestCase):
 
             gzh = i['gzh']
 
-            assert_in('mp.weixin.qq.com/profile?src=3&timestamp', gzh['article_list_url'])
+            assert_in('mp.weixin.qq.com/profile?src=3&timestamp', gzh['profile_url'])
             assert_in('wx.qlogo.cn/mmhead', gzh['headimage'])
-            gzh_names.append(gzh['name'])
+            gzh_names.append(gzh['wechat_name'])
             isvs.append(gzh['isv'])
 
         # article
@@ -163,10 +163,10 @@ class TestStructuringGzh(unittest.TestCase):
 
         assert_equal('槽边往事', gzh_info['name'])
         assert_equal('bitsea', gzh_info['wechat_id'])
-        assert_equal('和菜头的微信Blog，用于分享各种新鲜资讯', gzh_info['principal'])
+        assert_equal('和菜头的微信Blog，用于分享各种新鲜资讯', gzh_info['authentication'])
         assert_equal('http://wx.qlogo.cn/mmhead/Q3auHgzwzM6zmSwQkvHdgXDtnpAyLYjuib8QdW6ibKKGo8zcZVbYxiaUw/0',
-                     gzh_info['img'])
-        assert_equal(' ', gzh_info['desc'])
+                     gzh_info['headimage'])
+        assert_equal(' ', gzh_info['introduction'])
 
     def test_get_article_by_history_json(self):
         file_name = '{}/{}/{}'.format(os.getcwd(), fake_data_path, 'bitsea-history.html')
