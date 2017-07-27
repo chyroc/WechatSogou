@@ -46,16 +46,16 @@ def __identify_image_callback(img, code):
         id_ = os.environ['rk_id']
         key = os.environ['rk_key']
         rc = RClient(username, password, id_, key)
-        return rc.rk_create(img, code)
+        result = rc.rk_create(img, code)
+        print('验证码：', result['Result'])
+        return result['Result']
     except Exception:
         raise Exception('识别验证码错误')
 
 
 def identify_image_callback_ruokuai_search(img):
-    result = __identify_image_callback(img, 3060)
-    return result['Result']
+    return __identify_image_callback(img, 3060)
 
 
 def identify_image_callback_ruokuai_history(img):
-    result = __identify_image_callback(img, 3040)
-    return result['Result']
+    return __identify_image_callback(img, 3040)
