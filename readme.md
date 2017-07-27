@@ -64,7 +64,7 @@ wechats = wechatsogou.WechatSogouAPI()
 
 ## 获取特定公众号信息 - get_gzh_info
 
-![ws_api.get_gzh_info('南航青年志愿者')](./screenshot/get_gzh_info.png)
+![ws_api.get_gzh_info('南航青年志愿者')](https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_info.png)
 
 - 使用
 ```
@@ -100,7 +100,7 @@ Out[5]:
 
 ## 搜索公众号
 
-![ws_api.search_gzh('南京航空航天大学')](./screenshot/search_gzh.png)
+![ws_api.search_gzh('南京航空航天大学')](https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/search_gzh.png)
 
 - 使用
 ```
@@ -148,7 +148,7 @@ list of dict, dict:
 
 ## 搜索微信文章
 
-![ws_api.search_article('南京航空航天大学')](./screenshot/search_article.png)
+![ws_api.search_article('南京航空航天大学')](https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/search_article.png)
 
 - 使用
 ```
@@ -193,7 +193,7 @@ list of dict, dict:
 
 ## 解析最近文章页 - get_gzh_artilce_by_history
 
-![ws_api.search_article('南京航空航天大学')](./screenshot/search_article.png)
+![ws_api.search_article('南京航空航天大学')](https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/search_article.png)
 
 
 - 使用
