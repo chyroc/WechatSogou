@@ -323,7 +323,7 @@ class WechatSogouAPI(object):
         ------
         WechatSogouRequestsException
         """
-        url = 'http://w.sugg.sogou.com/sugg/ajaj_json.jsp?key={}&type=wxpub&pr=web'.format(quote(keyword))
+        url = 'http://w.sugg.sogou.com/sugg/ajaj_json.jsp?key={}&type=wxpub&pr=web'.format(quote(keyword.encode('utf-8')))
         r = requests.get(url)
         if not r.ok:
             raise WechatSogouRequestsException('get_sugg', r)
