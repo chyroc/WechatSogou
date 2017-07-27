@@ -2,6 +2,8 @@
 
 from __future__ import absolute_import, unicode_literals, print_function
 
+import re
+import json
 import time
 
 import requests
@@ -9,6 +11,7 @@ import requests
 from wechatsogou.exceptions import WechatSogouRequestsException, WechatSogouVcodeOcrException
 from wechatsogou.request import WechatSogouRequest
 from wechatsogou.structuring import WechatSogouStructuring
+from wechatsogou.pkgs import quote
 from wechatsogou.identify_image import (
     ws_cache,
     identify_image_callback_example,
@@ -92,7 +95,7 @@ class WechatSogouAPI(object):
                 'authentication': ''  # 认证
             }
         """
-        info = self.search_gzh(wecgat_id_or_name)
+        info = self.search_gzh(wecgat_id_or_name, 1, deblocking_callback, identify_image_callback)
         return info[0] if info else None
 
     def search_gzh(self, keyword, page=1, deblocking_callback=None, identify_image_callback=None):
@@ -297,36 +300,33 @@ class WechatSogouAPI(object):
         return WechatSogouStructuring.get_gzh_info_and_article_by_history(resp.text)
 
     def get_article_content(self):
-        """获取 文章 原文 ， 避免临时链接失效
+        """获取文章原文，避免临时链接失效
 
         :return:
         """
+        pass
 
     def get_sugg(self, keyword):
         """获取微信搜狗搜索关键词联想
 
-        Args:
-            keyword: 关键词
+        Parameters
+        ----------
+        keyword : str or unicode
+            关键词
 
-        Returns:
-            sugg: 联想关键词列表
+        Returns
+        -------
+        list[str]
+            联想关键词列表
 
-        Raises:
-            WechatSogouException: get_sugg keyword error 关键词不是str或者不是可以str()的类型
-            WechatSogouException: sugg refind error 返回分析错误
+        Raises
+        ------
+        WechatSogouRequestsException
         """
-        pass  # todo
-        # try:
-        #     keyword = str(keyword) if type(keyword) != str else keyword
-        # except Exception as e:
-        #     logger.error('get_sugg keyword error', e)
-        #     raise WechatSogouException('get_sugg keyword error')
-        # url = 'http://w.sugg.sogou.com/sugg/ajaj_json.jsp?key=' + keyword + '&type=wxpub&pr=web'
-        # text = self._get(url, 'get', host='w.sugg.sogou.com')
-        # try:
-        #     sugg = re.findall(u'\["' + keyword + '",(.*?),\["', text)[0]
-        #     sugg = eval(sugg)
-        #     return sugg
-        # except Exception as e:
-        #     logger.error('sugg refind error', e)
-        #     raise WechatSogouException('sugg refind error')
+        url = 'http://w.sugg.sogou.com/sugg/ajaj_json.jsp?key={}&type=wxpub&pr=web'.format(quote(keyword.encode('utf-8')))
+        r = requests.get(url)
+        if not r.ok:
+            raise WechatSogouRequestsException('get_sugg', r)
+
+        sugg = re.findall(u'\["' + keyword + '",(.*?),\["', r.text)[0]
+        return json.loads(sugg)

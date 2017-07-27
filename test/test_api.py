@@ -43,6 +43,11 @@ class TestAPI(unittest.TestCase):
     def test_search_gzh_error(self):
         pass  # todo
 
+    def test_get_sugg(self):
+        sugg_gaokao = ws_api.get_sugg(gaokao_keyword)
+        assert_equal(10, len(sugg_gaokao))
+
+
 
 if __name__ == '__main__':
     unittest.main()
