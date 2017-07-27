@@ -20,4 +20,3 @@ build/
 .hypothesis/
 test/.hypothesis/
 t.py
-y.py
