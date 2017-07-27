@@ -5,7 +5,7 @@ from __future__ import absolute_import, unicode_literals, print_function
 import io
 import os
 import unittest
-from nose.tools import assert_equal, assert_not_equal
+from nose.tools import assert_equal
 
 import httpretty
 
