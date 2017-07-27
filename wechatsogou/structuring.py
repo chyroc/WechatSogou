@@ -221,8 +221,6 @@ class WechatSogouStructuring(object):
             }
 
         """
-        # TODO 加上返回的数据的文档
-
         if article_json is None:
             article_json = find_article_json_re.findall(text)
             article_json = article_json[0] + '}}]}'
