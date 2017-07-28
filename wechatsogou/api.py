@@ -23,7 +23,7 @@ class WechatSogouAPI(object):
     def __init__(self, captcha_break_time=1):
         assert isinstance(captcha_break_time, int) and 0 < captcha_break_time < 20
 
-        self.captcha_break_time = captcha_break_time
+        self.captcha_break_times = captcha_break_time
 
     def __set_cookie(self, suv=None, snuid=None, referer=None):
         suv = ws_cache.get('suv') if suv is None else suv
@@ -38,16 +38,16 @@ class WechatSogouAPI(object):
 
     def __deblocking_search(self, url, resp, req, deblocking_callback, identify_image_callback):
         millis = int(round(time.time() * 1000))
-        r_img = req.get('http://weixin.sogou.com/antispider/util/seccode.php?tc={}'.format(millis))
-        if not r_img.ok:
+        r_captcha = req.get('http://weixin.sogou.com/antispider/util/seccode.php?tc={}'.format(millis))
+        if not r_captcha.ok:
             raise WechatSogouRequestsException('WechatSogouAPI get img', resp)
 
         if callable(deblocking_callback):
-            r_deblocking = deblocking_callback(req, resp, r_img.content)
+            r_deblocking = deblocking_callback(req, resp, r_captcha.content)
         else:
             identify_image_callback = identify_image_callback if callable(
                 identify_image_callback) else identify_image_callback_example
-            r_deblocking = deblocking_callback_search_example(url, req, resp, r_img.content, identify_image_callback)
+            r_deblocking = deblocking_callback_search_example(url, req, resp, r_captcha.content, identify_image_callback)
 
         if r_deblocking['code'] != 0:
             raise WechatSogouVcodeOcrException(
@@ -56,16 +56,16 @@ class WechatSogouAPI(object):
             self.__set_cache(req.cookies.get('SUID'), r_deblocking['id'])
 
     def __deblocking_history(self, url, resp, req, deblocking_callback, identify_image_callback):
-        r_img = req.get('https://mp.weixin.qq.com/mp/verifycode?cert={}'.format(time.time() * 1000))
-        if not r_img.ok:
+        r_captcha = req.get('https://mp.weixin.qq.com/mp/verifycode?cert={}'.format(time.time() * 1000))
+        if not r_captcha.ok:
             raise WechatSogouRequestsException('WechatSogouAPI deblocking_history get img', resp)
 
         if callable(deblocking_callback):
-            r_deblocking = deblocking_callback(req, resp, r_img.content)
+            r_deblocking = deblocking_callback(req, resp, r_captcha.content)
         else:
             identify_image_callback = identify_image_callback if callable(
                 identify_image_callback) else identify_image_callback_example
-            r_deblocking = deblocking_callback_history_example(url, req, resp, r_img.content, identify_image_callback)
+            r_deblocking = deblocking_callback_history_example(url, req, resp, r_captcha.content, identify_image_callback)
 
         if r_deblocking['ret'] != 0:
             raise WechatSogouVcodeOcrException(
@@ -73,12 +73,12 @@ class WechatSogouAPI(object):
                     **r_deblocking))
 
     def __deblocking(self, deblocking, url, resp, req, deblocking_callback, identify_image_callback):
-        for i in range(self.captcha_break_time):
+        for i in range(self.captcha_break_times):
             try:
                 deblocking(url, resp, req, deblocking_callback, identify_image_callback)
                 return
             except WechatSogouVcodeOcrException as e:
-                if i == self.captcha_break_time - 1:
+                if i == self.captcha_break_times - 1:
                     raise WechatSogouVcodeOcrException(e)
 
     def get_gzh_info(self, wecgat_id_or_name, deblocking_callback=None, identify_image_callback=None):
