@@ -12,9 +12,9 @@ import httpretty
 from wechatsogou.request import WechatSogouRequest
 from wechatsogou.api import WechatSogouAPI
 from test import fake_data_path, gaokao_keyword
-from test.rk import identify_image_callback_ruokuai_search
+from test.rk import identify_image_callback_ruokuai_search, identify_image_callback_ruokuai_history
 
-ws_api = WechatSogouAPI()
+ws_api = WechatSogouAPI(captcha_break_time=3)
 
 
 class TestAPI(unittest.TestCase):
@@ -40,6 +40,7 @@ class TestAPI(unittest.TestCase):
                       '新东方在线高考辅导'],
                      [i['wechat_name'] for i in gzh_list])
 
+    # todo use chinese qq
     def test_search_gzh_real(self):
         gzh_list = ws_api.search_gzh(gaokao_keyword, identify_image_callback=identify_image_callback_ruokuai_search)
         assert_equal(10, len(gzh_list))
@@ -47,7 +48,8 @@ class TestAPI(unittest.TestCase):
 
     def test_get_gzh_artilce_by_history_real(self):
         gzh_artilce = ws_api.get_gzh_artilce_by_history(gaokao_keyword,
-                                                        identify_image_callback=identify_image_callback_ruokuai_search)
+                                                        identify_image_callback_search=identify_image_callback_ruokuai_search,
+                                                        identify_image_callback_history=identify_image_callback_ruokuai_history)
         assert_in('gzh_info', gzh_artilce)
         assert_in('article', gzh_artilce)
         assert_in('wx.qlogo.cn', gzh_artilce['gzh_info']['headimage'])
@@ -56,7 +58,6 @@ class TestAPI(unittest.TestCase):
     def test_get_sugg(self):
         sugg_gaokao = ws_api.get_sugg(gaokao_keyword)
         assert_equal(10, len(sugg_gaokao))
-
 
 
 if __name__ == '__main__':
