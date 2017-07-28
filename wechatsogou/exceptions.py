@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from requests import RequestException
+
 
 class WechatSogouException(Exception):
     """基于搜狗搜索的的微信公众号爬虫接口  异常基类
@@ -13,7 +15,7 @@ class WechatSogouVcodeOcrException(WechatSogouException):
     pass
 
 
-class WechatSogouRequestsException(WechatSogouException):
+class WechatSogouRequestsException(WechatSogouException, RequestException):
     """基于搜狗搜索的的微信公众号爬虫接口 抓取 异常类
 
     Parameters
@@ -25,5 +27,6 @@ class WechatSogouRequestsException(WechatSogouException):
     """
 
     def __init__(self, errmsg, r):
-        WechatSogouException('{} [url {}] [content {}]'.format(errmsg, r.url, r.content))
+        WechatSogouException(
+            '{} [url {}] [status_codde {}] [content {}]'.format(errmsg, r.url, r.status_code, r.content))
         self.status_code = r.status_code
