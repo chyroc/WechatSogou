@@ -27,5 +27,6 @@ class WechatSogouRequestsException(WechatSogouException, RequestException):
     """
 
     def __init__(self, errmsg, r):
-        WechatSogouException('{} [url {}] [content {}]'.format(errmsg, r.url, r.content))
+        WechatSogouException(
+            '{} [url {}] [status_codde {}] [content {}]'.format(errmsg, r.url, r.status_code, r.content))
         self.status_code = r.status_code

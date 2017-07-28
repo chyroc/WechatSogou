@@ -20,52 +20,68 @@ from wechatsogou.identify_image import (
 
 
 class WechatSogouAPI(object):
-    def __set_cookie(self, suv=None, snuid=None, referer=None):
-        suv = ws_cache.get('suv') if suv is None else suv
-        snuid = ws_cache.get('snuid') if snuid is None else snuid
+    def __init__(self, captcha_break_time=1):
+        assert isinstance(captcha_break_time, int) and captcha_break_time > 0
 
-        return {'Cookie': 'SUV={};SNUID={};'.format(suv, snuid)} if referer is None else {
-            'Cookie': 'SUV={};SNUID={};'.format(suv, snuid), 'Referer': referer}
+        self.captcha_break_time = captcha_break_time
+
+    def __set_cookie(self, suv=None, snuid=None, referer=None):
+        suv = ws_cache.get('suv', '') if suv is None else suv
+        snuid = ws_cache.get('snuid', '') if snuid is None else snuid
+
+        headers = {'Cookie': 'SUV={};SNUID={};'.format(suv, snuid)}
+        if referer is not None:
+            headers.update({'Referer': referer})
+
+        return headers
 
     def __set_cache(self, suv, snuid):
         ws_cache.set('suv', suv)
         ws_cache.set('snuid', snuid)
 
-    def __deblocking_search(self, url, resp, req, deblocking_callback, identify_image_callback):
-        millis = int(round(time.time() * 1000))
-        r_img = req.get('http://weixin.sogou.com/antispider/util/seccode.php?tc={}'.format(millis))
-        if not r_img.ok:
-            raise WechatSogouRequestsException('WechatSogouAPI get img', resp)
+    def __deblocking_base(self, captcha_url, url, resp, req, deblocking_callback, identify_image_callback):
+        r_captcha = req.get(captcha_url)
+        if not r_captcha.ok:
+            raise WechatSogouRequestsException('[WechatSogouAPI] get captcha', resp)
 
         if callable(deblocking_callback):
-            r_deblocking = deblocking_callback(req, resp, r_img.content)
+            r_deblocking = deblocking_callback(req, resp, r_captcha.content)
         else:
             identify_image_callback = identify_image_callback if callable(
                 identify_image_callback) else identify_image_callback_example
-            r_deblocking = deblocking_callback_search_example(url, req, resp, r_img.content, identify_image_callback)
+            r_deblocking = deblocking_callback_search_example(url, req, resp, r_captcha.content,
+                                                              identify_image_callback)
 
+        return r_deblocking
+
+    def __deblocking_search_single(self, url, resp, req, deblocking_callback, identify_image_callback):
+        captcha_url = 'http://weixin.sogou.com/antispider/util/seccode.php?tc={}'.format(int(round(time.time() * 1000)))
+        r_deblocking = self.__deblocking_base(captcha_url, url, resp, req, deblocking_callback, identify_image_callback)
         if r_deblocking['code'] != 0:
             raise WechatSogouVcodeOcrException(
                 '[WechatSogouAPI identify image] code: {code}, msg: {msg}'.format(**r_deblocking))
         else:
             self.__set_cache(req.cookies.get('SUID'), r_deblocking['id'])
 
-    def __deblocking_history(self, url, resp, req, deblocking_callback, identify_image_callback):
-        r_img = req.get('https://mp.weixin.qq.com/mp/verifycode?cert={}'.format(time.time() * 1000))
-        if not r_img.ok:
-            raise WechatSogouRequestsException('WechatSogouAPI deblocking_history get img', resp)
-
-        if callable(deblocking_callback):
-            r_deblocking = deblocking_callback(req, resp, r_img.content)
-        else:
-            identify_image_callback = identify_image_callback if callable(
-                identify_image_callback) else identify_image_callback_example
-            r_deblocking = deblocking_callback_history_example(url, req, resp, r_img.content, identify_image_callback)
+    def __deblocking_history_single(self, url, resp, req, deblocking_callback, identify_image_callback):
+        captcha_url = 'https://mp.weixin.qq.com/mp/verifycode?cert={}'.format(time.time() * 1000)
+        r_deblocking = self.__deblocking_base(captcha_url, url, resp, req, deblocking_callback, identify_image_callback)
 
         if r_deblocking['ret'] != 0:
             raise WechatSogouVcodeOcrException(
-                '[WechatSogouAPI identify image] code: {ret}, msg: {errmsg}, cookie_count: {cookie_count}'.format(
+                '[WechatSogouAPI captcha image] code: {ret}, msg: {errmsg}, cookie_count: {cookie_count}'.format(
                     **r_deblocking))
+
+    def __deblocking(self, deblocking, url, resp, req, deblocking_callback, identify_image_callback):
+        assert isinstance(deblocking, callable)
+
+        for i in range(self.captcha_break_time):
+            try:
+                deblocking(url, resp, req, deblocking_callback, identify_image_callback)
+                return
+            except WechatSogouVcodeOcrException as e:
+                if i == self.captcha_break_time - 1:
+                    raise WechatSogouVcodeOcrException(e)
 
     def get_gzh_info(self, wecgat_id_or_name, deblocking_callback=None, identify_image_callback=None):
         """获取公众号微信号 wechatid 的信息
@@ -146,7 +162,8 @@ class WechatSogouAPI(object):
             raise WechatSogouRequestsException('WechatSogouAPI search_gzh', resp)
 
         if 'antispider' in resp.url:
-            self.__deblocking_search(url, resp, req, deblocking_callback, identify_image_callback)
+            self.__deblocking(self.__deblocking_search_single, url, resp, req, deblocking_callback,
+                              identify_image_callback)
             resp = WechatSogouRequest.get(url, req=req, headers=self.__set_cookie())  # req=req
 
         return WechatSogouStructuring.get_gzh_by_search(resp.text)
@@ -216,7 +233,8 @@ class WechatSogouAPI(object):
             raise WechatSogouRequestsException('WechatSogouAPI search_article', resp)
 
         if 'antispider' in resp.url:
-            self.__deblocking_search(url, resp, req, deblocking_callback, identify_image_callback)
+            self.__deblocking(self.__deblocking_search_single, url, resp, req, deblocking_callback,
+                              identify_image_callback)
             resp = WechatSogouRequest.get(url, req=req, headers=self.__set_cookie(referer=url_referer))  # req=req
 
         return WechatSogouStructuring.get_article_by_search(resp.text)
@@ -294,7 +312,8 @@ class WechatSogouAPI(object):
             raise WechatSogouRequestsException('WechatSogouAPI get_gzh_artilce_by_history', resp)
 
         if '请输入验证码' in resp.text:
-            self.__deblocking_history(url, resp, req, deblocking_callback, identify_image_callback)
+            self.__deblocking(self.__deblocking_history_single, url, resp, req, deblocking_callback,
+                              identify_image_callback)
             resp = WechatSogouRequest.get(url, req=req)  # req=req headers=self.__set_cookie()
 
         return WechatSogouStructuring.get_gzh_info_and_article_by_history(resp.text)
@@ -323,7 +342,8 @@ class WechatSogouAPI(object):
         ------
         WechatSogouRequestsException
         """
-        url = 'http://w.sugg.sogou.com/sugg/ajaj_json.jsp?key={}&type=wxpub&pr=web'.format(quote(keyword.encode('utf-8')))
+        url = 'http://w.sugg.sogou.com/sugg/ajaj_json.jsp?key={}&type=wxpub&pr=web'.format(
+            quote(keyword.encode('utf-8')))
         r = requests.get(url)
         if not r.ok:
             raise WechatSogouRequestsException('get_sugg', r)
