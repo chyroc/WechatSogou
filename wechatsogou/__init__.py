@@ -1,7 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import, unicode_literals, print_function
+# __        __        _           _   ____
+# \ \      / /__  ___| |__   __ _| |_/ ___|  ___   __ _  ___  _   _
+#  \ \ /\ / / _ \/ __| '_ \ / _` | __\___ \ / _ \ / _` |/ _ \| | | |
+#   \ V  V /  __/ (__| | | | (_| | |_ ___) | (_) | (_| | (_) | |_| |
+#    \_/\_/ \___|\___|_| |_|\__,_|\__|____/ \___/ \__, |\___/ \__,_|
+#                                                 |___/
 
+"""
+WechatSogou Crawler Library
+~~~~~~~~~~~~~~~~~~~~~
+
+"""
 from wechatsogou.api import WechatSogouAPI
 from wechatsogou.request import WechatSogouRequest
 from wechatsogou.structuring import WechatSogouStructuring
@@ -15,7 +25,9 @@ __all__ = [
     'WechatSogouVcodeOcrException',
     'WechatSogouRequestsException']
 
+__title__ = 'wechatsogou'
 __version__ = "3.0.0"
+__author__ = 'Chyroc'
 
 """doc string
 

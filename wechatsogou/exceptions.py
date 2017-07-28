@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from requests import RequestException
+
 
 class WechatSogouException(Exception):
     """基于搜狗搜索的的微信公众号爬虫接口  异常基类
@@ -13,7 +15,7 @@ class WechatSogouVcodeOcrException(WechatSogouException):
     pass
 
 
-class WechatSogouRequestsException(WechatSogouException):
+class WechatSogouRequestsException(WechatSogouException, RequestException):
     """基于搜狗搜索的的微信公众号爬虫接口 抓取 异常类
 
     Parameters
