@@ -237,8 +237,11 @@ class WechatSogouAPI(object):
 
         return WechatSogouStructuring.get_article_by_search(resp.text)
 
-    def get_gzh_artilce_by_history(self, keyword=None, url=None, deblocking_callback=None,
-                                   identify_image_callback=None):
+    def get_gzh_artilce_by_history(self, keyword=None, url=None,
+                                   deblocking_callback_search=None,
+                                   identify_image_callback_search=None,
+                                   deblocking_callback_history=None,
+                                   identify_image_callback_history=None):
         """从 公众号的最近10条群发页面 提取公众号信息 和 文章列表信息
 
         对于出现验证码的情况，可以由使用者自己提供：
@@ -253,10 +256,14 @@ class WechatSogouAPI(object):
             公众号的id 或者name
         url : str or unicode
             群发页url，如果不提供url，就先去搜索一遍拿到url
-        deblocking_callback : callable
-            处理出现验证码页面的函数，参见 deblocking_callback_example
-        identify_image_callback : callable
-            处理验证码函数，输入验证码二进制数据，输出文字，参见 identify_image_callback_example
+        deblocking_callback_search : callable
+            处理出现 搜索 的时候出现验证码的函数，参见 deblocking_callback_example
+        identify_image_callback_search : callable
+            处理 搜索 的时候处理验证码函数，输入验证码二进制数据，输出文字，参见 identify_image_callback_example
+        deblocking_callback_history : callable
+            处理出现 历史页 的时候出现验证码的函数，参见 deblocking_callback_example
+        identify_image_callback_history : callable
+            处理 历史页 的时候处理验证码函数，输入验证码二进制数据，输出文字，参见 identify_image_callback_example
 
         Returns
         -------
@@ -295,8 +302,8 @@ class WechatSogouAPI(object):
             requests error
         """
         if url is None:
-            gzh_list = self.get_gzh_info(keyword, deblocking_callback=deblocking_callback,
-                                         identify_image_callback=identify_image_callback)
+            gzh_list = self.get_gzh_info(keyword, deblocking_callback=deblocking_callback_search,
+                                         identify_image_callback=identify_image_callback_search)
             if gzh_list:
                 url = gzh_list['profile_url']
             else:
@@ -310,7 +317,8 @@ class WechatSogouAPI(object):
             raise WechatSogouRequestsException('WechatSogouAPI get_gzh_artilce_by_history', resp)
 
         if '请输入验证码' in resp.text:
-            self.__deblocking(self.__deblocking_history, url, resp, req, deblocking_callback, identify_image_callback)
+            self.__deblocking(self.__deblocking_history, url, resp, req, deblocking_callback_history,
+                              identify_image_callback_history)
             resp = WechatSogouRequest.get(url, req=req)  # req=req headers=self.__set_cookie()
 
         return WechatSogouStructuring.get_gzh_info_and_article_by_history(resp.text)
