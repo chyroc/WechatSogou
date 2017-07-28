@@ -14,7 +14,7 @@ from wechatsogou.api import WechatSogouAPI
 from test import fake_data_path, gaokao_keyword
 from test.rk import identify_image_callback_ruokuai_search
 
-ws_api = WechatSogouAPI()
+ws_api = WechatSogouAPI(captcha_break_time=3)
 
 
 class TestAPI(unittest.TestCase):
@@ -56,7 +56,6 @@ class TestAPI(unittest.TestCase):
     def test_get_sugg(self):
         sugg_gaokao = ws_api.get_sugg(gaokao_keyword)
         assert_equal(10, len(sugg_gaokao))
-
 
 
 if __name__ == '__main__':

@@ -47,7 +47,8 @@ class WechatSogouAPI(object):
         else:
             identify_image_callback = identify_image_callback if callable(
                 identify_image_callback) else identify_image_callback_example
-            r_deblocking = deblocking_callback_search_example(url, req, resp, r_captcha.content, identify_image_callback)
+            r_deblocking = deblocking_callback_search_example(url, req, resp, r_captcha.content,
+                                                              identify_image_callback)
 
         if r_deblocking['code'] != 0:
             raise WechatSogouVcodeOcrException(
@@ -65,7 +66,8 @@ class WechatSogouAPI(object):
         else:
             identify_image_callback = identify_image_callback if callable(
                 identify_image_callback) else identify_image_callback_example
-            r_deblocking = deblocking_callback_history_example(url, req, resp, r_captcha.content, identify_image_callback)
+            r_deblocking = deblocking_callback_history_example(url, req, resp, r_captcha.content,
+                                                               identify_image_callback)
 
         if r_deblocking['ret'] != 0:
             raise WechatSogouVcodeOcrException(
