@@ -8,6 +8,7 @@ from collections import OrderedDict
 import requests
 
 from wechatsogou.pkgs import urlencode
+from wechatsogou.const import WechatSogouConst
 
 
 class WechatSogouRequest(object):
@@ -112,6 +113,51 @@ class WechatSogouRequest(object):
         qs_dict['query'] = keyword
 
         return 'http://weixin.sogou.com/weixin?{}'.format(urlencode(qs_dict))
+
+    @staticmethod
+    def gen_hot_url(hot_index, page=1):
+        """拼接 首页热门文章 URL
+
+        Parameters
+        ----------
+        hot_index : str or unicode
+            首页热门文章的分类（常量）：WechatSogouConst.hot_index.xxx
+        page : int
+            页数
+
+        Returns
+        -------
+        str
+            热门文章分类的url
+        """
+
+        assert hasattr(WechatSogouConst.hot_index, hot_index)
+        assert isinstance(page, int) and page > 0
+        hot_index = getattr(WechatSogouConst.hot_index, hot_index)
+
+        index_urls = {
+            WechatSogouConst.hot_index.hot: 0,  # 热门
+            WechatSogouConst.hot_index.recommendation: 1,  # 推荐
+            WechatSogouConst.hot_index.duanzi: 2,  # 段子手
+            WechatSogouConst.hot_index.health: 3,  # 养生
+            WechatSogouConst.hot_index.sifanghua: 4,  # 私房话
+            WechatSogouConst.hot_index.gossip: 5,  # 八卦
+            WechatSogouConst.hot_index.life: 6,  # 生活
+            WechatSogouConst.hot_index.finance: 7,  # 财经
+            WechatSogouConst.hot_index.car: 8,  # 汽车
+            WechatSogouConst.hot_index.technology: 9,  # 科技
+            WechatSogouConst.hot_index.fashion: 10,  # 时尚
+            WechatSogouConst.hot_index.mummy: 11,  # 辣妈
+            WechatSogouConst.hot_index.dianzan: 12,  # 点赞
+            WechatSogouConst.hot_index.travel: 13,  # 旅行
+            WechatSogouConst.hot_index.job: 14,  # 职场
+            WechatSogouConst.hot_index.food: 15,  # 美食
+            WechatSogouConst.hot_index.history: 16,  # 历史
+            WechatSogouConst.hot_index.study: 17,  # 学霸
+            WechatSogouConst.hot_index.constellation: 18,  # 星座
+            WechatSogouConst.hot_index.sport: 19,  # 体育
+        }
+        return 'http://weixin.sogou.com/wapindex/wap/0612/wap_{}/{}.html'.format(index_urls[hot_index], page - 1)
 
     @staticmethod
     def get(url, req=None, **kwargs):

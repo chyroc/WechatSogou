@@ -14,14 +14,18 @@ WechatSogou Crawler Library
 """
 
 from wechatsogou.api import WechatSogouAPI
+from wechatsogou.const import WechatSogouConst
 from wechatsogou.request import WechatSogouRequest
 from wechatsogou.structuring import WechatSogouStructuring
 from wechatsogou.exceptions import WechatSogouException, WechatSogouVcodeOcrException, WechatSogouRequestsException
 
 __all__ = [
+    'WechatSogouConst',
+
     'WechatSogouAPI',
     'WechatSogouRequest',
     'WechatSogouStructuring',
+
     'WechatSogouException',
     'WechatSogouVcodeOcrException',
     'WechatSogouRequestsException']
