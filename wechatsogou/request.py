@@ -10,6 +10,9 @@ import requests
 from wechatsogou.pkgs import urlencode
 from wechatsogou.const import WechatSogouConst
 
+_search_type_gzh = 1  # 1 是公号
+_search_type_article = 2  # 2 是文章
+
 
 class WechatSogouRequest(object):
     @staticmethod
@@ -29,8 +32,8 @@ class WechatSogouRequest(object):
         article_type : WechatSogouConst.search_article_type
             含有内容的类型 image 有图 / video 有视频 / rich 有图和视频 / all 啥都有
         ft, et : datetime.date
-            当 tsn 是 5 时，ft 代表开始时间，如： 2017-07-01
-            当 tsn 是 5 时，et 代表结束时间，如： 2017-07-15
+            当 tsn 是 specific 时，ft 代表开始时间，如： 2017-07-01
+            当 tsn 是 specific 时，et 代表结束时间，如： 2017-07-15
 
         Returns
         -------
@@ -38,9 +41,14 @@ class WechatSogouRequest(object):
             search_article_url
         """
         assert isinstance(page, int) and page > 0
-        assert timesn in [0, 1, 2, 3, 4, 5]
+        assert timesn in [WechatSogouConst.search_article_time.anytime,
+                          WechatSogouConst.search_article_time.day,
+                          WechatSogouConst.search_article_time.week,
+                          WechatSogouConst.search_article_time.month,
+                          WechatSogouConst.search_article_time.year,
+                          WechatSogouConst.search_article_time.specific]
 
-        if timesn == 5:
+        if timesn == WechatSogouConst.search_article_time.specific:
             assert isinstance(ft, datetime.date)
             assert isinstance(et, datetime.date)
             assert ft <= et
@@ -50,17 +58,17 @@ class WechatSogouRequest(object):
 
         interation_image = 458754
         interation_video = 458756
-        if article_type == 'rich':
+        if article_type == WechatSogouConst.search_article_type.rich:
             interation = '{},{}'.format(interation_image, interation_video)
-        elif article_type == 'image':
+        elif article_type == WechatSogouConst.search_article_type.image:
             interation = interation_image
-        elif article_type == 'video':
+        elif article_type == WechatSogouConst.search_article_type.video:
             interation = interation_video
         else:
             interation = ''
 
         qsDict = OrderedDict()
-        qsDict['type'] = 2  # 2 是文章
+        qsDict['type'] = _search_type_article
         qsDict['page'] = page
         qsDict['ie'] = 'utf8'
         qsDict['query'] = keyword
@@ -97,7 +105,7 @@ class WechatSogouRequest(object):
         assert isinstance(page, int) and page > 0
 
         qs_dict = OrderedDict()
-        qs_dict['type'] = 1  # 1 是公号
+        qs_dict['type'] = _search_type_gzh
         qs_dict['page'] = page
         qs_dict['ie'] = 'utf8'
         qs_dict['query'] = keyword

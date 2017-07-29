@@ -191,8 +191,8 @@ class WechatSogouAPI(object):
         article_type : WechatSogouConst.search_article_type
             含有内容的类型 image 有图 / video 有视频 / rich 有图和视频 / all 啥都有
         ft, et : datetime.date or None
-            当 tsn 是 5 时，ft 代表开始时间，如： 2017-07-01
-            当 tsn 是 5 时，et 代表结束时间，如： 2017-07-15
+            当 tsn 是 specific 时，ft 代表开始时间，如： 2017-07-01
+            当 tsn 是 specific 时，et 代表结束时间，如： 2017-07-15
         deblocking_callback : callable
             处理出现验证码页面的函数，参见 deblocking_callback_example
         identify_image_callback : callable
