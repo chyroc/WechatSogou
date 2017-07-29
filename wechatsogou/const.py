@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from functools import wraps
 
 from wechatsogou.exceptions import WechatSogouException
@@ -18,6 +20,17 @@ class _WechatSogouSearchArticleTypeConst(object):
     rich = 'rich'
     video = 'video'
     image = 'image'
+
+
+@Const
+class _WechatSogouSearchArticleTimeConst(object):
+    """时间 0 没有限制 / 1一天 / 2一周 / 3一月 / 4一年 / 5自定"""
+    anytime = 0
+    day = 1
+    week = 2
+    month = 3
+    year = 4
+    specific = 5
 
 
 @Const
@@ -48,6 +61,7 @@ class _WechatSogouHotIndexConst(object):
 class _Const(object):
     hot_index = _WechatSogouHotIndexConst()
     search_article_type = _WechatSogouSearchArticleTypeConst()
+    search_article_time = _WechatSogouSearchArticleTimeConst()
 
 
 WechatSogouConst = _Const()

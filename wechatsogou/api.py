@@ -168,8 +168,9 @@ class WechatSogouAPI(object):
 
         return WechatSogouStructuring.get_gzh_by_search(resp.text)
 
-    def search_article(self, keyword, page=1, timesn=0, article_type=WechatSogouConst.search_article_type.all, ft=None,
-                       et=None, deblocking_callback=None, identify_image_callback=None):
+    def search_article(self, keyword, page=1, timesn=WechatSogouConst.search_article_time.anytime,
+                       article_type=WechatSogouConst.search_article_type.all, ft=None, et=None,
+                       deblocking_callback=None, identify_image_callback=None):
         """搜索 文章
 
         对于出现验证码的情况，可以由使用者自己提供：
@@ -184,9 +185,9 @@ class WechatSogouAPI(object):
             搜索文字
         page : int, optional
             页数 the default is 1
-        timesn : {0, 1, 2, 3, 4, 5}
-            时间 0 没有限制 / 1一天 / 2一周 / 3一月 / 4一年 / 5自定
-            the default is 0
+        timesn : WechatSogouConst.search_article_time
+            时间 anytime 没有限制 / day 一天 / week 一周 / month 一月 / year 一年 / specific 自定
+            the default is anytime
         article_type : WechatSogouConst.search_article_type
             含有内容的类型 image 有图 / video 有视频 / rich 有图和视频 / all 啥都有
         ft, et : datetime.date or None
