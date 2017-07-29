@@ -114,7 +114,8 @@ class WechatSogouRequest(object):
 
         return 'http://weixin.sogou.com/weixin?{}'.format(urlencode(qs_dict))
 
-    def gen_hot_url(self, hot_index, page=1):
+    @staticmethod
+    def gen_hot_url(hot_index, page=1):
         """拼接 首页热门文章 URL
 
         Parameters
@@ -131,7 +132,7 @@ class WechatSogouRequest(object):
         """
 
         assert hasattr(WechatSogouConst.hot_index, hot_index)
-        assert isinstance(page, int) and page >= 0
+        assert isinstance(page, int) and page > 0
         hot_index = getattr(WechatSogouConst.hot_index, hot_index)
 
         index_urls = {
@@ -142,7 +143,7 @@ class WechatSogouRequest(object):
             WechatSogouConst.hot_index.sifanghua: 4,  # 私房话
             WechatSogouConst.hot_index.gossip: 5,  # 八卦
             WechatSogouConst.hot_index.life: 6,  # 生活
-            WechatSogouConst.hot_index.Finance: 7,  # 财经
+            WechatSogouConst.hot_index.finance: 7,  # 财经
             WechatSogouConst.hot_index.car: 8,  # 汽车
             WechatSogouConst.hot_index.technology: 9,  # 科技
             WechatSogouConst.hot_index.fashion: 10,  # 时尚

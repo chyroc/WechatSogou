@@ -19,7 +19,7 @@ class _WechatSogouHotIndexConst(object):
     sifanghua = 'sifanghua'
     gossip = 'gossip'
     life = 'life'
-    Finance = 'Finance'
+    finance = 'finance'
     car = 'car'
     technology = 'technology'
     fashion = 'fashion'
@@ -42,4 +42,4 @@ class _Const(object):
 WechatSogouConst = _Const()
 
 if __name__ == '__main__':
-    print(WechatSogouConst.hot_index)
+    print(list(filter(lambda x: not x.startswith('__'), dir(WechatSogouConst.hot_index))))
