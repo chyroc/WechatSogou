@@ -1,7 +1,7 @@
 site_name: 'wechatsogou'
 pages:
-- 'API列表': 'README.md'
-- '更新日志': 'CHANGELOG.md'
+- 'API列表': 'README.rst'
+- '更新日志': 'HISTORY.rst'
 - 'FAQ': 'FAQ.md'
 extra_css: ['docs/bootstrap/css']
 extra_javascript: ['docs/bootstrap/js']
