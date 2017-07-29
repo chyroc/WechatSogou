@@ -291,7 +291,7 @@ list of dict, dict:
        },
          ...
          ],
-         'gzh_info': {
+         'gzh': {
        'authentication': '南京航空航天大学',
        'headimage': 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM4xV5PgPjK5XoPaaQoxnWJAFicibMvPAnsoybawMBFxua1g/0',
        'introduction': '南航大志愿活动的领跑者，为你提供校内外的志愿资源和精彩消息。',
@@ -300,7 +300,7 @@ list of dict, dict:
          }
        }
 
--  数据结构 \`\`\`python { 'gzh\_info': { 'wechat\_name': '', # 名称
+-  数据结构 \`\`\`python { 'gzh': { 'wechat\_name': '', # 名称
    'wechat\_id': '', # 微信id 'introduction': '', # 简介
    'authentication': '', # 认证 'headimage': '' # 头像 }, 'article': [ {
    'send\_id': int, #
@@ -316,14 +316,70 @@ list of dict, dict:
 ::
 
 
-    ### 获取关键字联想词
+    ### 解析 首页热门 页 - get_gzh_artilce_by_hot
+
+    ![ws_api.get_gzh_artilce_by_hot(WechatSogouConst.hot_index.food)](https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_artilce_by_hot.png)
+
     - 使用
 
-In [1]: import wechatsogou ...: ...: ws\_api
-=wechatsogou.WechatSogouAPI() ...: ws\_api.get\_sugg('高考') ...:
-Out[1]: ['高考e通', '高考专业培训', '高考地理俱乐部',
-'高考志愿填报咨讯', '高考报考资讯', '高考教育', '高考早知道',
-'高考服务志愿者', '高考机构', '高考福音'] \`\`\`
+In [1]: from pprint import pprint ...: from wechatsogou import
+WechatSogouAPI, WechatSogouConst ...: ...: ws\_api = WechatSogouAPI()
+...: gzh\_articles =
+ws\_api.get\_gzh\_artilce\_by\_hot(WechatSogouConst.hot\_index.food)
+...: for i in gzh\_articles: ...: pprint(i) ...: { 'article': {
+'abstract':
+'闷热的夏天有什么事情能比吃上凉凉的甜品更惬意的呢？快一起动手做起来吧，简单方便，放冰箱冻一冻，那感觉~橙汁蒸木瓜木瓜1个（300-400克左右），橙子4个，枫糖浆20克（如果家里没有，也可以用蜂蜜、炼乳等代替），椰果适量。做法1．用削皮',
+'main\_img':
+'http://img01.sogoucdn.com/net/a/04/link?appid=100520033&url=http%3A%2F%2Fmmbiz.qpic.cn%2Fmmbiz\_jpg%2Fw9UGwFPia7QTUIadPibgW8OFkqf1ibR40xicKfzofRS0sDpaFp3CG0jkPyQKeXl44TXswztW1SJnic7tmCibjB8rIIGw%2F0%3Fwx\_fmt%3Djpeg',
+'open\_id': 'oIWsFty9hHVI9F10amtzx5TOWIq8', 'time': 1501325220, 'title':
+'夏日甜品制作方法，不收藏后悔哦!', 'url':
+'http://mp.weixin.qq.com/s?src=3&timestamp=1501328525&ver=1&signature=n9*oX0k4YbNFhNMsOjIekYrsha44lfBSCbG9jicAbGYrWNN8*\ 48NzpcaHdxwUnC12syY5-ZxwcBfiJlMzdbAwWKlo26EW14w2Ax\ *gjLVlOX-AGXB4443obZ-GK0pw*\ AFZAGZD8sI4AFBZSZpyeaxN4sS7cpynxdIuw6S2h\*--LI='
+}, 'gzh': { 'headimage':
+'http://img03.sogoucdn.com/app/a/100520090/oIWsFty9hHVI9F10amtzx5TOWIq8',
+'wechat\_name': '甜品烘焙制作坊' } } ... ... \`\`\`
+
+-  数据结构
+
+   .. code:: python
+
+       {
+       'gzh': {
+           'headimage': str,  # 公众号头像
+           'wechat_name': str,  # 公众号名称
+       },
+       'article': {
+           'url': str,  # 文章临时链接
+           'title': str,  # 文章标题
+           'abstract': str,  # 文章摘要
+           'time': int,  # 推送时间，10位时间戳
+           'open_id': str,  # open id
+           'main_img': str  # 封面图片
+       }
+       }
+
+获取关键字联想词
+~~~~~~~~~~~~~~~~
+
+-  使用
+
+   ::
+
+       In [1]: import wechatsogou
+          ...:
+          ...: ws_api =wechatsogou.WechatSogouAPI()
+          ...: ws_api.get_sugg('高考')
+          ...:
+       Out[1]:
+       ['高考e通',
+        '高考专业培训',
+        '高考地理俱乐部',
+        '高考志愿填报咨讯',
+        '高考报考资讯',
+        '高考教育',
+        '高考早知道',
+        '高考服务志愿者',
+        '高考机构',
+        '高考福音']
 
 -  数据结构
 
