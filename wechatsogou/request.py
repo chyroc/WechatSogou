@@ -5,8 +5,6 @@ from __future__ import absolute_import, unicode_literals, print_function
 import datetime
 from collections import OrderedDict
 
-import requests
-
 from wechatsogou.pkgs import urlencode
 from wechatsogou.const import WechatSogouConst
 
@@ -28,9 +26,10 @@ class WechatSogouRequest(object):
             页数 the default is 1
         timesn : WechatSogouConst.search_article_time
             时间 anytime 没有限制 / day 一天 / week 一周 / month 一月 / year 一年 / specific 自定
-            the default is anytime
+            默认是 anytime
         article_type : WechatSogouConst.search_article_type
             含有内容的类型 image 有图 / video 有视频 / rich 有图和视频 / all 啥都有
+            默认是 all
         ft, et : datetime.date
             当 tsn 是 specific 时，ft 代表开始时间，如： 2017-07-01
             当 tsn 是 specific 时，et 代表结束时间，如： 2017-07-15
@@ -155,26 +154,3 @@ class WechatSogouRequest(object):
             WechatSogouConst.hot_index.sport: 19,  # 体育
         }
         return 'http://weixin.sogou.com/wapindex/wap/0612/wap_{}/{}.html'.format(index_urls[hot_index], page - 1)
-
-    @staticmethod
-    def get(url, req=None, **kwargs):
-        """搜索 公众号 获取文本
-
-        Parameters
-        ----------
-        url : str or unicode
-            url
-        req : requests.sessions.Session
-            requests.Session()
-
-        Returns
-        -------
-        requests.models.Response
-            return of requests
-        """
-        if isinstance(req, requests.sessions.Session):
-            r = req.get(url, **kwargs)
-        else:
-            r = requests.get(url, **kwargs)
-
-        return r

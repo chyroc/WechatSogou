@@ -12,7 +12,7 @@ from wechatsogou.filecache import WechatCache
 ws_cache = WechatCache()
 
 
-def identify_image_callback_example(img):
+def identify_image_callback_by_hand(img):
     """识别二维码
 
     Parameters
@@ -30,7 +30,7 @@ def identify_image_callback_example(img):
     return input("please input code: ")
 
 
-def deblocking_callback_search_example(url, req, resp, img, identify_image_callback):
+def unlock_sogou_callback_example(url, req, resp, img, identify_image_callback):
     """手动打码解锁
 
     Parameters
@@ -50,20 +50,14 @@ def deblocking_callback_search_example(url, req, resp, img, identify_image_callb
     -------
     dict
         {
-            'url': '',
-            'img': '',
-            'name': '',
-            'wechat_id': '',
-            'post_perm': '',
-            'qrcode': '',
-            'introduction': '',
-            'authentication': ''
+            'code': '',
+            'msg': '',
         }
     """
     # no use resp
     url_quote = url.split('weixin.sogou.com/')[-1]
 
-    deblocking_url = 'http://weixin.sogou.com/antispider/thank.php'
+    unlock_url = 'http://weixin.sogou.com/antispider/thank.php'
     data = {
         'c': identify_image_callback(img),
         'r': '%2F' + url_quote,
@@ -73,14 +67,14 @@ def deblocking_callback_search_example(url, req, resp, img, identify_image_callb
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
         'Referer': 'http://weixin.sogou.com/antispider/?from=%2f' + url_quote
     }
-    r_deblocking = req.post(deblocking_url, data, headers=headers)
-    if not r_deblocking.ok:
+    r_unlock = req.post(unlock_url, data, headers=headers)
+    if not r_unlock.ok:
         raise Exception()  # todo use ws exception
 
-    return r_deblocking.json()
+    return r_unlock.json()
 
 
-def deblocking_callback_history_example(url, req, resp, img, identify_image_callback):
+def unlock_weixin_callback_example(url, req, resp, img, identify_image_callback):
     """手动打码解锁
 
     Parameters
@@ -100,19 +94,14 @@ def deblocking_callback_history_example(url, req, resp, img, identify_image_call
     -------
     dict
         {
-            'url': '',
-            'img': '',
-            'name': '',
-            'wechat_id': '',
-            'post_perm': '',
-            'qrcode': '',
-            'introduction': '',
-            'authentication': ''
+            'ret': '',
+            'errmsg': '',
+            'cookie_count': '',
         }
     """
     # no use resp
 
-    deblocking_url = 'https://mp.weixin.qq.com/mp/verifycode'
+    unlock_url = 'https://mp.weixin.qq.com/mp/verifycode'
     data = {
         'cert': time.time() * 1000,
         'input': identify_image_callback(img)
@@ -122,8 +111,8 @@ def deblocking_callback_history_example(url, req, resp, img, identify_image_call
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
         'Referer': url
     }
-    r_deblocking = req.post(deblocking_url, data, headers=headers)
-    if not r_deblocking.ok:
+    r_unlock = req.post(unlock_url, data, headers=headers)
+    if not r_unlock.ok:
         raise Exception()  # todo use ws exception
 
-    return r_deblocking.json()
+    return r_unlock.json()
