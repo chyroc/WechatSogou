@@ -10,6 +10,7 @@ from wechatsogou.const import WechatSogouConst
 class TestConst(unittest.TestCase):
     def test_const(self):
         assert_true(hasattr(WechatSogouConst, 'hot_index'))
+        assert_true(hasattr(WechatSogouConst, 'search_article_type'))
 
         assert_equal(WechatSogouConst.hot_index.hot, 'hot')
         assert_equal(WechatSogouConst.hot_index.recommendation, 'recommendation')
@@ -31,6 +32,11 @@ class TestConst(unittest.TestCase):
         assert_equal(WechatSogouConst.hot_index.study, 'study')
         assert_equal(WechatSogouConst.hot_index.constellation, 'constellation')
         assert_equal(WechatSogouConst.hot_index.sport, 'sport')
+
+        assert_equal(WechatSogouConst.search_article_type.all, 'all')
+        assert_equal(WechatSogouConst.search_article_type.rich, 'rich')
+        assert_equal(WechatSogouConst.search_article_type.video, 'video')
+        assert_equal(WechatSogouConst.search_article_type.image, 'image')
 
 
 if __name__ == '__main__':

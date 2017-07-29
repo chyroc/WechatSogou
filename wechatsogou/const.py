@@ -11,6 +11,14 @@ def Const(cls):
 
 
 @Const
+class _WechatSogouSearchArticleTypeConst(object):
+    all = 'all'
+    rich = 'rich'
+    video = 'video'
+    image = 'image'
+
+
+@Const
 class _WechatSogouHotIndexConst(object):
     hot = 'hot'
     recommendation = 'recommendation'
@@ -37,6 +45,7 @@ class _WechatSogouHotIndexConst(object):
 @Const
 class _Const(object):
     hot_index = _WechatSogouHotIndexConst()
+    search_article_type = _WechatSogouSearchArticleTypeConst()
 
 
 WechatSogouConst = _Const()
