@@ -40,7 +40,7 @@ class TestAPI(unittest.TestCase):
                       '新东方在线高考辅导'],
                      [i['wechat_name'] for i in gzh_list])
 
-    # todo use chinese qq
+    # todo use chinese
     def test_search_gzh_real(self):
         gzh_list = ws_api.search_gzh(gaokao_keyword, identify_image_callback=identify_image_callback_ruokuai_search)
         assert_equal(10, len(gzh_list))

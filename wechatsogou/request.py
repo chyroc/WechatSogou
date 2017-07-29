@@ -10,16 +10,14 @@ import requests
 from wechatsogou.pkgs import urlencode
 from wechatsogou.const import WechatSogouConst
 
+_search_type_gzh = 1  # 1 是公号
+_search_type_article = 2  # 2 是文章
+
 
 class WechatSogouRequest(object):
-    TYPE_IMAGE = 'image'
-    TYPE_VIDEO = 'video'
-    TYPE_RICH = 'rich'
-    TYPE_ALL = 'all'
-
     @staticmethod
-    def gen_search_article_url(keyword, page=1, timesn=0, article_type=TYPE_ALL, wxid=None, usip=None, ft=None,
-                               et=None):
+    def gen_search_article_url(keyword, page=1, timesn=WechatSogouConst.search_article_time.anytime,
+                               article_type=WechatSogouConst.search_article_type.all, ft=None, et=None):
         """拼接搜索 文章 URL
 
         Parameters
@@ -28,29 +26,29 @@ class WechatSogouRequest(object):
             搜索文字
         page : int, optional
             页数 the default is 1
-        timesn : {0, 1, 2, 3, 4, 5}
-            时间 0 没有限制 / 1一天 / 2一周 / 3一月 / 4一年 / 5自定
-            the default is 0
-        article_type : {'image', 'video', 'rich', 'all'}
-            含有内容的类型 TYPE_IMAGE 有图 / TYPE_VIDEO 有视频 / TYPE_RICH 有图和视频 / TYPE_ALL 啥都有
-        wxid : None
-            wxid usip 联合起来就是账号内搜索
-        usip : None
-            wxid usip 联合起来就是账号内搜索
+        timesn : WechatSogouConst.search_article_time
+            时间 anytime 没有限制 / day 一天 / week 一周 / month 一月 / year 一年 / specific 自定
+            the default is anytime
+        article_type : WechatSogouConst.search_article_type
+            含有内容的类型 image 有图 / video 有视频 / rich 有图和视频 / all 啥都有
         ft, et : datetime.date
-            当 tsn 是 5 时，ft 代表开始时间，如： 2017-07-01
-            当 tsn 是 5 时，et 代表结束时间，如： 2017-07-15
+            当 tsn 是 specific 时，ft 代表开始时间，如： 2017-07-01
+            当 tsn 是 specific 时，et 代表结束时间，如： 2017-07-15
 
         Returns
         -------
         str
             search_article_url
         """
-
         assert isinstance(page, int) and page > 0
-        assert timesn in [0, 1, 2, 3, 4, 5]
+        assert timesn in [WechatSogouConst.search_article_time.anytime,
+                          WechatSogouConst.search_article_time.day,
+                          WechatSogouConst.search_article_time.week,
+                          WechatSogouConst.search_article_time.month,
+                          WechatSogouConst.search_article_time.year,
+                          WechatSogouConst.search_article_time.specific]
 
-        if timesn == 5:
+        if timesn == WechatSogouConst.search_article_time.specific:
             assert isinstance(ft, datetime.date)
             assert isinstance(et, datetime.date)
             assert ft <= et
@@ -60,17 +58,17 @@ class WechatSogouRequest(object):
 
         interation_image = 458754
         interation_video = 458756
-        if article_type == 'rich':
+        if article_type == WechatSogouConst.search_article_type.rich:
             interation = '{},{}'.format(interation_image, interation_video)
-        elif article_type == 'image':
+        elif article_type == WechatSogouConst.search_article_type.image:
             interation = interation_image
-        elif article_type == 'video':
+        elif article_type == WechatSogouConst.search_article_type.video:
             interation = interation_video
         else:
             interation = ''
 
         qsDict = OrderedDict()
-        qsDict['type'] = 2  # 2 是文章
+        qsDict['type'] = _search_type_article
         qsDict['page'] = page
         qsDict['ie'] = 'utf8'
         qsDict['query'] = keyword
@@ -107,7 +105,7 @@ class WechatSogouRequest(object):
         assert isinstance(page, int) and page > 0
 
         qs_dict = OrderedDict()
-        qs_dict['type'] = 1  # 1 是公号
+        qs_dict['type'] = _search_type_gzh
         qs_dict['page'] = page
         qs_dict['ie'] = 'utf8'
         qs_dict['query'] = keyword

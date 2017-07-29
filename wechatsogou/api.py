@@ -8,6 +8,7 @@ import time
 
 import requests
 
+from wechatsogou.const import WechatSogouConst
 from wechatsogou.exceptions import WechatSogouRequestsException, WechatSogouVcodeOcrException
 from wechatsogou.request import WechatSogouRequest
 from wechatsogou.structuring import WechatSogouStructuring
@@ -167,7 +168,8 @@ class WechatSogouAPI(object):
 
         return WechatSogouStructuring.get_gzh_by_search(resp.text)
 
-    def search_article(self, keyword, page=1, timesn=0, article_type=WechatSogouRequest.TYPE_ALL, ft=None, et=None,
+    def search_article(self, keyword, page=1, timesn=WechatSogouConst.search_article_time.anytime,
+                       article_type=WechatSogouConst.search_article_type.all, ft=None, et=None,
                        deblocking_callback=None, identify_image_callback=None):
         """搜索 文章
 
@@ -183,14 +185,14 @@ class WechatSogouAPI(object):
             搜索文字
         page : int, optional
             页数 the default is 1
-        timesn : {0, 1, 2, 3, 4, 5}
-            时间 0 没有限制 / 1一天 / 2一周 / 3一月 / 4一年 / 5自定
-            the default is 0
-        article_type : {'image', 'video', 'rich', 'all'}
-            含有内容的类型 TYPE_IMAGE 有图 / TYPE_VIDEO 有视频 / TYPE_RICH 有图和视频 / TYPE_ALL 啥都有
+        timesn : WechatSogouConst.search_article_time
+            时间 anytime 没有限制 / day 一天 / week 一周 / month 一月 / year 一年 / specific 自定
+            the default is anytime
+        article_type : WechatSogouConst.search_article_type
+            含有内容的类型 image 有图 / video 有视频 / rich 有图和视频 / all 啥都有
         ft, et : datetime.date or None
-            当 tsn 是 5 时，ft 代表开始时间，如： 2017-07-01
-            当 tsn 是 5 时，et 代表结束时间，如： 2017-07-15
+            当 tsn 是 specific 时，ft 代表开始时间，如： 2017-07-01
+            当 tsn 是 specific 时，et 代表结束时间，如： 2017-07-15
         deblocking_callback : callable
             处理出现验证码页面的函数，参见 deblocking_callback_example
         identify_image_callback : callable
@@ -328,7 +330,7 @@ class WechatSogouAPI(object):
 
         :return:
         """
-        pass
+        pass  # TODO 获取文章原文，避免临时链接失效
 
     def get_sugg(self, keyword):
         """获取微信搜狗搜索关键词联想
