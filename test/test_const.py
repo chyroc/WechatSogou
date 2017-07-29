@@ -8,9 +8,8 @@ from wechatsogou.const import WechatSogouConst
 
 
 class TestConst(unittest.TestCase):
-    def test_const(self):
+    def test_const_hot_index(self):
         assert_true(hasattr(WechatSogouConst, 'hot_index'))
-        assert_true(hasattr(WechatSogouConst, 'search_article_type'))
 
         assert_equal(WechatSogouConst.hot_index.hot, 'hot')
         assert_equal(WechatSogouConst.hot_index.recommendation, 'recommendation')
@@ -33,10 +32,23 @@ class TestConst(unittest.TestCase):
         assert_equal(WechatSogouConst.hot_index.constellation, 'constellation')
         assert_equal(WechatSogouConst.hot_index.sport, 'sport')
 
+    def test_const_search_article_type(self):
+        assert_true(hasattr(WechatSogouConst, 'search_article_type'))
+
         assert_equal(WechatSogouConst.search_article_type.all, 'all')
         assert_equal(WechatSogouConst.search_article_type.rich, 'rich')
         assert_equal(WechatSogouConst.search_article_type.video, 'video')
         assert_equal(WechatSogouConst.search_article_type.image, 'image')
+
+    def test_const_search_article_time(self):
+        assert_true(hasattr(WechatSogouConst, 'search_article_time'))
+
+        assert_equal(WechatSogouConst.search_article_time.anytime, 0)
+        assert_equal(WechatSogouConst.search_article_time.day, 1)
+        assert_equal(WechatSogouConst.search_article_time.week, 2)
+        assert_equal(WechatSogouConst.search_article_time.month, 3)
+        assert_equal(WechatSogouConst.search_article_time.year, 4)
+        assert_equal(WechatSogouConst.search_article_time.specific, 5)
 
 
 if __name__ == '__main__':
