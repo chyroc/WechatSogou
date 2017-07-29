@@ -7,10 +7,10 @@ from wechatsogou.exceptions import WechatSogouException
 
 def Const(cls):
     @wraps(cls)
-    def new_sett(self, name, value):
+    def new_setattr(self, name, value):
         raise WechatSogouException('const : {} can not be changed'.format(name))
 
-    cls.__setattr__ = new_sett
+    cls.__setattr__ = new_setattr
     return cls
 
 
