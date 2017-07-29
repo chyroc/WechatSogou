@@ -58,7 +58,8 @@ class WechatSogouAPI(object):
 
         if r_unlock['code'] != 0:
             raise WechatSogouVcodeOcrException(
-                '[WechatSogouAPI identify image] code: {code}, msg: {msg}'.format(**r_unlock))
+                '[WechatSogouAPI identify image] code: {code}, msg: {msg}'.format(code=r_unlock.get('code'),
+                                                                                  msg=r_unlock.get('msg')))
         else:
             self.__set_cache(session.cookies.get('SUID'), r_unlock['id'])
 
@@ -75,7 +76,7 @@ class WechatSogouAPI(object):
         if r_unlock['ret'] != 0:
             raise WechatSogouVcodeOcrException(
                 '[WechatSogouAPI identify image] code: {ret}, msg: {errmsg}, cookie_count: {cookie_count}'.format(
-                    **r_unlock))
+                    ret=r_unlock.get('ret'), errmsg=r_unlock.get('errmsg'), cookie_count=r_unlock.get('cookie_count')))
 
     def __get_by_unlock(self, url, referer=None, is_need_unlock=None, unlock_platform=None, unlock_callback=None,
                         identify_image_callback=None):
