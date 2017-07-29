@@ -118,7 +118,7 @@ class WechatSogouRequest(object):
 
         Parameters
         ----------
-        hot_index : str or unicode
+        hot_index : WechatSogouConst.hot_index
             首页热门文章的分类（常量）：WechatSogouConst.hot_index.xxx
         page : int
             页数
@@ -131,7 +131,6 @@ class WechatSogouRequest(object):
 
         assert hasattr(WechatSogouConst.hot_index, hot_index)
         assert isinstance(page, int) and page > 0
-        hot_index = getattr(WechatSogouConst.hot_index, hot_index)
 
         index_urls = {
             WechatSogouConst.hot_index.hot: 0,  # 热门

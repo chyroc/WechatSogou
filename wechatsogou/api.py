@@ -325,6 +325,54 @@ class WechatSogouAPI(object):
 
         return WechatSogouStructuring.get_gzh_info_and_article_by_history(resp.text)
 
+    def get_gzh_artilce_by_hot(self, hot_index, page=1, deblocking_callback=None, identify_image_callback=None):
+        """获取 首页热门文章
+
+        Parameters
+        ----------
+        hot_index : WechatSogouConst.hot_index
+            首页热门文章的分类（常量）：WechatSogouConst.hot_index.xxx
+        page : int
+            页数
+
+        Returns
+        -------
+        list[dict]
+            {
+                'gzh': {
+                    'headimage': str,  # 公众号头像
+                    'wechat_name': str,  # 公众号名称
+                },
+                'article': {
+                    'url': str,  # 文章临时链接
+                    'title': str,  # 文章标题
+                    'abstract': str,  # 文章摘要
+                    'time': int,  # 推送时间，10位时间戳
+                    'open_id': str,  # open id
+                    'main_img': str  # 封面图片
+                }
+            }
+        """
+
+        assert hasattr(WechatSogouConst.hot_index, hot_index)
+        assert isinstance(page, int) and page > 0
+
+        req = requests.session()
+
+        url = WechatSogouRequest.gen_hot_url(hot_index, page)
+
+        resp = WechatSogouRequest.get(url, req=req, headers=self.__set_cookie())
+        resp.encoding = 'utf-8'
+
+        if not resp.ok:
+            raise WechatSogouRequestsException('WechatSogouAPI get_hot_article', resp)
+
+        if 'antispider' in resp.url:
+            self.__deblocking(self.__deblocking_search, url, resp, req, deblocking_callback, identify_image_callback)
+            resp = WechatSogouRequest.get(url, req=req, headers=self.__set_cookie())  # req=req
+
+        return WechatSogouStructuring.get_gzh_artilce_by_hot(resp.text)
+
     def get_article_content(self):
         """获取文章原文，避免临时链接失效
 
