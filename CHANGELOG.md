@@ -1,5 +1,21 @@
 # Change Log
 
+## [v3.1.0](https://github.com/Chyroc/WechatSogou/tree/v3.1.0) (2017-07-29)
+[Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v3.0.0...v3.1.0)
+
+**Closed issues:**
+
+- 请教下 如何能获取到 关键词搜索 一天内的列表? [\#73](https://github.com/Chyroc/WechatSogou/issues/73)
+
+**Merged pull requests:**
+
+- Add/get hot api / gzh =\> gzh\_info [\#109](https://github.com/Chyroc/WechatSogou/pull/109) ([Chyroc](https://github.com/Chyroc))
+- Change/search article type const [\#108](https://github.com/Chyroc/WechatSogou/pull/108) ([Chyroc](https://github.com/Chyroc))
+- Add const class  and  add gen hot url [\#107](https://github.com/Chyroc/WechatSogou/pull/107) ([Chyroc](https://github.com/Chyroc))
+- Add retry for captcha break [\#106](https://github.com/Chyroc/WechatSogou/pull/106) ([Chyroc](https://github.com/Chyroc))
+- test api in real network env [\#104](https://github.com/Chyroc/WechatSogou/pull/104) ([Chyroc](https://github.com/Chyroc))
+- Release/v3.0.0 [\#103](https://github.com/Chyroc/WechatSogou/pull/103) ([Chyroc](https://github.com/Chyroc))
+
 ## [v3.0.0](https://github.com/Chyroc/WechatSogou/tree/v3.0.0) (2017-07-27)
 [Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v2.0.5...v3.0.0)
 
