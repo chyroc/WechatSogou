@@ -40,6 +40,3 @@ class _Const(object):
 
 
 WechatSogouConst = _Const()
-
-if __name__ == '__main__':
-    print(list(filter(lambda x: not x.startswith('__'), dir(WechatSogouConst.hot_index))))
