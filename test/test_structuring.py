@@ -229,11 +229,73 @@ class TestStructuringGzh(unittest.TestCase):
     def test_get_gzh_info_and_article_by_history(self):
         file_name = '{}/{}/{}'.format(os.getcwd(), fake_data_path, 'bitsea-history.html')
         with io.open(file_name, encoding='utf-8') as f:
-            gzh_history = f.read()
+            gzh_info_and_article_by_history = f.read()
 
-        gzh_article_list = WechatSogouStructuring.get_gzh_info_and_article_by_history(gzh_history)
-        assert_in('gzh_info', gzh_article_list)
+        gzh_article_list = WechatSogouStructuring.get_gzh_info_and_article_by_history(gzh_info_and_article_by_history)
+        assert_in('gzh', gzh_article_list)
         assert_in('article', gzh_article_list)
+
+    def test_get_gzh_artilce_by_hot(self):
+        file_name = '{}/{}/{}'.format(os.getcwd(), fake_data_path, 'wapindex-wap-0612-wap_8-0.html')
+        with io.open(file_name, encoding='utf-8') as f:
+            gzh_artilce_by_hot = f.read()
+
+            gzh_artilces = WechatSogouStructuring.get_gzh_artilce_by_hot(gzh_artilce_by_hot)
+
+        for gzh_artilce in gzh_artilces:
+            assert_in('gzh', gzh_artilce)
+            assert_in('article', gzh_artilce)
+            assert_in('http://mp.weixin.qq.com/s?src=', gzh_artilce['article']['url'])
+        assert_greater_equal(len(gzh_artilces), 10)
+
+        wechat_names = []
+        headimages = []
+        titles = []
+        times = []
+        for i in gzh_artilces:
+            wechat_names.append(i['gzh']['wechat_name'])
+            headimages.append(i['gzh']['headimage'])
+            titles.append(i['article']['title'])
+            times.append(i['article']['time'])
+
+        assert_equal(
+            ['全球汽车精选', '车早茶', '吴佩频道', '驾考宝典', '腾讯汽车', '新车评', '非常好车', '汽车情报所',
+             '一猫汽车资讯', '资深科技控', '郎club', '科技日报', '汽车使用宝典', '名车报', '科普中国网'],
+            wechat_names)
+        assert_equal(['http://img03.sogoucdn.com/app/a/100520090/oIWsFt1dGMefD1f8dOg2UCwQUjKs',
+                      'http://img04.sogoucdn.com/app/a/100520090/oIWsFtwoQX8wX7w6loDevPqLEC_I',
+                      'http://img03.sogoucdn.com/app/a/100520090/oIWsFt9Hbbtr9VLnfR9i_K5Z8D48',
+                      'http://img04.sogoucdn.com/app/a/100520090/oIWsFt3txmWu-usvUa6gU0qlyEVo',
+                      'http://img01.sogoucdn.com/app/a/100520090/oIWsFt8VDujUqNSCfruXtMNfekaw',
+                      'http://img01.sogoucdn.com/app/a/100520090/oIWsFt9YD5HWLDe5QAkuvh0JWrgw',
+                      'http://img01.sogoucdn.com/app/a/100520090/oIWsFt_WUnpQ7lZajAstgL8o1lWo',
+                      'http://img02.sogoucdn.com/app/a/100520090/oIWsFtzUnzWUMz1PMek5zjVlS42U',
+                      'http://img03.sogoucdn.com/app/a/100520090/oIWsFt2yk491dhhSP940JzLEameY',
+                      'http://img03.sogoucdn.com/app/a/100520090/oIWsFtzm9UtmgY-SkOTFwQFpGsU8',
+                      'http://img02.sogoucdn.com/app/a/100520090/oIWsFt7VwiM8GqYcv8DBNb-k5NBQ',
+                      'http://img03.sogoucdn.com/app/a/100520090/oIWsFt2tjckivF8b0MP_nNTdESkE',
+                      'http://img01.sogoucdn.com/app/a/100520090/oIWsFtzC2r61_riTCWp5iHX04fmo',
+                      'http://img02.sogoucdn.com/app/a/100520090/oIWsFt8JIY_-o7DBMxorP19hcF0Q',
+                      'http://img04.sogoucdn.com/app/a/100520090/oIWsFtyV5sdIXU2uy4m6oVBq77nA'],
+                     headimages)
+        assert_equal(['不做这个动作，你的轮胎3个月就要换!',
+                      '新车质量最差的十个品牌?国人表示难以接受……',
+                      '带着米其林的指引去看古德伍德|品牌',
+                      '方向盘打法巧记口诀，科目二提分就靠它了!',
+                      '宝马“鸡腿”、奥迪“游艇”，这些奇葩的挡杆你见过几个?',
+                      '你没看错，我们做了期途昂和途锐的对比',
+                      '7成特斯拉被召回，难道是质量不过关?',
+                      '在中国惹不起的7种车,遇到请回避!',
+                      '迈腾摊上大事儿了 全新一代君威17.58万起', '面对这份驾享，朝廷大人都忍不住亲自上阵!',
+                      '外卖小哥被暴晒：底层人士的悲哀，有钱人不会懂',
+                      '自动驾驶还处于“新手”阶段，何时成为“老司机”?院士这样说……',
+                      '高速上碰到石头，是躲还是撞?', '装什么神秘，不就是加长版的讴歌TLX吗!',
+                      '一个动作，车里的人集体中毒!很多人都忽略了'],
+                     titles)
+        assert_equal(
+            [1501328135, 1501327941, 1501326826, 1501326716, 1501326675, 1501326455, 1501326222, 1501325595,
+             1501325529, 1501325521, 1501325223, 1501324531, 1501324443, 1501324310, 1501323274],
+            times)
 
 
 if __name__ == '__main__':

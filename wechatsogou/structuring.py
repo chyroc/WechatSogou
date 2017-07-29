@@ -283,7 +283,7 @@ class WechatSogouStructuring(object):
         -------
         dict
             {
-                'gzh_info': {
+                'gzh': {
                     'wechat_name': '',  # 名称
                     'wechat_id': '',  # 微信id
                     'introduction': '',  # 描述
@@ -310,6 +310,70 @@ class WechatSogouStructuring(object):
             }
         """
         return {
-            'gzh_info': WechatSogouStructuring.get_gzh_info_by_history(text),
+            'gzh': WechatSogouStructuring.get_gzh_info_by_history(text),
             'article': WechatSogouStructuring.get_article_by_history_json(text)
         }
+
+    @staticmethod
+    def get_gzh_artilce_by_hot(text):
+        """从 首页热门搜索 提取公众号信息 和 文章列表信息
+
+        Parameters
+        ----------
+        text : str or unicode
+            首页热门搜索 页 中 某一页 的文本
+
+        Returns
+        -------
+        list[dict]
+            {
+                'gzh': {
+                    'headimage': str,  # 公众号头像
+                    'wechat_name': str,  # 公众号名称
+                },
+                'article': {
+                    'url': str,  # 文章临时链接
+                    'title': str,  # 文章标题
+                    'abstract': str,  # 文章摘要
+                    'time': int,  # 推送时间，10位时间戳
+                    'open_id': str,  # open id
+                    'main_img': str  # 封面图片
+                }
+            }
+        """
+        page = etree.HTML(text)
+        lis = page.xpath('/html/body/li')
+        gzh_article_list = []
+        for li in lis:
+            url = li.xpath('div[1]/h4/a/@href')
+            title = li.xpath('div[1]/h4/a/div/text()')
+            abstract = li.xpath('div[1]/p[1]/text()')
+
+            xpath_time = li.xpath('div[1]/p[2]')[0]
+            open_id = xpath_time.xpath('span/@data-openid')
+            headimage = xpath_time.xpath('span/@data-headimage')
+            gzh_name = xpath_time.xpath('span/text()')
+            send_time = xpath_time.xpath('a/span/@data-lastmodified')
+            main_img = li.xpath('div[2]/a/img/@src')
+
+            try:
+                send_time = int(send_time[0])
+            except:
+                send_time = send_time[0]
+
+            gzh_article_list.append({
+                'gzh': {
+                    'headimage': headimage[0],
+                    'wechat_name': gzh_name[0],
+                },
+                'article': {
+                    'url': url[0],
+                    'title': title[0],
+                    'abstract': abstract[0],
+                    'time': send_time,
+                    'open_id': open_id[0],
+                    'main_img': main_img[0]
+                }
+            })
+
+        return gzh_article_list
