@@ -18,7 +18,7 @@ class TestConst(unittest.TestCase):
         assert_equal(WechatSogouConst.hot_index.sifanghua, 'sifanghua')
         assert_equal(WechatSogouConst.hot_index.gossip, 'gossip')
         assert_equal(WechatSogouConst.hot_index.life, 'life')
-        assert_equal(WechatSogouConst.hot_index.Finance, 'Finance')
+        assert_equal(WechatSogouConst.hot_index.finance, 'finance')
         assert_equal(WechatSogouConst.hot_index.car, 'car')
         assert_equal(WechatSogouConst.hot_index.technology, 'technology')
         assert_equal(WechatSogouConst.hot_index.fashion, 'fashion')
