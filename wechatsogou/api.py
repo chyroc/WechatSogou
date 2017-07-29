@@ -8,11 +8,11 @@ import time
 
 import requests
 
+from wechatsogou.pkgs import quote
 from wechatsogou.const import WechatSogouConst
-from wechatsogou.exceptions import WechatSogouRequestsException, WechatSogouVcodeOcrException
 from wechatsogou.request import WechatSogouRequest
 from wechatsogou.structuring import WechatSogouStructuring
-from wechatsogou.pkgs import quote
+from wechatsogou.exceptions import WechatSogouRequestsException, WechatSogouVcodeOcrException
 from wechatsogou.identify_image import (
     ws_cache,
     identify_image_callback_by_hand,
@@ -90,7 +90,6 @@ class WechatSogouAPI(object):
 
         session = requests.session()
         resp = self.__get(url, session, headers=self.__set_cookie(referer=referer))
-        # resp.encoding = 'utf-8'
 
         if is_need_unlock(resp):
             for i in range(self.captcha_break_times):
