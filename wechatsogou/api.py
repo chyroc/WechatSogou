@@ -271,7 +271,7 @@ class WechatSogouAPI(object):
         -------
         dict
             {
-                'gzh_info': {
+                'gzh': {
                     'wechat_name': '',  # 名称
                     'wechat_id': '',  # 微信id
                     'introduction': '',  # 描述

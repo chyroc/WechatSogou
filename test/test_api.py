@@ -9,6 +9,7 @@ import unittest
 from nose.tools import assert_equal, assert_true, assert_in, assert_greater_equal
 import httpretty
 
+from wechatsogou.const import WechatSogouConst
 from wechatsogou.request import WechatSogouRequest
 from wechatsogou.api import WechatSogouAPI
 from test import fake_data_path, gaokao_keyword
@@ -50,10 +51,19 @@ class TestAPI(unittest.TestCase):
         gzh_artilce = ws_api.get_gzh_artilce_by_history(gaokao_keyword,
                                                         identify_image_callback_search=identify_image_callback_ruokuai_search,
                                                         identify_image_callback_history=identify_image_callback_ruokuai_history)
-        assert_in('gzh_info', gzh_artilce)
+        assert_in('gzh', gzh_artilce)
         assert_in('article', gzh_artilce)
-        assert_in('wx.qlogo.cn', gzh_artilce['gzh_info']['headimage'])
+        assert_in('wx.qlogo.cn', gzh_artilce['gzh']['headimage'])
         assert_greater_equal(len(gzh_artilce['article']), 1)
+
+    def test_get_gzh_artilce_by_hot_real(self):
+        gzh_artilces = ws_api.get_gzh_artilce_by_hot(WechatSogouConst.hot_index.recommendation,
+                                                     identify_image_callback=identify_image_callback_ruokuai_search)
+        for gzh_artilce in gzh_artilces:
+            assert_in('gzh', gzh_artilce)
+            assert_in('article', gzh_artilce)
+            assert_in('http://mp.weixin.qq.com/s?src=', gzh_artilce['article']['url'])
+        assert_greater_equal(len(gzh_artilces), 10)
 
     def test_get_sugg(self):
         sugg_gaokao = ws_api.get_sugg(gaokao_keyword)

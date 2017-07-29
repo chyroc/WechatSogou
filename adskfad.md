@@ -257,7 +257,7 @@ Out[1]:
     },
   ...
   ],
-  'gzh_info': {
+  'gzh': {
     'authentication': '南京航空航天大学',
     'headimage': 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM4xV5PgPjK5XoPaaQoxnWJAFicibMvPAnsoybawMBFxua1g/0',
     'introduction': '南航大志愿活动的领跑者，为你提供校内外的志愿资源和精彩消息。',
@@ -269,7 +269,7 @@ Out[1]:
 - 数据结构
 ```python
 {
-    'gzh_info': {
+    'gzh': {
         'wechat_name': '',  # 名称
         'wechat_id': '',  # 微信id
         'introduction': '',  # 简介
@@ -297,7 +297,7 @@ Out[1]:
 
 ```
 
-### 解析最近文章页 - get_gzh_artilce_by_history
+### 解析 首页热门 页 - get_gzh_artilce_by_hot
 
 ![ws_api.get_gzh_artilce_by_hot(WechatSogouConst.hot_index.food)](https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_artilce_by_hot.png)
 

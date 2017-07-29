@@ -283,7 +283,7 @@ class WechatSogouStructuring(object):
         -------
         dict
             {
-                'gzh_info': {
+                'gzh': {
                     'wechat_name': '',  # 名称
                     'wechat_id': '',  # 微信id
                     'introduction': '',  # 描述
@@ -310,7 +310,7 @@ class WechatSogouStructuring(object):
             }
         """
         return {
-            'gzh_info': WechatSogouStructuring.get_gzh_info_by_history(text),
+            'gzh': WechatSogouStructuring.get_gzh_info_by_history(text),
             'article': WechatSogouStructuring.get_article_by_history_json(text)
         }
 
