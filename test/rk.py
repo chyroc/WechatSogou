@@ -53,9 +53,9 @@ def __identify_image_callback(img, code):
         raise Exception('识别验证码错误')
 
 
-def identify_image_callback_ruokuai_search(img):
+def identify_image_callback_ruokuai_sogou(img):
     return __identify_image_callback(img, 3060)
 
 
-def identify_image_callback_ruokuai_history(img):
+def identify_image_callback_ruokuai_weixin(img):
     return __identify_image_callback(img, 3040)
