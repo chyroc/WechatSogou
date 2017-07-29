@@ -7,6 +7,7 @@ from nose.tools import assert_raises, assert_equal, assert_in, assert_not_in
 
 from hypothesis import given, strategies as st
 
+from wechatsogou.const import WechatSogouConst
 from wechatsogou.request import WechatSogouRequest
 from test import gaokao_keyword
 
@@ -54,14 +55,18 @@ class TestBasicGenSearchArticleURL(unittest.TestCase):
                 WechatSogouRequest.gen_search_article_url(gaokao_keyword, timesn=timesn)
 
     def test_gen_search_article_url_article_type(self):
-        url = WechatSogouRequest.gen_search_article_url(gaokao_keyword, article_type=WechatSogouRequest.TYPE_ALL)
+        url = WechatSogouRequest.gen_search_article_url(gaokao_keyword,
+                                                        article_type=WechatSogouConst.search_article_type.all)
         assert_equal('interation=', url[-11:])
 
-        url = WechatSogouRequest.gen_search_article_url(gaokao_keyword, article_type=WechatSogouRequest.TYPE_IMAGE)
+        url = WechatSogouRequest.gen_search_article_url(gaokao_keyword,
+                                                        article_type=WechatSogouConst.search_article_type.image)
         assert_in('interation=458754', url)
 
-        url = WechatSogouRequest.gen_search_article_url(gaokao_keyword, article_type=WechatSogouRequest.TYPE_VIDEO)
+        url = WechatSogouRequest.gen_search_article_url(gaokao_keyword,
+                                                        article_type=WechatSogouConst.search_article_type.video)
         assert_in('interation=458756', url)
 
-        url = WechatSogouRequest.gen_search_article_url(gaokao_keyword, article_type=WechatSogouRequest.TYPE_RICH)
+        url = WechatSogouRequest.gen_search_article_url(gaokao_keyword,
+                                                        article_type=WechatSogouConst.search_article_type.rich)
         assert_in('interation=458754%2C458756', url)

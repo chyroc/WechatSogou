@@ -1,10 +1,12 @@
 from functools import wraps
 
+from wechatsogou.exceptions import WechatSogouException
+
 
 def Const(cls):
     @wraps(cls)
     def new_sett(self, name, value):
-        raise Exception('can not set const')
+        raise WechatSogouException('const : {} can not be changed'.format(name))
 
     cls.__setattr__ = new_sett
     return cls
