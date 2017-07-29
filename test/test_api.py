@@ -49,8 +49,8 @@ class TestAPI(unittest.TestCase):
 
     def test_get_gzh_artilce_by_history_real(self):
         gzh_artilce = ws_api.get_gzh_artilce_by_history(gaokao_keyword,
-                                                        identify_image_callback_search=identify_image_callback_ruokuai_search,
-                                                        identify_image_callback_history=identify_image_callback_ruokuai_history)
+                                                        identify_image_callback_sogou=identify_image_callback_ruokuai_search,
+                                                        identify_image_callback_weixin=identify_image_callback_ruokuai_history)
         assert_in('gzh', gzh_artilce)
         assert_in('article', gzh_artilce)
         assert_in('wx.qlogo.cn', gzh_artilce['gzh']['headimage'])
