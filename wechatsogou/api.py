@@ -8,7 +8,7 @@ import time
 
 import requests
 
-from wechatsogou.pkgs import quote
+from wechatsogou.five import quote
 from wechatsogou.const import WechatSogouConst
 from wechatsogou.request import WechatSogouRequest
 from wechatsogou.structuring import WechatSogouStructuring

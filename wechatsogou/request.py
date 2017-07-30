@@ -5,7 +5,7 @@ from __future__ import absolute_import, unicode_literals, print_function
 import datetime
 from collections import OrderedDict
 
-from wechatsogou.pkgs import urlencode
+from wechatsogou.five import urlencode
 from wechatsogou.const import WechatSogouConst
 
 _search_type_gzh = 1  # 1 是公号
