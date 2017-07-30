@@ -11,10 +11,8 @@ if six.PY2:
     from urllib import quote as quote
     import StringIO
 
-
     def readimg(content):
         return Image.open(StringIO.StringIO(content))
-
 
     reload(sys)
     sys.setdefaultencoding('utf-8')
@@ -27,12 +25,10 @@ else:
     from urllib.request import quote as quote
     import tempfile
 
-
     def readimg(content):
         f = tempfile.TemporaryFile()
         f.write(content)
         return Image.open(f)
-
 
     urlencode = urllib.parse.urlencode
     input = input
