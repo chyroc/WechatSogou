@@ -18,7 +18,7 @@ assert_equal.__self__.maxDiff = None
 
 class TestStructuringGzh(unittest.TestCase):
     def test_get_gzh_by_search(self):
-        file_name = '{}/{}/{}'.format(os.getcwd(), fake_data_path, 'search-gaokao-gzh.html')
+        file_name = os.path.join(fake_data_path, 'search-gaokao-gzh.html')
         with io.open(file_name, encoding='utf-8') as f:
             search_gaokao_gzh = f.read()
 
@@ -89,7 +89,7 @@ class TestStructuringGzh(unittest.TestCase):
                      authentications)
 
     def test_get_article_by_search(self):
-        file_name = '{}/{}/{}'.format(os.getcwd(), fake_data_path, 'search-gaokao-article.html')
+        file_name = os.path.join(fake_data_path, 'search-gaokao-article.html')
         with io.open(file_name, encoding='utf-8') as f:
             search_gaokao_article = f.read()
 
@@ -156,7 +156,7 @@ class TestStructuringGzh(unittest.TestCase):
         assert_in(0, isvs)
 
     def test_get_gzh_info_by_history(self):
-        file_name = '{}/{}/{}'.format(os.getcwd(), fake_data_path, 'bitsea-history.html')
+        file_name = os.path.join(fake_data_path, 'bitsea-history.html')
         with io.open(file_name, encoding='utf-8') as f:
             gzh_history = f.read()
 
@@ -170,7 +170,7 @@ class TestStructuringGzh(unittest.TestCase):
         assert_equal(' ', gzh_info['introduction'])
 
     def test_get_article_by_history_json(self):
-        file_name = '{}/{}/{}'.format(os.getcwd(), fake_data_path, 'bitsea-history.html')
+        file_name = os.path.join(fake_data_path, 'bitsea-history.html')
         with io.open(file_name, encoding='utf-8') as f:
             gzh_history = f.read()
 
@@ -228,7 +228,7 @@ class TestStructuringGzh(unittest.TestCase):
                       '野鸡给自己加戏，观众不说话，并不等于看不明白。', ], digests)
 
     def test_get_gzh_info_and_article_by_history(self):
-        file_name = '{}/{}/{}'.format(os.getcwd(), fake_data_path, 'bitsea-history.html')
+        file_name = os.path.join(fake_data_path, 'bitsea-history.html')
         with io.open(file_name, encoding='utf-8') as f:
             gzh_info_and_article_by_history = f.read()
 
@@ -237,7 +237,7 @@ class TestStructuringGzh(unittest.TestCase):
         assert_in('article', gzh_article_list)
 
     def test_get_gzh_artilce_by_hot(self):
-        file_name = '{}/{}/{}'.format(os.getcwd(), fake_data_path, 'wapindex-wap-0612-wap_8-0.html')
+        file_name = os.path.join(fake_data_path, 'wapindex-wap-0612-wap_8-0.html')
         with io.open(file_name, encoding='utf-8') as f:
             gzh_artilce_by_hot = f.read()
 
@@ -299,7 +299,7 @@ class TestStructuringGzh(unittest.TestCase):
             times)
 
     def test_get_article_by_search_wap(self):
-        file_name = '{}/{}/{}'.format(os.getcwd(), fake_data_path, 'search-gaokao-article.json')
+        file_name = os.path.join(fake_data_path, 'search-gaokao-article.json')
         with io.open(file_name, encoding='utf-8') as f:
             wap_json = json.load(f)
 
