@@ -3,13 +3,6 @@
 from PIL import Image
 import six
 
-# url_parse
-# urlencode
-# unquote
-# quote
-# readimg
-
-
 if six.PY2:
     import sys
     import urlparse as url_parse

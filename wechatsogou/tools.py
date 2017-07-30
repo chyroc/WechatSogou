@@ -6,7 +6,7 @@ import ast
 
 import requests
 
-from wechatsogou.pkgs import url_parse
+from wechatsogou.five import url_parse
 
 
 def list_or_empty(content, contype=None):

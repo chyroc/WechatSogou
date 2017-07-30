@@ -6,7 +6,7 @@ import time
 
 import requests
 
-from wechatsogou.pkgs import readimg, input
+from wechatsogou.five import readimg, input
 from wechatsogou.filecache import WechatCache
 
 ws_cache = WechatCache()

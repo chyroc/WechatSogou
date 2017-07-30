@@ -9,7 +9,7 @@ from lxml import etree
 from lxml.etree import XML
 
 from wechatsogou.tools import get_elem_text, list_or_empty, replace_html
-from wechatsogou.pkgs import str_to_bytes
+from wechatsogou.five import str_to_bytes
 
 find_article_json_re = re.compile('var msgList = (.*?)}}]};')
 
