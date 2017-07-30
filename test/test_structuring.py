@@ -4,13 +4,14 @@ from __future__ import absolute_import, unicode_literals, print_function
 
 import io
 import os
+import json
 import unittest
 import datetime
 
 from nose.tools import assert_equal, assert_in, assert_true, assert_greater_equal
 
 from wechatsogou.structuring import WechatSogouStructuring
-from test import fake_data_path
+from test import fake_data_path, gaokao_keyword
 
 assert_equal.__self__.maxDiff = None
 
@@ -296,6 +297,67 @@ class TestStructuringGzh(unittest.TestCase):
             [1501328135, 1501327941, 1501326826, 1501326716, 1501326675, 1501326455, 1501326222, 1501325595,
              1501325529, 1501325521, 1501325223, 1501324531, 1501324443, 1501324310, 1501323274],
             times)
+
+    def test_get_article_by_search_wap(self):
+        file_name = '{}/{}/{}'.format(os.getcwd(), fake_data_path, 'search-gaokao-article.json')
+        with io.open(file_name, encoding='utf-8') as f:
+            wap_json = json.load(f)
+
+        gzh_artilces = WechatSogouStructuring.get_article_by_search_wap(gaokao_keyword, wap_json)
+        assert_equal(10, len(gzh_artilces))
+
+        titles = []
+        abstracts = []
+        gzh_names = []
+        isvs = []
+        open_ids = []
+        for i in gzh_artilces:
+            assert_in('gzh', i)
+            assert_in('article', i)
+
+            article = i['article']
+
+            titles.append(article['title'])
+            abstracts.append(article['abstract'])
+            assert_in('mp.weixin.qq.com/', article['url'])
+
+            gzh = i['gzh']
+
+            assert_in('mp.weixin.qq.com/profile?src=3&timestamp', gzh['profile_url'])
+            assert_in('wx.qlogo.cn/mmhead', gzh['headimage'])
+            gzh_names.append(gzh['wechat_name'])
+            isvs.append(gzh['isv'])
+            open_ids.append(gzh['open_id'])
+
+        assert_equal(['高考有多重要,为什么要重视高考?丨微观点',
+                      '高考:穷人考不好,中产考状元,精英不高考',
+                      '17个高考落榜者的“逆袭”故事:高考失败,天不会塌',
+                      '刚刚,高考“满分”诞生了!(附各省高考分数线)',
+                      '高考2017 | 全国各省区市高考录取时间大汇总,最新最全!',
+                      '28省公布高考分数线!各省高考状元出炉!',
+                      '高考2017 | 教育部发布高招录取工作通知!六大事项看过来',
+                      '高考录取过程详解',
+                      '高考前互有好感,高考后开始拍拖,还一同被清华录取!学霸早恋...',
+                      '高考复读,你怕了吗?'],
+                     titles)
+        assert_equal(['针对这个问题,其实占豪已经谈过,但还是想借高考之后、借这位小战友的留言,结合自己的人生经验,谈谈个人对这件事的看法.在占豪看来,现实的社会是分层的,一个一个阶...',
+                      '#条条大路通罗马,有人就出生在罗马#前几天北京文科高考状元熊轩昂接受澎湃新闻的采访的时候,说了下面这段话. “农村地区的孩子越来越难考上好学校,而像我这种父母都...',
+                      '从高考分数出来的那一刻,今年的考生们大概都会大胆猜想自己未来的命运:高分者,一脚踏进名牌高校工作不愁,似乎人生已经平步青云;落榜者,面对落魄的分数整日哀叹,或...',
+                      '高考会有满分的情况吗?还真有!6月22日开始,全国各省的高考成绩陆续发布.22日晚上,成都市青白江区一个小区内人声鼎沸,因为小区里有一位今年参加高考的学生,总分...',
+                      '2017年高考录取工作开始了,各省区市高考录取工作何时进行?为了方便考生和家长及时了解,小编为大家作了最新最全的梳理.(图片可点击放大查看) 北京7月6日,飞行专业...',
+                      '随着阅卷工作的结束,各地开始陆续公布2017年高考录取分数线.目前,已有28个省份公布了高考分数线.青海、新疆、西藏尚未公布.据媒体报道,青海将于6月30日前发布成绩...',
+                      '有关省级教育行政部门、招生考试机构要精心实施减少录取批次改革,完善平行志愿投档录取办法,努力提高考生志愿满足率.上海、浙江要精心组织新高考录取工作,细化完善工...',
+                      '在高考录取过程中,我省和全国各地一样都实行计算机远程网上录取的方式.录取中坚持“学校负责、招办监督”的原则,整个录取过程严格按照录取日程安排,分批次进行录取....',
+                      '但学霸们在这个问题上有自己的选择,今年佛山有一对高分学霸,两人虽早有好感,但均理性选择高考后才开始拍拖,两人一同考上清华,在班上传为佳话.然而,有家长担心孩子...',
+                      '我家孩子高考失利了,只考了326分,刚到本科线,本科没希望了,哎!我家闺女也是文科370分,真愁人,该怎么办呢?让孩子走专科,孩子不甘心,做家长的也不甘心,复习,...']
+                     , abstracts)
+        assert_equal(['占豪', '才华有限青年', '新闻哥', '光明网', '微言教育', '中国经济网', '阳光高考信息平台', '甘肃教育', '广州日报', '河北高考'], gzh_names)
+        assert_equal(['0', '1', '1', '1', '1', '1', '1', '1', '1', '0'], isvs)
+        assert_equal(['oIWsFt8nKJlpLQbQ5H9NMPBjxup8', 'oIWsFt24BFRU0oh5C8cGFo7vAwYk', 'oIWsFt7B8jj2BkEA1WsGkPU40uhU',
+                      'oIWsFtwaY2ERrY_oAgz5pHTn4aGc', 'oIWsFt5d7GugmQYi0cNC60qYV9c4', 'oIWsFt0B7LsVbUCMpgksNY8tqIno',
+                      'oIWsFtzrEz_Tydpahalp9daXMg0Y', 'oIWsFt5kk9RnueF3AiUOao2XrP9o', 'oIWsFt7aLTQfT_wmrF4GpT27_xjg',
+                      'oIWsFt3nYBUhqb4beN3rTBxdUHD8'],
+                     open_ids)
 
 
 if __name__ == '__main__':

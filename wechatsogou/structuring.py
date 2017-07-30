@@ -6,8 +6,10 @@ import re
 import json
 
 from lxml import etree
+from lxml.etree import XML
 
 from wechatsogou.tools import get_elem_text, list_or_empty, replace_html
+from wechatsogou.pkgs import str_to_bytes
 
 find_article_json_re = re.compile('var msgList = (.*?)}}]};')
 
@@ -65,6 +67,35 @@ class WechatSogouStructuring(object):
                 'authentication': authentication[0] if authentication else ''
             })
         return relist
+
+    @staticmethod
+    def get_article_by_search_wap(keyword, wap_dict):
+        datas = []
+        for i in wap_dict['items']:
+            item = str_to_bytes(i).replace(b'\xee\x90\x8a' + str_to_bytes(keyword) + b'\xee\x90\x8b',
+                                           str_to_bytes(keyword))
+            root = XML(item)
+            display = root.find('.//display')
+            datas.append({
+                'gzh': {
+                    'profile_url': display.find('encGzhUrl').text,
+                    'open_id': display.find('openid').text,
+                    'isv': display.find('isV').text,
+                    'wechat_name': display.find('sourcename').text,
+                    'wechat_id': display.find('username').text,
+                    'headimage': display.find('headimage').text,
+                    'qrcode': display.find('encQrcodeUrl').text,
+                },
+                'article': {
+                    'title': display.find('title').text,
+                    'url': display.find('url').text,  # encArticleUrl
+                    'main_img': display.find('imglink').text,
+                    'abstract': display.find('content168').text,
+                    'time': display.find('lastModified').text,
+                },
+            })
+
+        return datas
 
     @staticmethod
     def get_article_by_search(text):
