@@ -33,15 +33,6 @@
 
 <img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/pay_wx.jpg" width="250" /><img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/pay_zfb.jpg" width="250" />
 
-谢谢：
-
-- [微信] [ax4] [50]
-- [微信] [风雨坛·君] [50]
-- [支付宝] [陆小凤] [28.88]
-- [支付宝] [朋鑫] [18.88]
-- [微信] [JenkinsY94] [9.99]
-- [微信] [谁认领一下] [8]
-- [微信] [谁认领一下] [1]
 
 # 问题集锦
     Q:没有得到原始文章url？
