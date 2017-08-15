@@ -34,6 +34,7 @@ class WechatSogouStructuring(object):
         -------
         list[dict]
             {
+                'open_id': '', # 微信号唯一ID
                 'profile_url': '',  # 最近10条群发页链接
                 'headimage': '',  # 头像
                 'wechat_name': '',  # 名称
@@ -57,6 +58,7 @@ class WechatSogouStructuring(object):
             introduction = get_elem_text(li.xpath('dl[1]/dd')[0])
             authentication = li.xpath('dl[2]/dd/text()')
             relist.append({
+                'open_id': headimage[0].split('/')[-1],
                 'profile_url': url[0],
                 'headimage': headimage[0],
                 'wechat_name': wechat_name.replace('red_beg', '').replace('red_end', ''),
