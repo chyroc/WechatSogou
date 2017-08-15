@@ -1,5 +1,29 @@
 # Change Log
 
+## [v3.1.1](https://github.com/Chyroc/WechatSogou/tree/v3.1.1) (2017-08-15)
+[Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v3.1.0...v3.1.1)
+
+**Fixed bugs:**
+
+- 命令行和pycharm文件测试文件路径不一致的问题 [\#121](https://github.com/Chyroc/WechatSogou/issues/121)
+
+**Closed issues:**
+
+- 作者有代理的api没有呀 [\#136](https://github.com/Chyroc/WechatSogou/issues/136)
+- search\_article时只能获取到第10页，超过了获取到的就是空了 [\#132](https://github.com/Chyroc/WechatSogou/issues/132)
+
+**Merged pull requests:**
+
+- 返回open id [\#138](https://github.com/Chyroc/WechatSogou/pull/138) ([Chyroc](https://github.com/Chyroc))
+- add slack invite channel link [\#135](https://github.com/Chyroc/WechatSogou/pull/135) ([Chyroc](https://github.com/Chyroc))
+- fix test file not equal in shell vs ide \(fixes 121\) [\#130](https://github.com/Chyroc/WechatSogou/pull/130) ([Chyroc](https://github.com/Chyroc))
+- search articles from wap [\#129](https://github.com/Chyroc/WechatSogou/pull/129) ([Chyroc](https://github.com/Chyroc))
+- use hand input to unlock if not in ci env [\#114](https://github.com/Chyroc/WechatSogou/pull/114) ([Chyroc](https://github.com/Chyroc))
+- fix docs [\#113](https://github.com/Chyroc/WechatSogou/pull/113) ([Chyroc](https://github.com/Chyroc))
+- Change/refactor unlock captcha [\#112](https://github.com/Chyroc/WechatSogou/pull/112) ([Chyroc](https://github.com/Chyroc))
+- add readthedocs docs [\#111](https://github.com/Chyroc/WechatSogou/pull/111) ([Chyroc](https://github.com/Chyroc))
+- Release/v3.1.0 [\#110](https://github.com/Chyroc/WechatSogou/pull/110) ([Chyroc](https://github.com/Chyroc))
+
 ## [v3.1.0](https://github.com/Chyroc/WechatSogou/tree/v3.1.0) (2017-07-29)
 [Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v3.0.0...v3.1.0)
 
