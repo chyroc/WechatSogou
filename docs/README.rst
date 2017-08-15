@@ -26,10 +26,15 @@
 
 `CHANGELOG <./CHANGELOG.md>`__
 
-交流QQ群
+交流分享
 ========
 
-132955136
+-  QQ群
+
+132955136 - Slack
+
+点击加入\ `wechatsogou slack
+channel <https://join.slack.com/t/wechatsogou/shared_invite/MjIxNjk4NzY5NzE1LTE1MDE3NzQwNDItNTcxOWUxMjFjNg>`__
 
 赞助作者
 ========
