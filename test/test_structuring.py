@@ -29,6 +29,7 @@ class TestStructuringGzh(unittest.TestCase):
         post_perms = []
         introductions = []
         authentications = []
+        open_ids = []
         assert_equal(10, len(gzh_list))
         for gzh in gzh_list:
             names.append(gzh['wechat_name'])
@@ -36,11 +37,23 @@ class TestStructuringGzh(unittest.TestCase):
             post_perms.append(gzh['post_perm'])
             introductions.append(gzh['introduction'])
             authentications.append(gzh['authentication'])
+            open_ids.append(gzh['open_id'])
 
             assert_in('mp.weixin.qq.com/profile?src=3&timestamp=', gzh['profile_url'])
             assert_in('mp.weixin.qq.com/rr?src=', gzh['qrcode'])
             assert_in('img01.sogoucdn.com/', gzh['headimage'])
 
+        assert_equal(['oIWsFt6fv4FH0OBNCyoonNoAp2OM',
+                      'oIWsFtzwnqHRVPsRY-eEzPo344jQ',
+                      'oIWsFt_PvlvuqFxQFPbOO26_GQh4',
+                      'oIWsFtzpOSqygkGiyzj1vVGi2zM4',
+                      'oIWsFt-lCZYAtfVXRykjgsWZMoJA',
+                      'oIWsFtzJBFA82fTPb7xU-gkPiyqA',
+                      'oIWsFt_wgF0dHou131y47qIMcuM0',
+                      'oIWsFt67sO47_fHfOFQC0rBHhxcY',
+                      'oIWsFt5Kltl1uXsy8fhj96eIVen8',
+                      'oIWsFt-2JeqhMEEVQuFw_geRzmbY'],
+                     open_ids)
         assert_equal(['山东高考指南',
                       '高考家长圈',
                       '河南高考指南',

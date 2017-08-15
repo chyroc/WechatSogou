@@ -122,6 +122,7 @@ class WechatSogouAPI(object):
         -------
         dict or None
             {
+                'open_id': '', # 微信号唯一ID
                 'profile_url': '',  # 最近10条群发页链接
                 'headimage': '',  # 头像
                 'wechat_name': '',  # 名称
@@ -159,6 +160,7 @@ class WechatSogouAPI(object):
         -------
         list[dict]
             {
+                'open_id': '', # 微信号唯一ID
                 'profile_url': '',  # 最近10条群发页链接
                 'headimage': '',  # 头像
                 'wechat_name': '',  # 名称
