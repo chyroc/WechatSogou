@@ -21,10 +21,11 @@ from wechatsogou.identify_image import (
 
 
 class WechatSogouAPI(object):
-    def __init__(self, captcha_break_time=1):
+    def __init__(self, captcha_break_time=1, proxies=None):
         assert isinstance(captcha_break_time, int) and 0 < captcha_break_time < 20
 
         self.captcha_break_times = captcha_break_time
+        self.proxies = proxies
 
     def __set_cookie(self, suv=None, snuid=None, referer=None):
         suv = ws_cache.get('suv') if suv is None else suv
@@ -38,7 +39,7 @@ class WechatSogouAPI(object):
         ws_cache.set('snuid', snuid)
 
     def __get(self, url, session, headers):
-        resp = session.get(url, headers=headers)
+        resp = session.get(url, headers=headers, proxies=self.proxies)
 
         if not resp.ok:
             raise WechatSogouRequestsException('WechatSogouAPI get error', resp)
