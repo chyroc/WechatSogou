@@ -69,19 +69,22 @@ pip install wechatsogou --upgrade
 
 ```python
 import wechatsogou
-```
 
- 构造函数能接受一个可选的 dict 来通过代理 IP 发送请求, 如:
- 
-```python
-api = wechatsogou.WechatSogouAPI()          # 直连
+# 可配置参数
 
-api = wechatsogou.WechatSogouAPI(proxies={  # 走代理通道 
+# 直连
+ws_api = wechatsogou.WechatSogouAPI()
+
+# 验证码输入错误的重试次数，默认为1
+ws_api = wechatsogou.WechatSogouAPI(captcha_break_time=3)
+
+# 配置代理，代理列表中至少需包含1个 HTTPS 协议的代理, 并确保代理可用
+ws_api = wechatsogou.WechatSogouAPI(proxies={
     "http": "127.0.0.0.1:8888",
     "https": "127.0.0.0.1:8888",
 })
 ```
-代理列表中至少需包含1个 HTTPS 协议的代理, 并确保代理可用
+
 
 ### 获取特定公众号信息 - get_gzh_info
 

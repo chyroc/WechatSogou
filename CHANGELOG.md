@@ -1,5 +1,20 @@
 # Change Log
 
+## [v3.1.2](https://github.com/Chyroc/WechatSogou/tree/v3.1.2) (2017-09-06)
+[Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v3.1.1...v3.1.2)
+
+**Closed issues:**
+
+- 有代理ip更换的参数吗  [\#141](https://github.com/Chyroc/WechatSogou/issues/141)
+- 字符 logo 怎么生成的.. [\#140](https://github.com/Chyroc/WechatSogou/issues/140)
+- 求教 验证码回掉咋用 有没有示例 [\#137](https://github.com/Chyroc/WechatSogou/issues/137)
+- 测试的时候识别结果存储起来做分析 [\#123](https://github.com/Chyroc/WechatSogou/issues/123)
+
+**Merged pull requests:**
+
+- Adding an optional proxy list for api requests [\#142](https://github.com/Chyroc/WechatSogou/pull/142) ([jeremylinlin](https://github.com/jeremylinlin))
+- Release/v3.1.1 [\#139](https://github.com/Chyroc/WechatSogou/pull/139) ([Chyroc](https://github.com/Chyroc))
+
 ## [v3.1.1](https://github.com/Chyroc/WechatSogou/tree/v3.1.1) (2017-08-15)
 [Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v3.1.0...v3.1.1)
 
