@@ -391,7 +391,7 @@ class WechatSogouStructuring(object):
 
             try:
                 send_time = int(send_time[0])
-            except:
+            except ValueError:
                 send_time = send_time[0]
 
             gzh_article_list.append({
