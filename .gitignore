@@ -21,3 +21,4 @@ build/
 test/.hypothesis/
 t.py
 y.py
+tencent_captcha/
