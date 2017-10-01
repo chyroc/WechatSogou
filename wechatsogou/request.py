@@ -8,8 +8,8 @@ from collections import OrderedDict
 from wechatsogou.five import urlencode
 from wechatsogou.const import WechatSogouConst
 
-_search_type_gzh = 1  # 1 是公号
-_search_type_article = 2  # 2 是文章
+_search_type_gzh = 1  # 公众号
+_search_type_article = 2  # 文章
 
 
 class WechatSogouRequest(object):
@@ -66,16 +66,16 @@ class WechatSogouRequest(object):
         else:
             interation = ''
 
-        qsDict = OrderedDict()
-        qsDict['type'] = _search_type_article
-        qsDict['page'] = page
-        qsDict['ie'] = 'utf8'
-        qsDict['query'] = keyword
+        qs_dict = OrderedDict()
+        qs_dict['type'] = _search_type_article
+        qs_dict['page'] = page
+        qs_dict['ie'] = 'utf8'
+        qs_dict['query'] = keyword
+        qs_dict['interation'] = interation
         if timesn != 0:
-            qsDict['tsn'] = timesn
-            qsDict['ft'] = str(ft)
-            qsDict['et'] = str(et)
-        qsDict['interation'] = interation
+            qs_dict['tsn'] = timesn
+            qs_dict['ft'] = str(ft)
+            qs_dict['et'] = str(et)
 
         # TODO 账号内搜索
         # '账号内 http://weixin.sogou.com/weixin?type=2&ie=utf8&query=%E9%AB%98%E8%80%83&tsn=3&ft=&et=&interation=458754
@@ -83,7 +83,7 @@ class WechatSogouRequest(object):
         # qs['wxid'] = wxid
         # qs['usip'] = usip
 
-        return 'http://weixin.sogou.com/weixin?{}'.format(urlencode(qsDict))
+        return 'http://weixin.sogou.com/weixin?{}'.format(urlencode(qs_dict))
 
     @staticmethod
     def gen_search_gzh_url(keyword, page=1):
