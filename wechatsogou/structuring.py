@@ -348,7 +348,7 @@ class WechatSogouStructuring(object):
         }
 
     @staticmethod
-    def get_gzh_artilce_by_hot(text):
+    def get_gzh_article_by_hot(text):
         """从 首页热门搜索 提取公众号信息 和 文章列表信息
 
         Parameters

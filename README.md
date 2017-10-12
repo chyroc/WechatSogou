@@ -231,16 +231,16 @@ list of dict, dict:
 }
 ```
 
-### 解析最近文章页 - get_gzh_artilce_by_history
+### 解析最近文章页 - get_gzh_article_by_history
 
-![ws_api.search_article('南京航空航天大学')](https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_artilce_by_history.png)
+![ws_api.search_article('南京航空航天大学')](https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_article_by_history.png)
 
 - 使用
 ```
 In [1]: import wechatsogou
    ...:
    ...: ws_api =wechatsogou.WechatSogouAPI()
-   ...: ws_api.get_gzh_artilce_by_history('南航青年志愿者')
+   ...: ws_api.get_gzh_article_by_history('南航青年志愿者')
    ...:
 Out[1]:
 {
@@ -315,9 +315,9 @@ Out[1]:
 
 ```
 
-### 解析 首页热门 页 - get_gzh_artilce_by_hot
+### 解析 首页热门 页 - get_gzh_article_by_hot
 
-![ws_api.get_gzh_artilce_by_hot(WechatSogouConst.hot_index.food)](https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_artilce_by_hot.png)
+![ws_api.get_gzh_article_by_hot(WechatSogouConst.hot_index.food)](https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_article_by_hot.png)
 
 - 使用
 ```
@@ -325,7 +325,7 @@ In [1]: from pprint import pprint
    ...: from wechatsogou import WechatSogouAPI, WechatSogouConst
    ...:
    ...: ws_api = WechatSogouAPI()
-   ...: gzh_articles = ws_api.get_gzh_artilce_by_hot(WechatSogouConst.hot_index.food)
+   ...: gzh_articles = ws_api.get_gzh_article_by_hot(WechatSogouConst.hot_index.food)
    ...: for i in gzh_articles:
    ...:     pprint(i)
    ...:

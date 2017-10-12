@@ -258,7 +258,7 @@ class WechatSogouAPI(object):
 
         return WechatSogouStructuring.get_article_by_search(resp.text)
 
-    def get_gzh_artilce_by_history(self, keyword=None, url=None,
+    def get_gzh_article_by_history(self, keyword=None, url=None,
                                    unlock_callback_sogou=None,
                                    identify_image_callback_sogou=None,
                                    unlock_callback_weixin=None,
@@ -335,7 +335,7 @@ class WechatSogouAPI(object):
 
         return WechatSogouStructuring.get_gzh_info_and_article_by_history(resp.text)
 
-    def get_gzh_artilce_by_hot(self, hot_index, page=1, unlock_callback=None, identify_image_callback=None):
+    def get_gzh_article_by_hot(self, hot_index, page=1, unlock_callback=None, identify_image_callback=None):
         """获取 首页热门文章
 
         Parameters
@@ -374,7 +374,7 @@ class WechatSogouAPI(object):
                                     identify_image_callback=identify_image_callback)
 
         resp.encoding = 'utf-8'
-        return WechatSogouStructuring.get_gzh_artilce_by_hot(resp.text)
+        return WechatSogouStructuring.get_gzh_article_by_hot(resp.text)
 
     def get_article_content(self):
         """获取文章原文，避免临时链接失效
