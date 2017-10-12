@@ -1,7 +1,6 @@
 # Change Log
 
-## [v4.0.0](https://github.com/Chyroc/WechatSogou/tree/v4.0.0)
-
+## [v4.0.0](https://github.com/Chyroc/WechatSogou/tree/v4.0.0) (2017-10-12)
 [Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v3.1.2...v4.0.0)
 
 **Closed issues:**
