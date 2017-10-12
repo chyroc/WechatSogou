@@ -1,5 +1,24 @@
 # Change Log
 
+## [v4.0.0](https://github.com/Chyroc/WechatSogou/tree/v4.0.0)
+
+[Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v3.1.2...v4.0.0)
+
+**Closed issues:**
+
+- get\_gzh\_artilce\_by\_history 名字修改 [\#149](https://github.com/Chyroc/WechatSogou/issues/149)
+- 按照示例跑出来是乱码 [\#148](https://github.com/Chyroc/WechatSogou/issues/148)
+- 请问在阿里云ECS上出现需要输入验证码的时候该怎么解决？ [\#146](https://github.com/Chyroc/WechatSogou/issues/146)
+- get\_gzh\_artilce\_by\_history 出现填写code [\#144](https://github.com/Chyroc/WechatSogou/issues/144)
+- 验证码识别预估什么时候完成啊 [\#131](https://github.com/Chyroc/WechatSogou/issues/131)
+- 脚本定期检查python版本更新 [\#128](https://github.com/Chyroc/WechatSogou/issues/128)
+
+**Merged pull requests:**
+
+- fix typo artilce to article fix https://github.com/Chyroc/WechatSogou… [\#150](https://github.com/Chyroc/WechatSogou/pull/150) ([Chyroc](https://github.com/Chyroc))
+- remove is\_need\_unlock [\#147](https://github.com/Chyroc/WechatSogou/pull/147) ([Chyroc](https://github.com/Chyroc))
+- Release/v3.1.2 [\#143](https://github.com/Chyroc/WechatSogou/pull/143) ([Chyroc](https://github.com/Chyroc))
+
 ## [v3.1.2](https://github.com/Chyroc/WechatSogou/tree/v3.1.2) (2017-09-06)
 [Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v3.1.1...v3.1.2)
 
