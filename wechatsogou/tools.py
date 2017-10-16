@@ -40,6 +40,20 @@ def get_elem_text(elem):
     return ''.join([node.strip() for node in elem.itertext()])
 
 
+def get_first_of_element(element, sub):
+    """抽取lxml.etree库中elem对象中文字
+
+    Args:
+        element: lxml.etree.Element
+        sub: str
+
+    Returns:
+        elem中文字
+    """
+    profile_img = element.xpath(sub)
+    return profile_img[0] if profile_img else ''
+
+
 def get_encoding_from_reponse(r):
     """获取requests库get或post返回的对象编码
 
