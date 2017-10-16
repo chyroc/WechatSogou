@@ -52,11 +52,11 @@ class WechatSogouStructuring(object):
             url = li.xpath('div/div[1]/a/@href')
             headimage = li.xpath('div/div[1]/a/img/@src')
             wechat_name = get_elem_text(get_first_of_element(li, 'div/div[2]/p[1]'))
-            info = get_first_of_element(get_elem_text(li, 'div/div[2]/p[2]'))
+            info = get_elem_text(get_first_of_element(li, 'div/div[2]/p[2]'))
             post_perm = 0  # TODO 月发文 <script>var account_anti_url = "/websearch/weixin/pc/anti_account.jsp?.......";</script>
             qrcode = li.xpath('div/div[3]/span/img[1]/@src')
-            introduction = get_first_of_element(get_elem_text(li, 'dl[1]/dd'))
-            authentication = li.xpath('dl[2]/dd/text()')
+            introduction = get_elem_text(get_first_of_element(li, 'dl[1]/dd'))
+            authentication = get_first_of_element(li, 'dl[2]/dd/text()')
             relist.append({
                 'open_id': headimage[0].split('/')[-1],
                 'profile_url': url[0],
@@ -66,7 +66,7 @@ class WechatSogouStructuring(object):
                 'post_perm': post_perm,
                 'qrcode': qrcode[0] if qrcode else '',
                 'introduction': introduction.replace('red_beg', '').replace('red_end', ''),
-                'authentication': authentication[0] if authentication else ''
+                'authentication': authentication
             })
         return relist
 
@@ -164,10 +164,10 @@ class WechatSogouStructuring(object):
             time = list_or_empty(time)
             time = re.findall('timeConvert\(\'(.*?)\'\)', time)
             time = list_or_empty(time, int)
-            profile_url = gzh_info.xpath('@href')
-            headimage = gzh_info.xpath('@data-headimage')
-            wechat_name = gzh_info.xpath('text()')
-            gzh_isv = gzh_info.xpath('@data-isv')
+            profile_url = get_first_of_element(gzh_info, '@href')
+            headimage = get_first_of_element(gzh_info, '@data-headimage')
+            wechat_name = get_first_of_element(gzh_info, 'text()')
+            gzh_isv = get_first_of_element(gzh_info, '@data-isv', int)
 
             articles.append({
                 'article': {
@@ -178,10 +178,10 @@ class WechatSogouStructuring(object):
                     'time': time
                 },
                 'gzh': {
-                    'profile_url': list_or_empty(profile_url),
-                    'headimage': list_or_empty(headimage),
-                    'wechat_name': list_or_empty(wechat_name),
-                    'isv': list_or_empty(gzh_isv, int),
+                    'profile_url': profile_url,
+                    'headimage': headimage,
+                    'wechat_name': wechat_name,
+                    'isv': gzh_isv,
                 }
             })
         return articles
@@ -210,18 +210,18 @@ class WechatSogouStructuring(object):
         page = etree.HTML(text)
         profile_area = get_first_of_element(page, '//div[@class="profile_info_area"]')
 
-        profile_img = profile_area.xpath('div[1]/span/img/@src')
-        profile_name = profile_area.xpath('div[1]/div/strong/text()')
+        profile_img = get_first_of_element(profile_area, 'div[1]/span/img/@src')
+        profile_name = get_first_of_element(profile_area, 'div[1]/div/strong/text()')
         profile_wechat_id = get_first_of_element(profile_area, 'div[1]/div/p/text()')
-        profile_desc = profile_area.xpath('ul/li[1]/div/text()')
-        profile_principal = profile_area.xpath('ul/li[2]/div/text()')
+        profile_desc = get_first_of_element(profile_area, 'ul/li[1]/div/text()')
+        profile_principal = get_first_of_element(profile_area, 'ul/li[2]/div/text()')
 
         return {
-            'wechat_name': profile_name[0].strip(),
+            'wechat_name': profile_name.strip(),
             'wechat_id': profile_wechat_id.replace('微信号: ', '').strip('\n'),
-            'introduction': profile_desc[0],
-            'authentication': profile_principal[0],
-            'headimage': profile_img[0]
+            'introduction': profile_desc,
+            'authentication': profile_principal,
+            'headimage': profile_img
         }
 
     @staticmethod
@@ -381,13 +381,13 @@ class WechatSogouStructuring(object):
         gzh_article_list = []
         for li in lis:
             url = li.xpath('div[1]/h4/a/@href')
-            title = li.xpath('div[1]/h4/a/div/text()')
-            abstract = li.xpath('div[1]/p[1]/text()')
+            title = get_first_of_element(li, 'div[1]/h4/a/div/text()')
+            abstract = get_first_of_element(li, 'div[1]/p[1]/text()')
 
             xpath_time = get_first_of_element(li, 'div[1]/p[2]')
             open_id = xpath_time.xpath('span/@data-openid')
             headimage = xpath_time.xpath('span/@data-headimage')
-            gzh_name = xpath_time.xpath('span/text()')
+            gzh_name = get_first_of_element(xpath_time, 'span/text()')
             send_time = xpath_time.xpath('a/span/@data-lastmodified')
             main_img = li.xpath('div[2]/a/img/@src')
 
@@ -399,12 +399,12 @@ class WechatSogouStructuring(object):
             gzh_article_list.append({
                 'gzh': {
                     'headimage': headimage[0],
-                    'wechat_name': gzh_name[0],
+                    'wechat_name': gzh_name,
                 },
                 'article': {
                     'url': url[0],
-                    'title': title[0],
-                    'abstract': abstract[0],
+                    'title': title,
+                    'abstract': abstract,
                     'time': send_time,
                     'open_id': open_id[0],
                     'main_img': main_img[0]
