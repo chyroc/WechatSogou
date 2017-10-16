@@ -1,5 +1,17 @@
 # Change Log
 
+## [v4.0.1](https://github.com/Chyroc/WechatSogou/tree/v4.0.1) (2017-10-16)
+[Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v4.0.0...v4.0.1)
+
+**Closed issues:**
+
+- ws\_api.get\_gzh\_article\_by\_history\(keywords\)接口返回Index Error [\#152](https://github.com/Chyroc/WechatSogou/issues/152)
+
+**Merged pull requests:**
+
+- Fix lxml no data [\#153](https://github.com/Chyroc/WechatSogou/pull/153) ([Chyroc](https://github.com/Chyroc))
+- Release/v4.0.0 [\#151](https://github.com/Chyroc/WechatSogou/pull/151) ([Chyroc](https://github.com/Chyroc))
+
 ## [v4.0.0](https://github.com/Chyroc/WechatSogou/tree/v4.0.0) (2017-10-12)
 [Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v3.1.2...v4.0.0)
 
