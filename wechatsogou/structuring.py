@@ -49,22 +49,22 @@ class WechatSogouStructuring(object):
         lis = page.xpath('//ul[@class="news-list2"]/li')
         relist = []
         for li in lis:
-            url = li.xpath('div/div[1]/a/@href')
-            headimage = li.xpath('div/div[1]/a/img/@src')
+            url = get_first_of_element(li, 'div/div[1]/a/@href')
+            headimage = get_first_of_element(li, 'div/div[1]/a/img/@src')
             wechat_name = get_elem_text(get_first_of_element(li, 'div/div[2]/p[1]'))
             info = get_elem_text(get_first_of_element(li, 'div/div[2]/p[2]'))
             post_perm = 0  # TODO 月发文 <script>var account_anti_url = "/websearch/weixin/pc/anti_account.jsp?.......";</script>
-            qrcode = li.xpath('div/div[3]/span/img[1]/@src')
+            qrcode = get_first_of_element(li, 'div/div[3]/span/img[1]/@src')
             introduction = get_elem_text(get_first_of_element(li, 'dl[1]/dd'))
             authentication = get_first_of_element(li, 'dl[2]/dd/text()')
             relist.append({
-                'open_id': headimage[0].split('/')[-1],
-                'profile_url': url[0],
-                'headimage': headimage[0],
+                'open_id': headimage.split('/')[-1],
+                'profile_url': url,
+                'headimage': headimage,
                 'wechat_name': wechat_name.replace('red_beg', '').replace('red_end', ''),
                 'wechat_id': info.replace('微信号：', ''),
                 'post_perm': post_perm,
-                'qrcode': qrcode[0] if qrcode else '',
+                'qrcode': qrcode,
                 'introduction': introduction.replace('red_beg', '').replace('red_end', ''),
                 'authentication': authentication
             })
@@ -132,36 +132,31 @@ class WechatSogouStructuring(object):
 
         articles = []
         for li in lis:
-            url = li.xpath('div[1]/a/@href')
+            url = get_first_of_element(li, 'div[1]/a/@href')
             if url:
-                title = li.xpath('div[2]/h3/a')
+                title = get_first_of_element(li, 'div[2]/h3/a')
                 imgs = li.xpath('div[1]/a/img/@src')
-                abstract = li.xpath('div[2]/p')
-                time = li.xpath('div[2]/div/span/script/text()')
-                gzh_info = get_first_of_element(li, 'div[2]/div/a')
+                abstract = get_first_of_element(li, 'div[2]/p')
+                time = get_first_of_element(li, 'div[2]/div/span/script/text()')
+                gzh_info = li.xpath('div[2]/div/a')
             else:
-                url = li.xpath('div/h3/a/@href')
-                title = li.xpath('div/h3/a')
+                url = get_first_of_element(li, 'div/h3/a/@href')
+                title = get_first_of_element(li, 'div/h3/a')
                 imgs = []
                 spans = li.xpath('div/div[1]/a')
                 for span in spans:
                     img = span.xpath('span/img/@src')
                     if img:
                         imgs.append(img)
-                abstract = li.xpath('div/p')
-                time = li.xpath('div/div[2]/span/script/text()')
-                gzh_info = get_first_of_element(li, 'div/div[2]/a')
+                abstract = get_first_of_element(li, 'div/p')
+                time = get_first_of_element(li, 'div/div[2]/span/script/text()')
+                gzh_info = li.xpath('div/div[2]/a')
 
             if title:
-                title = get_elem_text(title[0]).replace("red_beg", "").replace("red_end", "")
-            else:
-                title = ''
+                title = get_elem_text(title).replace("red_beg", "").replace("red_end", "")
             if abstract:
-                abstract = get_elem_text(abstract[0]).replace("red_beg", "").replace("red_end", "")
-            else:
-                abstract = ''
+                abstract = get_elem_text(abstract).replace("red_beg", "").replace("red_end", "")
 
-            time = list_or_empty(time)
             time = re.findall('timeConvert\(\'(.*?)\'\)', time)
             time = list_or_empty(time, int)
             profile_url = get_first_of_element(gzh_info, '@href')
@@ -172,7 +167,7 @@ class WechatSogouStructuring(object):
             articles.append({
                 'article': {
                     'title': title,
-                    'url': list_or_empty(url),
+                    'url': url,
                     'imgs': imgs,
                     'abstract': abstract,
                     'time': time
@@ -380,16 +375,15 @@ class WechatSogouStructuring(object):
         lis = page.xpath('/html/body/li')
         gzh_article_list = []
         for li in lis:
-            url = li.xpath('div[1]/h4/a/@href')
+            url = get_first_of_element(li, 'div[1]/h4/a/@href')
             title = get_first_of_element(li, 'div[1]/h4/a/div/text()')
             abstract = get_first_of_element(li, 'div[1]/p[1]/text()')
-
             xpath_time = get_first_of_element(li, 'div[1]/p[2]')
-            open_id = xpath_time.xpath('span/@data-openid')
-            headimage = xpath_time.xpath('span/@data-headimage')
+            open_id = get_first_of_element(xpath_time, 'span/@data-openid')
+            headimage = get_first_of_element(xpath_time, 'span/@data-headimage')
             gzh_name = get_first_of_element(xpath_time, 'span/text()')
             send_time = xpath_time.xpath('a/span/@data-lastmodified')
-            main_img = li.xpath('div[2]/a/img/@src')
+            main_img = get_first_of_element(li, 'div[2]/a/img/@src')
 
             try:
                 send_time = int(send_time[0])
@@ -398,16 +392,16 @@ class WechatSogouStructuring(object):
 
             gzh_article_list.append({
                 'gzh': {
-                    'headimage': headimage[0],
+                    'headimage': headimage,
                     'wechat_name': gzh_name,
                 },
                 'article': {
-                    'url': url[0],
+                    'url': url,
                     'title': title,
                     'abstract': abstract,
                     'time': send_time,
-                    'open_id': open_id[0],
-                    'main_img': main_img[0]
+                    'open_id': open_id,
+                    'main_img': main_img
                 }
             })
 
