@@ -1,6 +1,132 @@
 Change Log
 ==========
 
+`v4.0.1 <https://github.com/Chyroc/WechatSogou/tree/v4.0.1>`__ (2017-10-16)
+---------------------------------------------------------------------------
+
+`Full
+Changelog <https://github.com/Chyroc/WechatSogou/compare/v4.0.0...v4.0.1>`__
+
+**Closed issues:**
+
+-  ws\_api.get\_gzh\_article\_by\_history(keywords)接口返回Index Error
+   `#152 <https://github.com/Chyroc/WechatSogou/issues/152>`__
+
+**Merged pull requests:**
+
+-  Fix lxml no data
+   `#153 <https://github.com/Chyroc/WechatSogou/pull/153>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  Release/v4.0.0
+   `#151 <https://github.com/Chyroc/WechatSogou/pull/151>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+
+`v4.0.0 <https://github.com/Chyroc/WechatSogou/tree/v4.0.0>`__ (2017-10-12)
+---------------------------------------------------------------------------
+
+`Full
+Changelog <https://github.com/Chyroc/WechatSogou/compare/v3.1.2...v4.0.0>`__
+
+**Closed issues:**
+
+-  get\_gzh\_artilce\_by\_history 名字修改
+   `#149 <https://github.com/Chyroc/WechatSogou/issues/149>`__
+-  按照示例跑出来是乱码
+   `#148 <https://github.com/Chyroc/WechatSogou/issues/148>`__
+-  请问在阿里云ECS上出现需要输入验证码的时候该怎么解决？
+   `#146 <https://github.com/Chyroc/WechatSogou/issues/146>`__
+-  get\_gzh\_artilce\_by\_history 出现填写code
+   `#144 <https://github.com/Chyroc/WechatSogou/issues/144>`__
+-  验证码识别预估什么时候完成啊
+   `#131 <https://github.com/Chyroc/WechatSogou/issues/131>`__
+-  脚本定期检查python版本更新
+   `#128 <https://github.com/Chyroc/WechatSogou/issues/128>`__
+
+**Merged pull requests:**
+
+-  fix typo artilce to article fix
+   https://github.com/Chyroc/WechatSogou…
+   `#150 <https://github.com/Chyroc/WechatSogou/pull/150>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  remove is\_need\_unlock
+   `#147 <https://github.com/Chyroc/WechatSogou/pull/147>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  Release/v3.1.2
+   `#143 <https://github.com/Chyroc/WechatSogou/pull/143>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+
+`v3.1.2 <https://github.com/Chyroc/WechatSogou/tree/v3.1.2>`__ (2017-09-06)
+---------------------------------------------------------------------------
+
+`Full
+Changelog <https://github.com/Chyroc/WechatSogou/compare/v3.1.1...v3.1.2>`__
+
+**Closed issues:**
+
+-  有代理ip更换的参数吗
+   `#141 <https://github.com/Chyroc/WechatSogou/issues/141>`__
+-  字符 logo 怎么生成的..
+   `#140 <https://github.com/Chyroc/WechatSogou/issues/140>`__
+-  求教 验证码回掉咋用 有没有示例
+   `#137 <https://github.com/Chyroc/WechatSogou/issues/137>`__
+-  测试的时候识别结果存储起来做分析
+   `#123 <https://github.com/Chyroc/WechatSogou/issues/123>`__
+
+**Merged pull requests:**
+
+-  Adding an optional proxy list for api requests
+   `#142 <https://github.com/Chyroc/WechatSogou/pull/142>`__
+   (`jeremylinlin <https://github.com/jeremylinlin>`__)
+-  Release/v3.1.1
+   `#139 <https://github.com/Chyroc/WechatSogou/pull/139>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+
+`v3.1.1 <https://github.com/Chyroc/WechatSogou/tree/v3.1.1>`__ (2017-08-15)
+---------------------------------------------------------------------------
+
+`Full
+Changelog <https://github.com/Chyroc/WechatSogou/compare/v3.1.0...v3.1.1>`__
+
+**Fixed bugs:**
+
+-  命令行和pycharm文件测试文件路径不一致的问题
+   `#121 <https://github.com/Chyroc/WechatSogou/issues/121>`__
+
+**Closed issues:**
+
+-  作者有代理的api没有呀
+   `#136 <https://github.com/Chyroc/WechatSogou/issues/136>`__
+-  search\_article时只能获取到第10页，超过了获取到的就是空了
+   `#132 <https://github.com/Chyroc/WechatSogou/issues/132>`__
+
+**Merged pull requests:**
+
+-  返回open id `#138 <https://github.com/Chyroc/WechatSogou/pull/138>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  add slack invite channel link
+   `#135 <https://github.com/Chyroc/WechatSogou/pull/135>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  fix test file not equal in shell vs ide (fixes 121)
+   `#130 <https://github.com/Chyroc/WechatSogou/pull/130>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  search articles from wap
+   `#129 <https://github.com/Chyroc/WechatSogou/pull/129>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  use hand input to unlock if not in ci env
+   `#114 <https://github.com/Chyroc/WechatSogou/pull/114>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  fix docs `#113 <https://github.com/Chyroc/WechatSogou/pull/113>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  Change/refactor unlock captcha
+   `#112 <https://github.com/Chyroc/WechatSogou/pull/112>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  add readthedocs docs
+   `#111 <https://github.com/Chyroc/WechatSogou/pull/111>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  Release/v3.1.0
+   `#110 <https://github.com/Chyroc/WechatSogou/pull/110>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+
 `v3.1.0 <https://github.com/Chyroc/WechatSogou/tree/v3.1.0>`__ (2017-07-29)
 ---------------------------------------------------------------------------
 

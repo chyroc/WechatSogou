@@ -9,7 +9,7 @@
 
 """
 WechatSogou Crawler Library
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 """
 
@@ -31,7 +31,7 @@ __all__ = [
     'WechatSogouRequestsException']
 
 __title__ = 'wechatsogou'
-__version__ = "3.1.0"
+__version__ = "4.0.1"
 __author__ = 'Chyroc'
 
 """doc string

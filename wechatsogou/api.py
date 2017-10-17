@@ -21,24 +21,36 @@ from wechatsogou.identify_image import (
 
 
 class WechatSogouAPI(object):
-    def __init__(self, captcha_break_time=1):
+    def __init__(self, captcha_break_time=1, proxies=None):
+        """初始化参数
+
+        Parameters
+        ----------
+        captcha_break_time : int
+            验证码输入错误重试次数
+        proxies : dict
+            代理
+        """
         assert isinstance(captcha_break_time, int) and 0 < captcha_break_time < 20
 
         self.captcha_break_times = captcha_break_time
+        self.proxies = proxies
 
     def __set_cookie(self, suv=None, snuid=None, referer=None):
         suv = ws_cache.get('suv') if suv is None else suv
         snuid = ws_cache.get('snuid') if snuid is None else snuid
 
-        return {'Cookie': 'SUV={};SNUID={};'.format(suv, snuid)} if referer is None else {
-            'Cookie': 'SUV={};SNUID={};'.format(suv, snuid), 'Referer': referer}
+        _headers = {'Cookie': 'SUV={};SNUID={};'.format(suv, snuid)}
+        if referer is not None:
+            _headers['Referer'] = referer
+        return _headers
 
     def __set_cache(self, suv, snuid):
         ws_cache.set('suv', suv)
         ws_cache.set('snuid', snuid)
 
     def __get(self, url, session, headers):
-        resp = session.get(url, headers=headers)
+        resp = session.get(url, headers=headers, proxies=self.proxies)
 
         if not resp.ok:
             raise WechatSogouRequestsException('WechatSogouAPI get error', resp)
@@ -78,9 +90,8 @@ class WechatSogouAPI(object):
                 '[WechatSogouAPI identify image] code: {ret}, msg: {errmsg}, cookie_count: {cookie_count}'.format(
                     ret=r_unlock.get('ret'), errmsg=r_unlock.get('errmsg'), cookie_count=r_unlock.get('cookie_count')))
 
-    def __get_by_unlock(self, url, referer=None, is_need_unlock=None, unlock_platform=None, unlock_callback=None,
+    def __get_by_unlock(self, url, referer=None, unlock_platform=None, unlock_callback=None,
                         identify_image_callback=None):
-        assert is_need_unlock is None or callable(is_need_unlock)
         assert unlock_platform is None or callable(unlock_platform)
 
         if identify_image_callback is None:
@@ -91,7 +102,7 @@ class WechatSogouAPI(object):
         session = requests.session()
         resp = self.__get(url, session, headers=self.__set_cookie(referer=referer))
 
-        if is_need_unlock(resp):
+        if 'antispider' in resp.url or '请输入验证码' in resp.text:
             for i in range(self.captcha_break_times):
                 try:
                     unlock_platform(url, resp, session, unlock_callback, identify_image_callback)
@@ -122,6 +133,7 @@ class WechatSogouAPI(object):
         -------
         dict or None
             {
+                'open_id': '', # 微信号唯一ID
                 'profile_url': '',  # 最近10条群发页链接
                 'headimage': '',  # 头像
                 'wechat_name': '',  # 名称
@@ -159,6 +171,7 @@ class WechatSogouAPI(object):
         -------
         list[dict]
             {
+                'open_id': '', # 微信号唯一ID
                 'profile_url': '',  # 最近10条群发页链接
                 'headimage': '',  # 头像
                 'wechat_name': '',  # 名称
@@ -176,7 +189,6 @@ class WechatSogouAPI(object):
         """
         url = WechatSogouRequest.gen_search_gzh_url(keyword, page)
         resp = self.__get_by_unlock(url,
-                                    is_need_unlock=lambda x: 'antispider' in x.url,
                                     unlock_platform=self.__unlock_sogou,
                                     unlock_callback=unlock_callback,
                                     identify_image_callback=identify_image_callback)
@@ -240,14 +252,13 @@ class WechatSogouAPI(object):
         """
         url = WechatSogouRequest.gen_search_article_url(keyword, page, timesn, article_type, ft, et)
         resp = self.__get_by_unlock(url, WechatSogouRequest.gen_search_article_url(keyword),
-                                    is_need_unlock=lambda x: 'antispider' in x.url,
                                     unlock_platform=self.__unlock_sogou,
                                     unlock_callback=unlock_callback,
                                     identify_image_callback=identify_image_callback)
 
         return WechatSogouStructuring.get_article_by_search(resp.text)
 
-    def get_gzh_artilce_by_history(self, keyword=None, url=None,
+    def get_gzh_article_by_history(self, keyword=None, url=None,
                                    unlock_callback_sogou=None,
                                    identify_image_callback_sogou=None,
                                    unlock_callback_weixin=None,
@@ -318,14 +329,13 @@ class WechatSogouAPI(object):
             url = gzh_list['profile_url']
 
         resp = self.__get_by_unlock(url, WechatSogouRequest.gen_search_article_url(keyword),
-                                    is_need_unlock=lambda x: '请输入验证码' in x.text,
                                     unlock_platform=self.__unlock_wechat,
                                     unlock_callback=unlock_callback_weixin,
                                     identify_image_callback=identify_image_callback_weixin)
 
         return WechatSogouStructuring.get_gzh_info_and_article_by_history(resp.text)
 
-    def get_gzh_artilce_by_hot(self, hot_index, page=1, unlock_callback=None, identify_image_callback=None):
+    def get_gzh_article_by_hot(self, hot_index, page=1, unlock_callback=None, identify_image_callback=None):
         """获取 首页热门文章
 
         Parameters
@@ -359,13 +369,12 @@ class WechatSogouAPI(object):
 
         url = WechatSogouRequest.gen_hot_url(hot_index, page)
         resp = self.__get_by_unlock(url,
-                                    is_need_unlock=lambda x: 'antispider' in x.url,
                                     unlock_platform=self.__unlock_sogou,
                                     unlock_callback=unlock_callback,
                                     identify_image_callback=identify_image_callback)
 
         resp.encoding = 'utf-8'
-        return WechatSogouStructuring.get_gzh_artilce_by_hot(resp.text)
+        return WechatSogouStructuring.get_gzh_article_by_hot(resp.text)
 
     def get_article_content(self):
         """获取文章原文，避免临时链接失效

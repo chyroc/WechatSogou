@@ -29,6 +29,7 @@ class TestStructuringGzh(unittest.TestCase):
         post_perms = []
         introductions = []
         authentications = []
+        open_ids = []
         assert_equal(10, len(gzh_list))
         for gzh in gzh_list:
             names.append(gzh['wechat_name'])
@@ -36,11 +37,23 @@ class TestStructuringGzh(unittest.TestCase):
             post_perms.append(gzh['post_perm'])
             introductions.append(gzh['introduction'])
             authentications.append(gzh['authentication'])
+            open_ids.append(gzh['open_id'])
 
             assert_in('mp.weixin.qq.com/profile?src=3&timestamp=', gzh['profile_url'])
             assert_in('mp.weixin.qq.com/rr?src=', gzh['qrcode'])
             assert_in('img01.sogoucdn.com/', gzh['headimage'])
 
+        assert_equal(['oIWsFt6fv4FH0OBNCyoonNoAp2OM',
+                      'oIWsFtzwnqHRVPsRY-eEzPo344jQ',
+                      'oIWsFt_PvlvuqFxQFPbOO26_GQh4',
+                      'oIWsFtzpOSqygkGiyzj1vVGi2zM4',
+                      'oIWsFt-lCZYAtfVXRykjgsWZMoJA',
+                      'oIWsFtzJBFA82fTPb7xU-gkPiyqA',
+                      'oIWsFt_wgF0dHou131y47qIMcuM0',
+                      'oIWsFt67sO47_fHfOFQC0rBHhxcY',
+                      'oIWsFt5Kltl1uXsy8fhj96eIVen8',
+                      'oIWsFt-2JeqhMEEVQuFw_geRzmbY'],
+                     open_ids)
         assert_equal(['山东高考指南',
                       '高考家长圈',
                       '河南高考指南',
@@ -236,24 +249,24 @@ class TestStructuringGzh(unittest.TestCase):
         assert_in('gzh', gzh_article_list)
         assert_in('article', gzh_article_list)
 
-    def test_get_gzh_artilce_by_hot(self):
+    def test_get_gzh_article_by_hot(self):
         file_name = os.path.join(fake_data_path, 'wapindex-wap-0612-wap_8-0.html')
         with io.open(file_name, encoding='utf-8') as f:
-            gzh_artilce_by_hot = f.read()
+            gzh_article_by_hot = f.read()
 
-            gzh_artilces = WechatSogouStructuring.get_gzh_artilce_by_hot(gzh_artilce_by_hot)
+            gzh_articles = WechatSogouStructuring.get_gzh_article_by_hot(gzh_article_by_hot)
 
-        for gzh_artilce in gzh_artilces:
-            assert_in('gzh', gzh_artilce)
-            assert_in('article', gzh_artilce)
-            assert_in('http://mp.weixin.qq.com/s?src=', gzh_artilce['article']['url'])
-        assert_greater_equal(len(gzh_artilces), 10)
+        for gzh_article in gzh_articles:
+            assert_in('gzh', gzh_article)
+            assert_in('article', gzh_article)
+            assert_in('http://mp.weixin.qq.com/s?src=', gzh_article['article']['url'])
+        assert_greater_equal(len(gzh_articles), 10)
 
         wechat_names = []
         headimages = []
         titles = []
         times = []
-        for i in gzh_artilces:
+        for i in gzh_articles:
             wechat_names.append(i['gzh']['wechat_name'])
             headimages.append(i['gzh']['headimage'])
             titles.append(i['article']['title'])
@@ -303,15 +316,15 @@ class TestStructuringGzh(unittest.TestCase):
         with io.open(file_name, encoding='utf-8') as f:
             wap_json = json.load(f)
 
-        gzh_artilces = WechatSogouStructuring.get_article_by_search_wap(gaokao_keyword, wap_json)
-        assert_equal(10, len(gzh_artilces))
+        gzh_articles = WechatSogouStructuring.get_article_by_search_wap(gaokao_keyword, wap_json)
+        assert_equal(10, len(gzh_articles))
 
         titles = []
         abstracts = []
         gzh_names = []
         isvs = []
         open_ids = []
-        for i in gzh_artilces:
+        for i in gzh_articles:
             assert_in('gzh', i)
             assert_in('article', i)
 

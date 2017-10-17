@@ -25,8 +25,13 @@
 
 [CHANGELOG](./CHANGELOG.md)
 
-# 交流QQ群
+# 交流分享
+- QQ群
+
 <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=2c888d2a84978b1fe863482166b9fe5e6418ae72eb2bf727905734d6af654fa5"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Github搜狗微信爬虫交流" title="Github搜狗微信爬虫交流">132955136</a>
+- Slack
+
+点击加入[wechatsogou slack channel](https://join.slack.com/t/wechatsogou/shared_invite/MjIxNjk4NzY5NzE1LTE1MDE3NzQwNDItNTcxOWUxMjFjNg)
 
 # 赞助作者
 甲鱼说，咖啡是灵魂的饮料，买点咖啡
@@ -51,13 +56,26 @@ pip install wechatsogou --upgrade
 
 # 使用
 
-### 引用
+### 初始化 API
 
 ```python
 import wechatsogou
 
-wechats = wechatsogou.WechatSogouAPI()
+# 可配置参数
+
+# 直连
+ws_api = wechatsogou.WechatSogouAPI()
+
+# 验证码输入错误的重试次数，默认为1
+ws_api = wechatsogou.WechatSogouAPI(captcha_break_time=3)
+
+# 配置代理，代理列表中至少需包含1个 HTTPS 协议的代理, 并确保代理可用
+ws_api = wechatsogou.WechatSogouAPI(proxies={
+    "http": "127.0.0.0.1:8888",
+    "https": "127.0.0.0.1:8888",
+})
 ```
+
 
 ### 获取特定公众号信息 - get_gzh_info
 
@@ -204,16 +222,16 @@ list of dict, dict:
 }
 ```
 
-### 解析最近文章页 - get_gzh_artilce_by_history
+### 解析最近文章页 - get_gzh_article_by_history
 
-![ws_api.search_article('南京航空航天大学')](https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_artilce_by_history.png)
+![ws_api.search_article('南京航空航天大学')](https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_article_by_history.png)
 
 - 使用
 ```
 In [1]: import wechatsogou
    ...:
    ...: ws_api =wechatsogou.WechatSogouAPI()
-   ...: ws_api.get_gzh_artilce_by_history('南航青年志愿者')
+   ...: ws_api.get_gzh_article_by_history('南航青年志愿者')
    ...:
 Out[1]:
 {
@@ -288,9 +306,9 @@ Out[1]:
 
 ```
 
-### 解析 首页热门 页 - get_gzh_artilce_by_hot
+### 解析 首页热门 页 - get_gzh_article_by_hot
 
-![ws_api.get_gzh_artilce_by_hot(WechatSogouConst.hot_index.food)](https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_artilce_by_hot.png)
+![ws_api.get_gzh_article_by_hot(WechatSogouConst.hot_index.food)](https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_article_by_hot.png)
 
 - 使用
 ```
@@ -298,7 +316,7 @@ In [1]: from pprint import pprint
    ...: from wechatsogou import WechatSogouAPI, WechatSogouConst
    ...:
    ...: ws_api = WechatSogouAPI()
-   ...: gzh_articles = ws_api.get_gzh_artilce_by_hot(WechatSogouConst.hot_index.food)
+   ...: gzh_articles = ws_api.get_gzh_article_by_hot(WechatSogouConst.hot_index.food)
    ...: for i in gzh_articles:
    ...:     pprint(i)
    ...:

@@ -26,10 +26,15 @@
 
 `CHANGELOG <./CHANGELOG.md>`__
 
-交流QQ群
+交流分享
 ========
 
-132955136
+-  QQ群
+
+132955136 - Slack
+
+点击加入\ `wechatsogou slack
+channel <https://join.slack.com/t/wechatsogou/shared_invite/MjIxNjk4NzY5NzE1LTE1MDE3NzQwNDItNTcxOWUxMjFjNg>`__
 
 赞助作者
 ========
@@ -70,14 +75,26 @@
 使用
 ====
 
-引用
-~~~~
+初始化 API
+~~~~~~~~~~
 
 .. code:: python
 
     import wechatsogou
 
-    wechats = wechatsogou.WechatSogouAPI()
+    # 可配置参数
+
+    # 直连
+    ws_api = wechatsogou.WechatSogouAPI()
+
+    # 验证码输入错误的重试次数，默认为1
+    ws_api = wechatsogou.WechatSogouAPI(captcha_break_time=3)
+
+    # 配置代理，代理列表中至少需包含1个 HTTPS 协议的代理, 并确保代理可用
+    ws_api = wechatsogou.WechatSogouAPI(proxies={
+        "http": "127.0.0.0.1:8888",
+        "https": "127.0.0.0.1:8888",
+    })
 
 获取特定公众号信息 - get\_gzh\_info
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -241,10 +258,10 @@ list of dict, dict:
         }
     }
 
-解析最近文章页 - get\_gzh\_artilce\_by\_history
+解析最近文章页 - get\_gzh\_article\_by\_history
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. figure:: https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_artilce_by_history.png
+.. figure:: https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_article_by_history.png
    :alt: ws\_api.search\_article('南京航空航天大学')
 
    ws\_api.search\_article('南京航空航天大学')
@@ -256,7 +273,7 @@ list of dict, dict:
        In [1]: import wechatsogou
           ...:
           ...: ws_api =wechatsogou.WechatSogouAPI()
-          ...: ws_api.get_gzh_artilce_by_history('南航青年志愿者')
+          ...: ws_api.get_gzh_article_by_history('南航青年志愿者')
           ...:
        Out[1]:
        {
@@ -316,16 +333,16 @@ list of dict, dict:
 ::
 
 
-    ### 解析 首页热门 页 - get_gzh_artilce_by_hot
+    ### 解析 首页热门 页 - get_gzh_article_by_hot
 
-    ![ws_api.get_gzh_artilce_by_hot(WechatSogouConst.hot_index.food)](https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_artilce_by_hot.png)
+    ![ws_api.get_gzh_article_by_hot(WechatSogouConst.hot_index.food)](https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_article_by_hot.png)
 
     - 使用
 
 In [1]: from pprint import pprint ...: from wechatsogou import
 WechatSogouAPI, WechatSogouConst ...: ...: ws\_api = WechatSogouAPI()
 ...: gzh\_articles =
-ws\_api.get\_gzh\_artilce\_by\_hot(WechatSogouConst.hot\_index.food)
+ws\_api.get\_gzh\_article\_by\_hot(WechatSogouConst.hot\_index.food)
 ...: for i in gzh\_articles: ...: pprint(i) ...: { 'article': {
 'abstract':
 '闷热的夏天有什么事情能比吃上凉凉的甜品更惬意的呢？快一起动手做起来吧，简单方便，放冰箱冻一冻，那感觉~橙汁蒸木瓜木瓜1个（300-400克左右），橙子4个，枫糖浆20克（如果家里没有，也可以用蜂蜜、炼乳等代替），椰果适量。做法1．用削皮',

@@ -8,7 +8,7 @@ import json
 from lxml import etree
 from lxml.etree import XML
 
-from wechatsogou.tools import get_elem_text, list_or_empty, replace_html
+from wechatsogou.tools import get_elem_text, list_or_empty, replace_html, get_first_of_element
 from wechatsogou.five import str_to_bytes
 
 find_article_json_re = re.compile('var msgList = (.*?)}}]};')
@@ -34,6 +34,7 @@ class WechatSogouStructuring(object):
         -------
         list[dict]
             {
+                'open_id': '', # 微信号唯一ID
                 'profile_url': '',  # 最近10条群发页链接
                 'headimage': '',  # 头像
                 'wechat_name': '',  # 名称
@@ -48,23 +49,24 @@ class WechatSogouStructuring(object):
         lis = page.xpath('//ul[@class="news-list2"]/li')
         relist = []
         for li in lis:
-            url = li.xpath('div/div[1]/a/@href')
-            headimage = li.xpath('div/div[1]/a/img/@src')
-            wechat_name = get_elem_text(li.xpath('div/div[2]/p[1]')[0])
-            info = get_elem_text(li.xpath('div/div[2]/p[2]')[0])
+            url = get_first_of_element(li, 'div/div[1]/a/@href')
+            headimage = get_first_of_element(li, 'div/div[1]/a/img/@src')
+            wechat_name = get_elem_text(get_first_of_element(li, 'div/div[2]/p[1]'))
+            info = get_elem_text(get_first_of_element(li, 'div/div[2]/p[2]'))
             post_perm = 0  # TODO 月发文 <script>var account_anti_url = "/websearch/weixin/pc/anti_account.jsp?.......";</script>
-            qrcode = li.xpath('div/div[3]/span/img[1]/@src')
-            introduction = get_elem_text(li.xpath('dl[1]/dd')[0])
-            authentication = li.xpath('dl[2]/dd/text()')
+            qrcode = get_first_of_element(li, 'div/div[3]/span/img[1]/@src')
+            introduction = get_elem_text(get_first_of_element(li, 'dl[1]/dd'))
+            authentication = get_first_of_element(li, 'dl[2]/dd/text()')
             relist.append({
-                'profile_url': url[0],
-                'headimage': headimage[0],
+                'open_id': headimage.split('/')[-1],
+                'profile_url': url,
+                'headimage': headimage,
                 'wechat_name': wechat_name.replace('red_beg', '').replace('red_end', ''),
                 'wechat_id': info.replace('微信号：', ''),
                 'post_perm': post_perm,
-                'qrcode': qrcode[0] if qrcode else '',
+                'qrcode': qrcode,
                 'introduction': introduction.replace('red_beg', '').replace('red_end', ''),
-                'authentication': authentication[0] if authentication else ''
+                'authentication': authentication
             })
         return relist
 
@@ -130,56 +132,51 @@ class WechatSogouStructuring(object):
 
         articles = []
         for li in lis:
-            url = li.xpath('div[1]/a/@href')
+            url = get_first_of_element(li, 'div[1]/a/@href')
             if url:
-                title = li.xpath('div[2]/h3/a')
+                title = get_first_of_element(li, 'div[2]/h3/a')
                 imgs = li.xpath('div[1]/a/img/@src')
-                abstract = li.xpath('div[2]/p')
-                time = li.xpath('div[2]/div/span/script/text()')
+                abstract = get_first_of_element(li, 'div[2]/p')
+                time = get_first_of_element(li, 'div[2]/div/span/script/text()')
                 gzh_info = li.xpath('div[2]/div/a')[0]
             else:
-                url = li.xpath('div/h3/a/@href')
-                title = li.xpath('div/h3/a')
+                url = get_first_of_element(li, 'div/h3/a/@href')
+                title = get_first_of_element(li, 'div/h3/a')
                 imgs = []
                 spans = li.xpath('div/div[1]/a')
                 for span in spans:
                     img = span.xpath('span/img/@src')
                     if img:
                         imgs.append(img)
-                abstract = li.xpath('div/p')
-                time = li.xpath('div/div[2]/span/script/text()')
+                abstract = get_first_of_element(li, 'div/p')
+                time = get_first_of_element(li, 'div/div[2]/span/script/text()')
                 gzh_info = li.xpath('div/div[2]/a')[0]
 
             if title:
-                title = get_elem_text(title[0]).replace("red_beg", "").replace("red_end", "")
-            else:
-                title = ''
+                title = get_elem_text(title).replace("red_beg", "").replace("red_end", "")
             if abstract:
-                abstract = get_elem_text(abstract[0]).replace("red_beg", "").replace("red_end", "")
-            else:
-                abstract = ''
+                abstract = get_elem_text(abstract).replace("red_beg", "").replace("red_end", "")
 
-            time = list_or_empty(time)
             time = re.findall('timeConvert\(\'(.*?)\'\)', time)
             time = list_or_empty(time, int)
-            profile_url = gzh_info.xpath('@href')
-            headimage = gzh_info.xpath('@data-headimage')
-            wechat_name = gzh_info.xpath('text()')
-            gzh_isv = gzh_info.xpath('@data-isv')
+            profile_url = get_first_of_element(gzh_info, '@href')
+            headimage = get_first_of_element(gzh_info, '@data-headimage')
+            wechat_name = get_first_of_element(gzh_info, 'text()')
+            gzh_isv = get_first_of_element(gzh_info, '@data-isv', int)
 
             articles.append({
                 'article': {
                     'title': title,
-                    'url': list_or_empty(url),
+                    'url': url,
                     'imgs': imgs,
                     'abstract': abstract,
                     'time': time
                 },
                 'gzh': {
-                    'profile_url': list_or_empty(profile_url),
-                    'headimage': list_or_empty(headimage),
-                    'wechat_name': list_or_empty(wechat_name),
-                    'isv': list_or_empty(gzh_isv, int),
+                    'profile_url': profile_url,
+                    'headimage': headimage,
+                    'wechat_name': wechat_name,
+                    'isv': gzh_isv,
                 }
             })
         return articles
@@ -206,20 +203,20 @@ class WechatSogouStructuring(object):
         """
 
         page = etree.HTML(text)
-        profile_area = page.xpath('//div[@class="profile_info_area"]')[0]
+        profile_area = get_first_of_element(page, '//div[@class="profile_info_area"]')
 
-        profile_img = profile_area.xpath('div[1]/span/img/@src')
-        profile_name = profile_area.xpath('div[1]/div/strong/text()')
-        profile_wechat_id = profile_area.xpath('div[1]/div/p/text()')
-        profile_desc = profile_area.xpath('ul/li[1]/div/text()')
-        profile_principal = profile_area.xpath('ul/li[2]/div/text()')
+        profile_img = get_first_of_element(profile_area, 'div[1]/span/img/@src')
+        profile_name = get_first_of_element(profile_area, 'div[1]/div/strong/text()')
+        profile_wechat_id = get_first_of_element(profile_area, 'div[1]/div/p/text()')
+        profile_desc = get_first_of_element(profile_area, 'ul/li[1]/div/text()')
+        profile_principal = get_first_of_element(profile_area, 'ul/li[2]/div/text()')
 
         return {
-            'wechat_name': profile_name[0].strip(),
-            'wechat_id': profile_wechat_id[0].replace('微信号: ', '').strip('\n'),
-            'introduction': profile_desc[0],
-            'authentication': profile_principal[0],
-            'headimage': profile_img[0]
+            'wechat_name': profile_name.strip(),
+            'wechat_id': profile_wechat_id.replace('微信号: ', '').strip('\n'),
+            'introduction': profile_desc,
+            'authentication': profile_principal,
+            'headimage': profile_img
         }
 
     @staticmethod
@@ -254,6 +251,8 @@ class WechatSogouStructuring(object):
         """
         if article_json is None:
             article_json = find_article_json_re.findall(text)
+            if not article_json:
+                return []
             article_json = article_json[0] + '}}]}'
             article_json = json.loads(article_json)
 
@@ -346,7 +345,7 @@ class WechatSogouStructuring(object):
         }
 
     @staticmethod
-    def get_gzh_artilce_by_hot(text):
+    def get_gzh_article_by_hot(text):
         """从 首页热门搜索 提取公众号信息 和 文章列表信息
 
         Parameters
@@ -376,34 +375,33 @@ class WechatSogouStructuring(object):
         lis = page.xpath('/html/body/li')
         gzh_article_list = []
         for li in lis:
-            url = li.xpath('div[1]/h4/a/@href')
-            title = li.xpath('div[1]/h4/a/div/text()')
-            abstract = li.xpath('div[1]/p[1]/text()')
-
-            xpath_time = li.xpath('div[1]/p[2]')[0]
-            open_id = xpath_time.xpath('span/@data-openid')
-            headimage = xpath_time.xpath('span/@data-headimage')
-            gzh_name = xpath_time.xpath('span/text()')
+            url = get_first_of_element(li, 'div[1]/h4/a/@href')
+            title = get_first_of_element(li, 'div[1]/h4/a/div/text()')
+            abstract = get_first_of_element(li, 'div[1]/p[1]/text()')
+            xpath_time = get_first_of_element(li, 'div[1]/p[2]')
+            open_id = get_first_of_element(xpath_time, 'span/@data-openid')
+            headimage = get_first_of_element(xpath_time, 'span/@data-headimage')
+            gzh_name = get_first_of_element(xpath_time, 'span/text()')
             send_time = xpath_time.xpath('a/span/@data-lastmodified')
-            main_img = li.xpath('div[2]/a/img/@src')
+            main_img = get_first_of_element(li, 'div[2]/a/img/@src')
 
             try:
                 send_time = int(send_time[0])
-            except:
+            except ValueError:
                 send_time = send_time[0]
 
             gzh_article_list.append({
                 'gzh': {
-                    'headimage': headimage[0],
-                    'wechat_name': gzh_name[0],
+                    'headimage': headimage,
+                    'wechat_name': gzh_name,
                 },
                 'article': {
-                    'url': url[0],
-                    'title': title[0],
-                    'abstract': abstract[0],
+                    'url': url,
+                    'title': title,
+                    'abstract': abstract,
                     'time': send_time,
-                    'open_id': open_id[0],
-                    'main_img': main_img[0]
+                    'open_id': open_id,
+                    'main_img': main_img
                 }
             })
 

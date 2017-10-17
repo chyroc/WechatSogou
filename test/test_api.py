@@ -28,24 +28,25 @@ class TestAPIReal(unittest.TestCase):
         gzh_list = ws_api.search_gzh(gaokao_keyword, identify_image_callback=self.identify_image_callback_sogou)
         assert_equal(10, len(gzh_list))
         assert_true(any(gaokao_keyword in i['wechat_name'] for i in gzh_list))
+        assert_true(any(i['open_id'] != '' for i in gzh_list))
 
-    def test_get_gzh_artilce_by_history_real(self):
-        gzh_artilce = ws_api.get_gzh_artilce_by_history(gaokao_keyword,
+    def test_get_gzh_article_by_history_real(self):
+        gzh_article = ws_api.get_gzh_article_by_history(gaokao_keyword,
                                                         identify_image_callback_sogou=self.identify_image_callback_sogou,
                                                         identify_image_callback_weixin=self.identify_image_callback_ruokuai_weixin)
-        assert_in('gzh', gzh_artilce)
-        assert_in('article', gzh_artilce)
-        assert_in('wx.qlogo.cn', gzh_artilce['gzh']['headimage'])
-        assert_greater_equal(len(gzh_artilce['article']), 1)
+        assert_in('gzh', gzh_article)
+        assert_in('article', gzh_article)
+        assert_in('wx.qlogo.cn', gzh_article['gzh']['headimage'])
+        assert_greater_equal(len(gzh_article['article']), 1)
 
-    def test_get_gzh_artilce_by_hot_real(self):
-        gzh_artilces = ws_api.get_gzh_artilce_by_hot(WechatSogouConst.hot_index.recommendation,
+    def test_get_gzh_article_by_hot_real(self):
+        gzh_articles = ws_api.get_gzh_article_by_hot(WechatSogouConst.hot_index.recommendation,
                                                      identify_image_callback=self.identify_image_callback_sogou)
-        for gzh_artilce in gzh_artilces:
-            assert_in('gzh', gzh_artilce)
-            assert_in('article', gzh_artilce)
-            assert_in('http://mp.weixin.qq.com/s?src=', gzh_artilce['article']['url'])
-        assert_greater_equal(len(gzh_artilces), 10)
+        for gzh_article in gzh_articles:
+            assert_in('gzh', gzh_article)
+            assert_in('article', gzh_article)
+            assert_in('http://mp.weixin.qq.com/s?src=', gzh_article['article']['url'])
+        assert_greater_equal(len(gzh_articles), 10)
 
     def test_get_sugg(self):
         sugg_gaokao = ws_api.get_sugg(gaokao_keyword)

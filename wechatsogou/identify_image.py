@@ -8,6 +8,7 @@ import requests
 
 from wechatsogou.five import readimg, input
 from wechatsogou.filecache import WechatCache
+from wechatsogou.exceptions import WechatSogouVcodeOcrException
 
 ws_cache = WechatCache()
 
@@ -69,7 +70,8 @@ def unlock_sogou_callback_example(url, req, resp, img, identify_image_callback):
     }
     r_unlock = req.post(unlock_url, data, headers=headers)
     if not r_unlock.ok:
-        raise Exception()  # todo use ws exception
+        raise WechatSogouVcodeOcrException(
+            'unlock[{}] failed: {}'.format(unlock_url, r_unlock.text, r_unlock.status_code))
 
     return r_unlock.json()
 
@@ -113,6 +115,7 @@ def unlock_weixin_callback_example(url, req, resp, img, identify_image_callback)
     }
     r_unlock = req.post(unlock_url, data, headers=headers)
     if not r_unlock.ok:
-        raise Exception()  # todo use ws exception
+        raise WechatSogouVcodeOcrException(
+            'unlock[{}] failed: {}[{}]'.format(unlock_url, r_unlock.text, r_unlock.status_code))
 
     return r_unlock.json()

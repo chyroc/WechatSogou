@@ -24,7 +24,10 @@ class _WechatSogouSearchArticleTypeConst(object):
 
 @Const
 class _WechatSogouSearchArticleTimeConst(object):
-    """时间 0 没有限制 / 1一天 / 2一周 / 3一月 / 4一年 / 5自定"""
+    """搜索条件 时间
+
+    0 没有限制 / 1一天 / 2一周 / 3一月 / 4一年 / 5自定
+    """
     anytime = 0
     day = 1
     week = 2
