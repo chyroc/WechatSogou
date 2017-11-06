@@ -41,7 +41,7 @@ channel <https://join.slack.com/t/wechatsogou/shared_invite/MjIxNjk4NzY5NzE1LTE1
 
 甲鱼说，咖啡是灵魂的饮料，买点咖啡
 
-谢谢这些人的\ `☕️ <./coffee.md>`__
+`谢谢这些人的☕️ <./coffee.md>`__
 
 问题集锦
 ========
@@ -82,11 +82,15 @@ channel <https://join.slack.com/t/wechatsogou/shared_invite/MjIxNjk4NzY5NzE1LTE1
     # 验证码输入错误的重试次数，默认为1
     ws_api = wechatsogou.WechatSogouAPI(captcha_break_time=3)
 
-    # 配置代理，代理列表中至少需包含1个 HTTPS 协议的代理, 并确保代理可用
+    # 所有requests库的参数都能在这用
+    # 如 配置代理，代理列表中至少需包含1个 HTTPS 协议的代理, 并确保代理可用
     ws_api = wechatsogou.WechatSogouAPI(proxies={
-        "http": "127.0.0.0.1:8888",
-        "https": "127.0.0.0.1:8888",
+        "http": "127.0.0.1:8888",
+        "https": "127.0.0.1:8888",
     })
+
+    # 如 设置超时
+    ws_api = wechatsogou.WechatSogouAPI(timeout=0.1)
 
 获取特定公众号信息 - get\_gzh\_info
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
