@@ -1,7 +1,7 @@
-.PHONY: rst dry_publish
+.PHONY: doc dry_publish
 
 docdir = docs
-rst:
+doc:
 	if [ -a $(docdir)/README.rst ]; then rm $(docdir)/README.rst; fi;
 	pandoc --from=markdown --to=rst --output=$(docdir)/README.rst README.md
 	if [ -a $(docdir)/HISTORY.rst ]; then rm $(docdir)/HISTORY.rst; fi;
