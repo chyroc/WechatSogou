@@ -31,7 +31,7 @@
 # 赞助作者
 甲鱼说，咖啡是灵魂的饮料，买点咖啡
 
-<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/pay_wx.jpg" width="250" /><img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/pay_zfb.jpg" width="250" />
+<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/pay_wechat.jpg" width="250" /><img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/pay_ali.jpg" width="250" />
 
 谢谢：
 
