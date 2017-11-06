@@ -21,7 +21,7 @@ from wechatsogou.identify_image import (
 
 
 class WechatSogouAPI(object):
-    def __init__(self, captcha_break_time=1, proxies=None):
+    def __init__(self, captcha_break_time=1, **kwargs):
         """初始化参数
 
         Parameters
@@ -30,11 +30,13 @@ class WechatSogouAPI(object):
             验证码输入错误重试次数
         proxies : dict
             代理
+        timeout : float
+            超时时间
         """
         assert isinstance(captcha_break_time, int) and 0 < captcha_break_time < 20
 
         self.captcha_break_times = captcha_break_time
-        self.proxies = proxies
+        self.requests_kwargs = kwargs
 
     def __set_cookie(self, suv=None, snuid=None, referer=None):
         suv = ws_cache.get('suv') if suv is None else suv
@@ -50,7 +52,7 @@ class WechatSogouAPI(object):
         ws_cache.set('snuid', snuid)
 
     def __get(self, url, session, headers):
-        resp = session.get(url, headers=headers, proxies=self.proxies)
+        resp = session.get(url, headers=headers, **self.requests_kwargs)
 
         if not resp.ok:
             raise WechatSogouRequestsException('WechatSogouAPI get error', resp)

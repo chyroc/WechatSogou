@@ -152,9 +152,9 @@ class WechatSogouStructuring(object):
                 time = get_first_of_element(li, 'div/div[2]/span/script/text()')
                 gzh_info = li.xpath('div/div[2]/a')[0]
 
-            if title:
+            if title is not None:
                 title = get_elem_text(title).replace("red_beg", "").replace("red_end", "")
-            if abstract:
+            if abstract is not None:
                 abstract = get_elem_text(abstract).replace("red_beg", "").replace("red_end", "")
 
             time = re.findall('timeConvert\(\'(.*?)\'\)', time)
