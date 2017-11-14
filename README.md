@@ -26,23 +26,17 @@
 [CHANGELOG](./CHANGELOG.md)
 
 # 交流分享
-- 知识星球
-
-<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/xiaomiquan.jpeg" width="250" />
 
 - QQ群
 
 <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=2c888d2a84978b1fe863482166b9fe5e6418ae72eb2bf727905734d6af654fa5"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Github搜狗微信爬虫交流" title="Github搜狗微信爬虫交流">132955136</a>
-- Slack
-
-点击加入[wechatsogou slack channel](https://join.slack.com/t/wechatsogou/shared_invite/MjIxNjk4NzY5NzE1LTE1MDE3NzQwNDItNTcxOWUxMjFjNg)
 
 # 赞助作者
 甲鱼说，咖啡是灵魂的饮料，买点咖啡
 
 [谢谢这些人的☕️](./coffee.md)
 
-<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/pay_wechat.jpg" width="250" /><img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/pay_ali.jpg" width="250" />
+<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/xiaomiquan.jpeg" width="250" /><img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/pay_wechat.jpg" width="250" /><img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/pay_ali.jpg" width="250" />
 
 
 # 问题集锦
