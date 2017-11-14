@@ -1,5 +1,22 @@
 # Change Log
 
+## [v4.0.2](https://github.com/Chyroc/WechatSogou/tree/v4.0.2) (2017-11-14)
+[Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v4.0.1...v4.0.2)
+
+**Closed issues:**
+
+- 你这个 Readme 里面，大小写不分的啊 [\#159](https://github.com/Chyroc/WechatSogou/issues/159)
+- get\_article\_by\_search方法只能获取微信右侧有图的文章列表 [\#155](https://github.com/Chyroc/WechatSogou/issues/155)
+
+**Merged pull requests:**
+
+- update readme remove slack [\#162](https://github.com/Chyroc/WechatSogou/pull/162) ([Chyroc](https://github.com/Chyroc))
+- update readme add xiaomiquan [\#161](https://github.com/Chyroc/WechatSogou/pull/161) ([Chyroc](https://github.com/Chyroc))
+- add set timeout [\#158](https://github.com/Chyroc/WechatSogou/pull/158) ([Chyroc](https://github.com/Chyroc))
+- fix readme [\#157](https://github.com/Chyroc/WechatSogou/pull/157) ([Chyroc](https://github.com/Chyroc))
+- Change/wechat pay qrcode [\#156](https://github.com/Chyroc/WechatSogou/pull/156) ([Chyroc](https://github.com/Chyroc))
+- Release/v4.0.1 [\#154](https://github.com/Chyroc/WechatSogou/pull/154) ([Chyroc](https://github.com/Chyroc))
+
 ## [v4.0.1](https://github.com/Chyroc/WechatSogou/tree/v4.0.1) (2017-10-16)
 [Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v4.0.0...v4.0.1)
 
