@@ -29,14 +29,9 @@
 交流分享
 ========
 
--  知识星球
-
 -  QQ群
 
-132955136 - Slack
-
-点击加入\ `wechatsogou slack
-channel <https://join.slack.com/t/wechatsogou/shared_invite/MjIxNjk4NzY5NzE1LTE1MDE3NzQwNDItNTcxOWUxMjFjNg>`__
+132955136
 
 赞助作者
 ========
