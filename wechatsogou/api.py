@@ -113,7 +113,10 @@ class WechatSogouAPI(object):
                     if i == self.captcha_break_times - 1:
                         raise WechatSogouVcodeOcrException(e)
 
-            resp = self.__get(url, session, headers=self.__set_cookie(referer=referer))
+            if '请输入验证码' in resp.text:
+                resp = session.get(url)
+            else:
+                resp = self.__get(url, session, headers=self.__set_cookie(referer=referer))
 
         return resp
 
