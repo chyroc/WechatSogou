@@ -1,5 +1,32 @@
 # Change Log
 
+## [v4.0.3](https://github.com/Chyroc/WechatSogou/tree/v4.0.3) (2018-02-27)
+[Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v4.0.2...v4.0.3)
+
+**Closed issues:**
+
+- 所有接口调取之后无数据返回。。 [\#179](https://github.com/Chyroc/WechatSogou/issues/179)
+- 输入验证码后报错如下， 该如何？ [\#178](https://github.com/Chyroc/WechatSogou/issues/178)
+- 爬出来的很多链接并不能够使用！ [\#177](https://github.com/Chyroc/WechatSogou/issues/177)
+- 已知url，如何抓取文章信息？ [\#174](https://github.com/Chyroc/WechatSogou/issues/174)
+- 请问为什么有的公众号明明存在，却用ws\_api.get\_gzh\_info搜索不到？ [\#173](https://github.com/Chyroc/WechatSogou/issues/173)
+- 当公众号搜索结果有多个时会有异常，没法爬取公众号连接 [\#172](https://github.com/Chyroc/WechatSogou/issues/172)
+- 这个包不好使了吗 [\#171](https://github.com/Chyroc/WechatSogou/issues/171)
+- 提示找不到模块，而且pip install wechatsogou安装失败 [\#169](https://github.com/Chyroc/WechatSogou/issues/169)
+- 按照实例跑得到的是空值：search\_gzh\('新华社'\) [\#168](https://github.com/Chyroc/WechatSogou/issues/168)
+- 输入验证码之后，无法获得相应数据的问题 [\#167](https://github.com/Chyroc/WechatSogou/issues/167)
+- get\_gzh\_article\_by\_history输入正确的验证码依然无法获取公众号文章列表页面数据 [\#165](https://github.com/Chyroc/WechatSogou/issues/165)
+- 大神可能问题有点冲突但是还是想问问您 [\#164](https://github.com/Chyroc/WechatSogou/issues/164)
+- 当我使用 ws\_api.search\_article\('importNew'\)，获取的内容出现了 `\<Element a at 0x1cc97853d08\>` [\#160](https://github.com/Chyroc/WechatSogou/issues/160)
+- 复杂部分用调用C [\#127](https://github.com/Chyroc/WechatSogou/issues/127)
+- 后台管理+可视化运行 [\#124](https://github.com/Chyroc/WechatSogou/issues/124)
+- 测试用识别转移到中国区服务器 [\#117](https://github.com/Chyroc/WechatSogou/issues/117)
+
+**Merged pull requests:**
+
+- fix wechat-identify-unlock [\#176](https://github.com/Chyroc/WechatSogou/pull/176) ([Chyroc](https://github.com/Chyroc))
+- Release/v4.0.2 [\#163](https://github.com/Chyroc/WechatSogou/pull/163) ([Chyroc](https://github.com/Chyroc))
+
 ## [v4.0.2](https://github.com/Chyroc/WechatSogou/tree/v4.0.2) (2017-11-14)
 [Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v4.0.1...v4.0.2)
 
