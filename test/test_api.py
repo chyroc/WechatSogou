@@ -26,6 +26,8 @@ class TestAPIReal(unittest.TestCase):
 
     def test_search_gzh_real(self):
         gzh_list = ws_api.search_gzh(gaokao_keyword, identify_image_callback=self.identify_image_callback_sogou)
+        print(gzh_list)
+        print(len(gzh_list))
         assert_equal(10, len(gzh_list))
         assert_true(any(gaokao_keyword in i['wechat_name'] for i in gzh_list))
         assert_true(any(i['open_id'] != '' for i in gzh_list))
