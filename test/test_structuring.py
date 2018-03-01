@@ -76,7 +76,7 @@ class TestStructuringGzh(unittest.TestCase):
                       u'tjsjgk',
                       u'koogaokao'],
                      wechat_ids)
-        assert_equal([0, 0, 0, 0, 0, 0, 0, 0, 0, 0], post_perms)
+        assert_equal([-1, -1, -1, -1, -1, -1, -1, -1, -1, -1], post_perms)
         assert_equal(
             ['这里是山东最权威最专业的高考交流平台,由山东商报徐玉芹教育工作室独家运作.本平台与山东商报高考交流群互为依托,为山东考生和家长提供最及时、最准确的高考政策及信息解读,以及一流的填报志愿咨询服务.合作...',
              '定期推送高三家长关注的优秀家长经验交流、志愿填报技巧、考生心理辅导方法、考前营养搭配等诸多优质内容;为家长搭建交流互动平台.',

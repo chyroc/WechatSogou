@@ -7,11 +7,13 @@ import json
 
 from lxml import etree
 from lxml.etree import XML
+import requests
 
 from wechatsogou.tools import get_elem_text, list_or_empty, replace_html, get_first_of_element
 from wechatsogou.five import str_to_bytes
 
 find_article_json_re = re.compile('var msgList = (.*?)}}]};')
+get_post_view_perm = re.compile('<script>var account_anti_url = "(.*?)";</script>')
 
 
 class WechatSogouStructuring(object):
@@ -20,6 +22,21 @@ class WechatSogouStructuring(object):
         content_url = replace_html(content_url)
         return ('http://mp.weixin.qq.com{}'.format(
             content_url) if 'http://mp.weixin.qq.com' not in content_url else content_url) if content_url else ''
+
+    @staticmethod
+    def __get_post_view_perm(text):
+        result = get_post_view_perm.findall(text)
+        if not result or len(result) < 1:
+            return None
+
+        r = requests.get('http://weixin.sogou.com{}'.format(result[0]))
+        if not r.ok:
+            return None
+
+        if r.json().get('code') != 'success':
+            return None
+
+        return r.json().get('msg')
 
     @staticmethod
     def get_gzh_by_search(text):
@@ -40,11 +57,14 @@ class WechatSogouStructuring(object):
                 'wechat_name': '',  # 名称
                 'wechat_id': '',  # 微信id
                 'post_perm': '',  # 最近一月群发数
+                'view_perm': '',  # 最近一月阅读量
                 'qrcode': '',  # 二维码
                 'introduction': '',  # 介绍
                 'authentication': ''  # 认证
             }
         """
+        post_view_perms = WechatSogouStructuring.__get_post_view_perm(text)
+
         page = etree.HTML(text)
         lis = page.xpath('//ul[@class="news-list2"]/li')
         relist = []
@@ -53,7 +73,6 @@ class WechatSogouStructuring(object):
             headimage = get_first_of_element(li, 'div/div[1]/a/img/@src')
             wechat_name = get_elem_text(get_first_of_element(li, 'div/div[2]/p[1]'))
             info = get_elem_text(get_first_of_element(li, 'div/div[2]/p[2]'))
-            post_perm = 0  # TODO 月发文 <script>var account_anti_url = "/websearch/weixin/pc/anti_account.jsp?.......";</script>
             qrcode = get_first_of_element(li, 'div/div[3]/span/img[1]/@src')
             introduction = get_elem_text(get_first_of_element(li, 'dl[1]/dd'))
             authentication = get_first_of_element(li, 'dl[2]/dd/text()')
@@ -63,11 +82,20 @@ class WechatSogouStructuring(object):
                 'headimage': headimage,
                 'wechat_name': wechat_name.replace('red_beg', '').replace('red_end', ''),
                 'wechat_id': info.replace('微信号：', ''),
-                'post_perm': post_perm,
                 'qrcode': qrcode,
                 'introduction': introduction.replace('red_beg', '').replace('red_end', ''),
-                'authentication': authentication
+                'authentication': authentication,
+                'post_perm': -1,
+                'view_perm': -1,
             })
+
+        if post_view_perms:
+            for i in relist:
+                if i['open_id'] in post_view_perms:
+                    post_view_perm = post_view_perms[i['open_id']].split(',')
+                    if len(post_view_perm) == 2:
+                        i['post_perm'] = int(post_view_perm[0])
+                        i['view_perm'] = int(post_view_perm[1])
         return relist
 
     @staticmethod

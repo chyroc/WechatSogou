@@ -1,6 +1,90 @@
 Change Log
 ==========
 
+`v4.0.3 <https://github.com/Chyroc/WechatSogou/tree/v4.0.3>`__ (2018-02-27)
+---------------------------------------------------------------------------
+
+`Full
+Changelog <https://github.com/Chyroc/WechatSogou/compare/v4.0.2...v4.0.3>`__
+
+**Closed issues:**
+
+-  所有接口调取之后无数据返回。。
+   `#179 <https://github.com/Chyroc/WechatSogou/issues/179>`__
+-  输入验证码后报错如下， 该如何？
+   `#178 <https://github.com/Chyroc/WechatSogou/issues/178>`__
+-  爬出来的很多链接并不能够使用！
+   `#177 <https://github.com/Chyroc/WechatSogou/issues/177>`__
+-  已知url，如何抓取文章信息？
+   `#174 <https://github.com/Chyroc/WechatSogou/issues/174>`__
+-  请问为什么有的公众号明明存在，却用ws_api.get_gzh_info搜索不到？
+   `#173 <https://github.com/Chyroc/WechatSogou/issues/173>`__
+-  当公众号搜索结果有多个时会有异常，没法爬取公众号连接
+   `#172 <https://github.com/Chyroc/WechatSogou/issues/172>`__
+-  这个包不好使了吗
+   `#171 <https://github.com/Chyroc/WechatSogou/issues/171>`__
+-  提示找不到模块，而且pip install wechatsogou安装失败
+   `#169 <https://github.com/Chyroc/WechatSogou/issues/169>`__
+-  按照实例跑得到的是空值：search_gzh(‘新华社’)
+   `#168 <https://github.com/Chyroc/WechatSogou/issues/168>`__
+-  输入验证码之后，无法获得相应数据的问题
+   `#167 <https://github.com/Chyroc/WechatSogou/issues/167>`__
+-  get_gzh_article_by_history输入正确的验证码依然无法获取公众号文章列表页面数据
+   `#165 <https://github.com/Chyroc/WechatSogou/issues/165>`__
+-  大神可能问题有点冲突但是还是想问问您
+   `#164 <https://github.com/Chyroc/WechatSogou/issues/164>`__
+-  当我使用 ws_api.search_article(‘importNew’)，获取的内容出现了
+   ``\<Element a at 0x1cc97853d08\>``
+   `#160 <https://github.com/Chyroc/WechatSogou/issues/160>`__
+-  复杂部分用调用C
+   `#127 <https://github.com/Chyroc/WechatSogou/issues/127>`__
+-  后台管理+可视化运行
+   `#124 <https://github.com/Chyroc/WechatSogou/issues/124>`__
+-  测试用识别转移到中国区服务器
+   `#117 <https://github.com/Chyroc/WechatSogou/issues/117>`__
+
+**Merged pull requests:**
+
+-  fix wechat-identify-unlock
+   `#176 <https://github.com/Chyroc/WechatSogou/pull/176>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  Release/v4.0.2
+   `#163 <https://github.com/Chyroc/WechatSogou/pull/163>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+
+`v4.0.2 <https://github.com/Chyroc/WechatSogou/tree/v4.0.2>`__ (2017-11-14)
+---------------------------------------------------------------------------
+
+`Full
+Changelog <https://github.com/Chyroc/WechatSogou/compare/v4.0.1...v4.0.2>`__
+
+**Closed issues:**
+
+-  你这个 Readme 里面，大小写不分的啊
+   `#159 <https://github.com/Chyroc/WechatSogou/issues/159>`__
+-  get_article_by_search方法只能获取微信右侧有图的文章列表
+   `#155 <https://github.com/Chyroc/WechatSogou/issues/155>`__
+
+**Merged pull requests:**
+
+-  update readme remove slack
+   `#162 <https://github.com/Chyroc/WechatSogou/pull/162>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  update readme add xiaomiquan
+   `#161 <https://github.com/Chyroc/WechatSogou/pull/161>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  add set timeout
+   `#158 <https://github.com/Chyroc/WechatSogou/pull/158>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  fix readme `#157 <https://github.com/Chyroc/WechatSogou/pull/157>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  Change/wechat pay qrcode
+   `#156 <https://github.com/Chyroc/WechatSogou/pull/156>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  Release/v4.0.1
+   `#154 <https://github.com/Chyroc/WechatSogou/pull/154>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+
 `v4.0.1 <https://github.com/Chyroc/WechatSogou/tree/v4.0.1>`__ (2017-10-16)
 ---------------------------------------------------------------------------
 
@@ -9,7 +93,7 @@ Changelog <https://github.com/Chyroc/WechatSogou/compare/v4.0.0...v4.0.1>`__
 
 **Closed issues:**
 
--  ws\_api.get\_gzh\_article\_by\_history(keywords)接口返回Index Error
+-  ws_api.get_gzh_article_by_history(keywords)接口返回Index Error
    `#152 <https://github.com/Chyroc/WechatSogou/issues/152>`__
 
 **Merged pull requests:**
@@ -29,13 +113,13 @@ Changelog <https://github.com/Chyroc/WechatSogou/compare/v3.1.2...v4.0.0>`__
 
 **Closed issues:**
 
--  get\_gzh\_artilce\_by\_history 名字修改
+-  get_gzh_artilce_by_history 名字修改
    `#149 <https://github.com/Chyroc/WechatSogou/issues/149>`__
 -  按照示例跑出来是乱码
    `#148 <https://github.com/Chyroc/WechatSogou/issues/148>`__
 -  请问在阿里云ECS上出现需要输入验证码的时候该怎么解决？
    `#146 <https://github.com/Chyroc/WechatSogou/issues/146>`__
--  get\_gzh\_artilce\_by\_history 出现填写code
+-  get_gzh_artilce_by_history 出现填写code
    `#144 <https://github.com/Chyroc/WechatSogou/issues/144>`__
 -  验证码识别预估什么时候完成啊
    `#131 <https://github.com/Chyroc/WechatSogou/issues/131>`__
@@ -48,7 +132,7 @@ Changelog <https://github.com/Chyroc/WechatSogou/compare/v3.1.2...v4.0.0>`__
    https://github.com/Chyroc/WechatSogou…
    `#150 <https://github.com/Chyroc/WechatSogou/pull/150>`__
    (`Chyroc <https://github.com/Chyroc>`__)
--  remove is\_need\_unlock
+-  remove is_need_unlock
    `#147 <https://github.com/Chyroc/WechatSogou/pull/147>`__
    (`Chyroc <https://github.com/Chyroc>`__)
 -  Release/v3.1.2
@@ -96,7 +180,7 @@ Changelog <https://github.com/Chyroc/WechatSogou/compare/v3.1.0...v3.1.1>`__
 
 -  作者有代理的api没有呀
    `#136 <https://github.com/Chyroc/WechatSogou/issues/136>`__
--  search\_article时只能获取到第10页，超过了获取到的就是空了
+-  search_article时只能获取到第10页，超过了获取到的就是空了
    `#132 <https://github.com/Chyroc/WechatSogou/issues/132>`__
 
 **Merged pull requests:**
@@ -140,7 +224,7 @@ Changelog <https://github.com/Chyroc/WechatSogou/compare/v3.0.0...v3.1.0>`__
 
 **Merged pull requests:**
 
--  Add/get hot api / gzh => gzh\_info
+-  Add/get hot api / gzh => gzh_info
    `#109 <https://github.com/Chyroc/WechatSogou/pull/109>`__
    (`Chyroc <https://github.com/Chyroc>`__)
 -  Change/search article type const
@@ -167,7 +251,7 @@ Changelog <https://github.com/Chyroc/WechatSogou/compare/v2.0.5...v3.0.0>`__
 
 **Closed issues:**
 
--  解封成功，正在为您跳转来源地址...
+-  解封成功，正在为您跳转来源地址…
    `#72 <https://github.com/Chyroc/WechatSogou/issues/72>`__
 -  列表页验证码有办法绕过吗？
    `#71 <https://github.com/Chyroc/WechatSogou/issues/71>`__
@@ -178,15 +262,15 @@ Changelog <https://github.com/Chyroc/WechatSogou/compare/v2.0.5...v3.0.0>`__
 -  badge issue `#64 <https://github.com/Chyroc/WechatSogou/issues/64>`__
 -  目前getcomment接口已报错，显示 404了，何解？
    `#63 <https://github.com/Chyroc/WechatSogou/issues/63>`__
--  调用方法search\_gzh\_info()搜索公众号时，获取到的结果中wechatid为‘’
+-  调用方法search_gzh_info()搜索公众号时，获取到的结果中wechatid为‘’
    `#62 <https://github.com/Chyroc/WechatSogou/issues/62>`__
 -  跳出来验证码之后输入，报错
    `#61 <https://github.com/Chyroc/WechatSogou/issues/61>`__
--  请问logging.config.fileConfig('logging.conf')出错如何解决
+-  请问logging.config.fileConfig(‘logging.conf’)出错如何解决
    `#60 <https://github.com/Chyroc/WechatSogou/issues/60>`__
 -  可否增加验证码输入错误，能再次重新输入的机制
    `#54 <https://github.com/Chyroc/WechatSogou/issues/54>`__
--  调用get\_gzh\_message返回{"ret":0,"errmsg":""}
+-  调用get_gzh_message返回{“ret”:0,“errmsg”:“”}
    `#52 <https://github.com/Chyroc/WechatSogou/issues/52>`__
 -  输入验证码后报错
    `#32 <https://github.com/Chyroc/WechatSogou/issues/32>`__
@@ -244,7 +328,7 @@ Changelog <https://github.com/Chyroc/WechatSogou/compare/v2.0.5...v3.0.0>`__
 -  Add annotation and fix
    `#88 <https://github.com/Chyroc/WechatSogou/pull/88>`__
    (`Chyroc <https://github.com/Chyroc>`__)
--  split test get gzh\_info and articel
+-  split test get gzh_info and articel
    `#87 <https://github.com/Chyroc/WechatSogou/pull/87>`__
    (`Chyroc <https://github.com/Chyroc>`__)
 -  add structuring-gzh-article-from-history
@@ -346,13 +430,13 @@ Changelog <https://github.com/Chyroc/WechatSogou/compare/v2.0.3...v2.0.4>`__
    `#25 <https://github.com/Chyroc/WechatSogou/issues/25>`__
 -  结果模版更新了
    `#24 <https://github.com/Chyroc/WechatSogou/issues/24>`__
--  文章标题带引号（"，&quot）的情况解析报错
+-  文章标题带引号（“，&quot）的情况解析报错
    `#23 <https://github.com/Chyroc/WechatSogou/issues/23>`__
 -  请问，我运行test.py时为何没报错却没得到任何结果？
    `#21 <https://github.com/Chyroc/WechatSogou/issues/21>`__
 -  如何获得公众号的id和名称？
    `#20 <https://github.com/Chyroc/WechatSogou/issues/20>`__
--  search\_gzh\_info无法取得内容
+-  search_gzh_info无法取得内容
    `#18 <https://github.com/Chyroc/WechatSogou/issues/18>`__
 -  原始文章url `#17 <https://github.com/Chyroc/WechatSogou/issues/17>`__
 -  请问在Linux下可以使用吗？我运行了一下出现如下问题，还望指教
@@ -370,13 +454,13 @@ Changelog <https://github.com/Chyroc/WechatSogou/compare/v2.0.3...v2.0.4>`__
 -  获取文章只能10篇？
    `#10 <https://github.com/Chyroc/WechatSogou/issues/10>`__
 -  搜狗平台问题 `#9 <https://github.com/Chyroc/WechatSogou/issues/9>`__
--  deal\_article\_comment(text=text)并不能获得用户的评论内容
+-  deal_article_comment(text=text)并不能获得用户的评论内容
    `#8 <https://github.com/Chyroc/WechatSogou/issues/8>`__
 -  py2.7 什么时候支持？
    `#7 <https://github.com/Chyroc/WechatSogou/issues/7>`__
 -  PIL is not support Python3
    `#6 <https://github.com/Chyroc/WechatSogou/issues/6>`__
--  演示代码wechats.get\_gzh\_article\_by\_url\_dict(wechat\_info['url'])提示list
+-  演示代码wechats.get_gzh_article_by_url_dict(wechat_info[‘url’])提示list
    index out of range
    `#5 <https://github.com/Chyroc/WechatSogou/issues/5>`__
 -  如何使用代理 `#2 <https://github.com/Chyroc/WechatSogou/issues/2>`__
@@ -425,4 +509,4 @@ Changelog <https://github.com/Chyroc/WechatSogou/compare/v2.0.3...v2.0.4>`__
    (`Chyroc <https://github.com/Chyroc>`__)
 
 \* *This Change Log was automatically generated by
-`github\_changelog\_generator <https://github.com/skywinder/Github-Changelog-Generator>`__*
+`github_changelog_generator <https://github.com/skywinder/Github-Changelog-Generator>`__*
