@@ -1,6 +1,28 @@
 Change Log
 ==========
 
+`v4.1.0 <https://github.com/Chyroc/WechatSogou/tree/v4.1.0>`__ (2018-03-01)
+---------------------------------------------------------------------------
+
+`Full
+Changelog <https://github.com/Chyroc/WechatSogou/compare/v4.0.3...v4.1.0>`__
+
+**Closed issues:**
+
+-  一些改进建议：近一月发文数、近一月平均阅读量、公众号Biz
+   `#182 <https://github.com/Chyroc/WechatSogou/issues/182>`__
+-  头像应该叫avatar，headimage不是头像的意思
+   `#175 <https://github.com/Chyroc/WechatSogou/issues/175>`__
+
+**Merged pull requests:**
+
+-  add post_perm-and-view_perm
+   `#183 <https://github.com/Chyroc/WechatSogou/pull/183>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  release/v4.0.3
+   `#180 <https://github.com/Chyroc/WechatSogou/pull/180>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+
 `v4.0.3 <https://github.com/Chyroc/WechatSogou/tree/v4.0.3>`__ (2018-02-27)
 ---------------------------------------------------------------------------
 
