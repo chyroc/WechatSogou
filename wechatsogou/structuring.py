@@ -84,7 +84,9 @@ class WechatSogouStructuring(object):
                 'wechat_id': info.replace('微信号：', ''),
                 'qrcode': qrcode,
                 'introduction': introduction.replace('red_beg', '').replace('red_end', ''),
-                'authentication': authentication
+                'authentication': authentication,
+                'post_perm': -1,
+                'view_perm': -1,
             })
 
         if post_view_perms:
