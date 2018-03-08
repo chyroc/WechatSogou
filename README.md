@@ -31,6 +31,12 @@
 
 <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=2c888d2a84978b1fe863482166b9fe5e6418ae72eb2bf727905734d6af654fa5"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Github搜狗微信爬虫交流" title="Github搜狗微信爬虫交流">132955136</a>
 
+- 微信群
+
+添加好友邀请加入，添加请备注：WechatSogou
+
+<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/wechat.jpg" width="250" />
+
 # 赞助作者
 甲鱼说，咖啡是灵魂的饮料，买点咖啡
 
@@ -40,7 +46,7 @@
 
 
 # 问题集锦
-    Q:没有得到原始文章url？
+    Q:没有得到原始文章url / 提示链接已经过期？
     A:微信屏蔽此接口，请在临时链接有效期内保存文章内容。
 
     Q:获取文章只能10篇？
@@ -114,6 +120,7 @@ Out[5]:
     'wechat_name': '',  # 名称
     'wechat_id': '',  # 微信id
     'post_perm': int,  # 最近一月群发数
+    'view_perm': int,  # 最近一月阅读量
     'qrcode': '',  # 二维码
     'introduction': '',  # 简介
     'authentication': ''  # 认证
@@ -138,6 +145,7 @@ Out[6]:
     'headimage': 'http://img01.sogoucdn.com/app/a/100520090/oIWsFt1MvjqspMDVvZjpmxyo36sU',
     'introduction': '南京航空航天大学官方微信',
     'post_perm': 0,
+    'view_perm': 0,
     'profile_url': 'http://mp.weixin.qq.com/profile?src=3&timestamp=1501141990&ver=1&signature=S-7U131D3eQERC8yJGVAg2edySXn*qGVi5uE8QyQU034di*2mS6vGJVnQBRB0It9t9M-Qn7ynvjRKZNQrjBMEg==',
     'qrcode': 'http://mp.weixin.qq.com/rr?src=3&timestamp=1501141990&ver=1&signature=Tlp-r0AaBRxtx3TuuyjdxmjiR4aEJY-hjh0kmtV6byVu3QIQYiMlJttJgGu0hwtZMZCCntdfaP5jD4JXipTwoGecAze8ycEF5KYZqtLSsNE=',
     'wechat_id': 'NUAA_1952',
@@ -148,6 +156,7 @@ Out[6]:
     'headimage': 'http://img01.sogoucdn.com/app/a/100520090/oIWsFtwVmjdK_57vIKeMceGXF5BQ',
     'introduction': '南京航空航天大学团委官方微信平台',
     'post_perm': 0,
+    'view_perm': 0,
     'profile_url': 'http://mp.weixin.qq.com/profile?src=3&timestamp=1501141990&ver=1&signature=aXFQrSDOiZJHedlL7vtAkvFMckxBmubE9VGrVczTwS601bOIT5Nrr8Pcgs6bQ-oEd6jdQ0aK5WCQjNwMAhJnyQ==',
     'qrcode': 'http://mp.weixin.qq.com/rr?src=3&timestamp=1501141990&ver=1&signature=7Cpbd9CVQsXJkExRcU5VM6NuyoxDQQfVfF7*CGI-PTR0y6stHPtdSDqzAzvPMWz67Xz9IMF2TDfu4Cndj5bKxlsFh6wGhiLH0b9ZKqgCW5k=',
     'wechat_id': 'nuaa_tw',
@@ -168,6 +177,7 @@ list of dict, dict:
     'wechat_name': '',  # 名称
     'wechat_id': '',  # 微信id
     'post_perm': int,  # 最近一月群发数
+    'view_perm': int,  # 最近一月阅读量
     'qrcode': '',  # 二维码
     'introduction': '',  # 介绍
     'authentication': ''  # 认证
