@@ -14,6 +14,8 @@ from wechatsogou.exceptions import WechatSogouException
 from wechatsogou.five import str_to_bytes
 from wechatsogou.tools import get_elem_text, list_or_empty, replace_html, get_first_of_element
 
+backgroud_image_p = re.compile('background-image:[ ]+url\(\"([\w\W]+?)\"\)')
+js_content = re.compile('js_content.*?>((\s|\S)+)</div>')
 find_article_json_re = re.compile('var msgList = (.*?)}}]};')
 get_post_view_perm = re.compile('<script>var account_anti_url = "(.*?)";</script>')
 
@@ -450,7 +452,6 @@ class WechatSogouStructuring(object):
             一篇微信文章的文本
         del_qqmusic: bool
             删除文章中的qq音乐
-
         del_voice: bool
             删除文章中的语音内容
 
@@ -463,9 +464,6 @@ class WechatSogouStructuring(object):
 
         }
         """
-        BACKGROUD_IMAGE_P = re.compile('background-image:[ ]+url\(\"([\w\W]+?)\"\)')
-        JS_CONTENT = re.compile('js_content.*?>((\s|\S)+)</div>')
-        content_info = {}
         # 1. 获取微信文本content
         html_obj = BeautifulSoup(text, "lxml")
         content_text = html_obj.find('div', {'class': 'rich_media_content', 'id': 'js_content'})
@@ -507,7 +505,7 @@ class WechatSogouStructuring(object):
 
             if ele.attrs.get('data-wxurl'):
                 del ele.attrs['data-wxurl']
-            img_url = re.findall(BACKGROUD_IMAGE_P, str(ele))
+            img_url = re.findall(backgroud_image_p, str(ele))
             if not img_url:
                 continue
             all_img_set.add(img_url[0])
@@ -521,11 +519,11 @@ class WechatSogouStructuring(object):
             ele.attrs['src'] = img_url
 
         # 5. 返回数据
-
         all_img_list = list(all_img_set)
         content_html = content_text.prettify()
         # 去除div[id=js_content]
-        content_html = re.findall(JS_CONTENT, content_html)[0][0]
-        content_info['content_html'] = content_html
-        content_info['content_img_list'] = all_img_list
-        return content_info
+        content_html = re.findall(js_content, content_html)[0][0]
+        return {
+            'content_html': content_html,
+            'content_img_list': all_img_list
+        }

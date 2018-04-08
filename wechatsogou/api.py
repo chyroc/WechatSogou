@@ -122,6 +122,13 @@ class WechatSogouAPI(object):
 
         Parameters
         ----------
+        content_info : dict 微信文章明细字典
+            {
+                'content_img_list': [], # 从微信文章解析出的原始图片列表
+                'content_html': '', # 从微信文章解析出文章的内容
+            }
+        hosting_callback : callable
+            托管回调函数，传入单个图片链接，返回托管后的图片链接
 
         Returns
         -------
@@ -137,7 +144,9 @@ class WechatSogouAPI(object):
         content_html = content_info.pop("content_html")
         for idx, img_url in enumerate(content_img_list):
             hosting_img_url = hosting_callback(img_url)
-            assert hosting_img_url is None
+            if not hosting_img_url:
+                # todo 定义标准异常
+                raise Exception()
             content_img_list[idx] = hosting_img_url
             content_html = content_html.replace(img_url, hosting_img_url)
 
@@ -403,20 +412,26 @@ class WechatSogouAPI(object):
         resp.encoding = 'utf-8'
         return WechatSogouStructuring.get_gzh_article_by_hot(resp.text)
 
-    def get_article_content(self, url, unlock_callback=None, identify_image_callback=None, hosting_callback=None):
+    def get_article_content(self, url, del_qqmusic=True, del_mpvoice=True, unlock_callback=None,
+                            identify_image_callback=None, hosting_callback=None):
         """获取文章原文，避免临时链接失效
 
         Parameters
         ----------
         url : str or unicode
             原文链接，临时链接
+        del_qqmusic: bool
+            True:微信原文中有插入的qq音乐，则删除
+            False:微信源文中有插入的qq音乐，则保留
+        del_mpvoice: bool
+            True:微信原文中有插入的语音消息，则删除
+            False:微信源文中有插入的语音消息，则保留
         unlock_callback : callable
-            处理出现 历史页 的时候出现验证码的函数，参见 unlock_callback_example
+            处理 文章明细 的时候出现验证码的函数，参见 unlock_callback_example
         identify_image_callback : callable
-            处理 历史页 的时候处理验证码函数，输入验证码二进制数据，输出文字，参见 identify_image_callback_example
+            处理 文章明细 的时候处理验证码函数，输入验证码二进制数据，输出文字，参见 identify_image_callback_example
         hosting_callback: callable
-            将微信采集的文章托管到7牛或者阿里云回调函数
-            回调函数接收:微信图片地址，返回上传后地址
+            将微信采集的文章托管到7牛或者阿里云回调函数，输入微信图片源地址，返回托管后地址
 
         Returns
         -------
@@ -438,7 +453,8 @@ class WechatSogouAPI(object):
         resp.encoding = 'utf-8'
         if '链接已过期' in resp.text:
             raise WechatSogouException('get_article_content 链接 [{}] 已过期'.format(url))
-        content_info = WechatSogouStructuring.get_article_detail(resp.text)
+        content_info = WechatSogouStructuring.get_article_detail(resp.text, del_qqmusic=del_qqmusic,
+                                                                 del_voice=del_mpvoice)
         if hosting_callback:
             content_info = self.__hosting_wechat_img(content_info, hosting_callback)
         return content_info
