@@ -439,9 +439,8 @@ class WechatSogouStructuring(object):
 
     @staticmethod
     def get_article_detail(text, del_qqmusic=True, del_voice=True):
-        """
+        """根据微信文章的临时链接获取明细
 
-        根据微信文章的临时链接获取明细
         1. 获取文本中所有的图片链接列表
         2. 获取微信文章的html内容页面(去除标题等信息)
 

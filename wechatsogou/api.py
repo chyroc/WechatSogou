@@ -118,11 +118,18 @@ class WechatSogouAPI(object):
         return resp
 
     def __hosting_wechat_img(self, content_info, hosting_callback):
-        """
-        将微信明细中图片托管到云端，同时将html页面中的对应图片替换
-        :param content_info:
-        :param hosting_callback:
-        :return:
+        """将微信明细中图片托管到云端，同时将html页面中的对应图片替换
+
+        Parameters
+        ----------
+
+        Returns
+        -------
+        dict
+            {
+                'content_img_list': '', # 托管后的图片列表
+                'content_html': '',  # 图片链接为托管后的图片链接内容
+            }
         """
         assert callable(hosting_callback)
 
@@ -397,8 +404,8 @@ class WechatSogouAPI(object):
         return WechatSogouStructuring.get_gzh_article_by_hot(resp.text)
 
     def get_article_content(self, url, unlock_callback=None, identify_image_callback=None, hosting_callback=None):
-        """
-        获取文章原文，避免临时链接失效
+        """获取文章原文，避免临时链接失效
+
         Parameters
         ----------
         url : str or unicode
