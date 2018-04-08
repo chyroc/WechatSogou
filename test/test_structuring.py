@@ -2,16 +2,17 @@
 
 from __future__ import absolute_import, unicode_literals, print_function
 
-import io
-import os
-import json
-import unittest
 import datetime
+import io
+import json
+import re
+import os
+import unittest
+from bs4 import BeautifulSoup
+from nose.tools import assert_equal, assert_in, assert_true, assert_greater_equal, assert_is_none
 
-from nose.tools import assert_equal, assert_in, assert_true, assert_greater_equal
-
-from wechatsogou.structuring import WechatSogouStructuring
 from test import fake_data_path, gaokao_keyword
+from wechatsogou.structuring import WechatSogouStructuring
 
 assert_equal.__self__.maxDiff = None
 
@@ -371,6 +372,60 @@ class TestStructuringGzh(unittest.TestCase):
                       'oIWsFtzrEz_Tydpahalp9daXMg0Y', 'oIWsFt5kk9RnueF3AiUOao2XrP9o', 'oIWsFt7aLTQfT_wmrF4GpT27_xjg',
                       'oIWsFt3nYBUhqb4beN3rTBxdUHD8'],
                      open_ids)
+
+    def test_get_article_detail(self):
+        file_name = os.path.join(fake_data_path, 'article_detail_backgroud-image.html')
+        with io.open(file_name, encoding='utf-8') as f:
+            text = f.read()
+
+        article_detail = WechatSogouStructuring.get_article_detail(text)
+        assert_equal(len(article_detail['content_img_list']), 29, article_detail)
+        assert_true('data-wxurl' not in article_detail['content_html'], article_detail['content_html'])
+        assert_true('qqmusic' not in article_detail['content_html'], article_detail['content_html'])
+        # 图片有src属性，无data-src属性
+        content_html = BeautifulSoup(article_detail['content_html'], 'lxml')
+        imgs = content_html.find_all("img", src=re.compile(r'http'))
+        assert_equal(len(imgs), 29, imgs)
+        for img in imgs:
+            assert_is_none(img.attrs.get('data-src'))
+
+
+        file_name = os.path.join(fake_data_path, 'article_detail_mpvoice.html')
+        with io.open(file_name, encoding='utf-8') as f:
+            text = f.read()
+
+        article_detail = WechatSogouStructuring.get_article_detail(text)
+        assert_equal(len(article_detail['content_img_list']), 9, article_detail)
+        assert_true('data-wxurl' not in article_detail['content_html'], article_detail['content_html'])
+        assert_true('qqmusic' not in article_detail['content_html'], article_detail['content_html'])
+        assert_true('mpvoice' not in article_detail['content_html'], article_detail['content_html'])
+
+        file_name = os.path.join(fake_data_path, 'article_detail_qqmusic.html')
+        with io.open(file_name, encoding='utf-8') as f:
+            text = f.read()
+
+        article_detail = WechatSogouStructuring.get_article_detail(text)
+        assert_equal(len(article_detail['content_img_list']), 2, article_detail)
+        assert_true('data-wxurl' not in article_detail['content_html'], article_detail['content_html'])
+        assert_true('qqmusic' not in article_detail['content_html'], article_detail['content_html'])
+        assert_true('mpvoice' not in article_detail['content_html'], article_detail['content_html'])
+
+        file_name = os.path.join(fake_data_path, 'article_detail_iframe.html')
+        with io.open(file_name, encoding='utf-8') as f:
+            text = f.read()
+
+        article_detail = WechatSogouStructuring.get_article_detail(text)
+        assert_equal(len(article_detail['content_img_list']), 6, article_detail)
+        assert_true('data-wxurl' not in article_detail['content_html'], article_detail['content_html'])
+        assert_true('qqmusic' not in article_detail['content_html'], article_detail['content_html'])
+        assert_true('mpvoice' not in article_detail['content_html'], article_detail['content_html'])
+
+        # 图片有src属性，无data-src属性
+        content_html = BeautifulSoup(article_detail['content_html'], 'lxml')
+        iframes = content_html.find_all("iframe", src=re.compile(r'http'))
+        assert_equal(len(iframes), 1, iframes)
+        for iframe in iframes:
+            assert_is_none(iframe.attrs.get('data-src'))
 
 
 if __name__ == '__main__':

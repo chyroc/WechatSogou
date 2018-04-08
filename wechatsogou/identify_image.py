@@ -57,7 +57,6 @@ def unlock_sogou_callback_example(url, req, resp, img, identify_image_callback):
     """
     # no use resp
     url_quote = url.split('weixin.sogou.com/')[-1]
-
     unlock_url = 'http://weixin.sogou.com/antispider/thank.php'
     data = {
         'c': identify_image_callback(img),

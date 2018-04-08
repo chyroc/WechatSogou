@@ -3,6 +3,7 @@
 from __future__ import absolute_import, unicode_literals, print_function
 
 import os
+import time
 import unittest
 
 from nose.tools import assert_equal, assert_true, assert_in, assert_greater_equal
@@ -51,6 +52,24 @@ class TestAPIReal(unittest.TestCase):
     def test_get_sugg(self):
         sugg_gaokao = ws_api.get_sugg(gaokao_keyword)
         assert_equal(10, len(sugg_gaokao))
+
+    def test_get_article_content(self):
+        gzh_article = ws_api.get_gzh_article_by_history(gaokao_keyword,
+                                                        identify_image_callback_sogou=self.identify_image_callback_sogou,
+                                                        identify_image_callback_weixin=self.identify_image_callback_ruokuai_weixin)
+        assert_in('gzh', gzh_article)
+        assert_in('article', gzh_article)
+        assert_in('wx.qlogo.cn', gzh_article['gzh']['headimage'])
+        assert_greater_equal(len(gzh_article['article']), 1)
+        # 防止测试时被封IP
+        time.sleep(11)
+        article_url = gzh_article['article'][0]['content_url']
+
+        article_info = ws_api.get_article_content(article_url,
+                                                  identify_image_callback=self.identify_image_callback_sogou)
+
+        assert_in('content_html', article_info)
+        assert_in('content_img_list', article_info)
 
 
 if __name__ == '__main__':
