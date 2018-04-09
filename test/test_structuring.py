@@ -9,7 +9,7 @@ import re
 import os
 import unittest
 from bs4 import BeautifulSoup
-from nose.tools import assert_equal, assert_in, assert_true, assert_greater_equal, assert_is_none
+from nose.tools import assert_equal, assert_in, assert_true, assert_greater_equal, assert_is_none, assert_not_in
 
 from test import fake_data_path, gaokao_keyword
 from wechatsogou.structuring import WechatSogouStructuring
@@ -417,8 +417,8 @@ class TestStructuringGzh(unittest.TestCase):
         article_detail = WechatSogouStructuring.get_article_detail(text)
         assert_equal(len(article_detail['content_img_list']), 6, article_detail)
         assert_true('data-wxurl' not in article_detail['content_html'], article_detail['content_html'])
-        assert_true('qqmusic' not in article_detail['content_html'], article_detail['content_html'])
-        assert_true('mpvoice' not in article_detail['content_html'], article_detail['content_html'])
+        assert_not_in('qqmusic', article_detail['content_html'], article_detail['content_html'])
+        assert_not_in('mpvoice', article_detail['content_html'], article_detail['content_html'])
 
         # 图片有src属性，无data-src属性
         content_html = BeautifulSoup(article_detail['content_html'], 'lxml')
