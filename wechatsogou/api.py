@@ -2,22 +2,22 @@
 
 from __future__ import absolute_import, unicode_literals, print_function
 
-import re
 import json
+import re
 import time
 
 import requests
 
-from wechatsogou.five import quote
 from wechatsogou.const import WechatSogouConst
-from wechatsogou.request import WechatSogouRequest
-from wechatsogou.structuring import WechatSogouStructuring
-from wechatsogou.exceptions import WechatSogouRequestsException, WechatSogouVcodeOcrException
+from wechatsogou.exceptions import WechatSogouRequestsException, WechatSogouVcodeOcrException, WechatSogouException
+from wechatsogou.five import quote
 from wechatsogou.identify_image import (
     ws_cache,
     identify_image_callback_by_hand,
     unlock_sogou_callback_example,
     unlock_weixin_callback_example)
+from wechatsogou.request import WechatSogouRequest
+from wechatsogou.structuring import WechatSogouStructuring
 
 
 class WechatSogouAPI(object):
@@ -41,7 +41,6 @@ class WechatSogouAPI(object):
     def __set_cookie(self, suv=None, snuid=None, referer=None):
         suv = ws_cache.get('suv') if suv is None else suv
         snuid = ws_cache.get('snuid') if snuid is None else snuid
-
         _headers = {'Cookie': 'SUV={};SNUID={};'.format(suv, snuid)}
         if referer is not None:
             _headers['Referer'] = referer
@@ -62,7 +61,6 @@ class WechatSogouAPI(object):
     def __unlock_sogou(self, url, resp, session, unlock_callback=None, identify_image_callback=None):
         if unlock_callback is None:
             unlock_callback = unlock_sogou_callback_example
-
         millis = int(round(time.time() * 1000))
         r_captcha = session.get('http://weixin.sogou.com/antispider/util/seccode.php?tc={}'.format(millis))
         if not r_captcha.ok:
@@ -103,7 +101,6 @@ class WechatSogouAPI(object):
 
         session = requests.session()
         resp = self.__get(url, session, headers=self.__set_cookie(referer=referer))
-
         if 'antispider' in resp.url or '请输入验证码' in resp.text:
             for i in range(self.captcha_break_times):
                 try:
@@ -119,6 +116,41 @@ class WechatSogouAPI(object):
                 resp = self.__get(url, session, headers=self.__set_cookie(referer=referer))
 
         return resp
+
+    def __hosting_wechat_img(self, content_info, hosting_callback):
+        """将微信明细中图片托管到云端，同时将html页面中的对应图片替换
+
+        Parameters
+        ----------
+        content_info : dict 微信文章明细字典
+            {
+                'content_img_list': [], # 从微信文章解析出的原始图片列表
+                'content_html': '', # 从微信文章解析出文章的内容
+            }
+        hosting_callback : callable
+            托管回调函数，传入单个图片链接，返回托管后的图片链接
+
+        Returns
+        -------
+        dict
+            {
+                'content_img_list': '', # 托管后的图片列表
+                'content_html': '',  # 图片链接为托管后的图片链接内容
+            }
+        """
+        assert callable(hosting_callback)
+
+        content_img_list = content_info.pop("content_img_list")
+        content_html = content_info.pop("content_html")
+        for idx, img_url in enumerate(content_img_list):
+            hosting_img_url = hosting_callback(img_url)
+            if not hosting_img_url:
+                # todo 定义标准异常
+                raise Exception()
+            content_img_list[idx] = hosting_img_url
+            content_html = content_html.replace(img_url, hosting_img_url)
+
+        return dict(content_img_list=content_img_list, content_html=content_html)
 
     def get_gzh_info(self, wecgat_id_or_name, unlock_callback=None, identify_image_callback=None):
         """获取公众号微信号 wechatid 的信息
@@ -197,7 +229,6 @@ class WechatSogouAPI(object):
                                     unlock_platform=self.__unlock_sogou,
                                     unlock_callback=unlock_callback,
                                     identify_image_callback=identify_image_callback)
-
         return WechatSogouStructuring.get_gzh_by_search(resp.text)
 
     def search_article(self, keyword, page=1, timesn=WechatSogouConst.search_article_time.anytime,
@@ -381,12 +412,52 @@ class WechatSogouAPI(object):
         resp.encoding = 'utf-8'
         return WechatSogouStructuring.get_gzh_article_by_hot(resp.text)
 
-    def get_article_content(self):
+    def get_article_content(self, url, del_qqmusic=True, del_mpvoice=True, unlock_callback=None,
+                            identify_image_callback=None, hosting_callback=None):
         """获取文章原文，避免临时链接失效
 
-        :return:
+        Parameters
+        ----------
+        url : str or unicode
+            原文链接，临时链接
+        del_qqmusic: bool
+            True:微信原文中有插入的qq音乐，则删除
+            False:微信源文中有插入的qq音乐，则保留
+        del_mpvoice: bool
+            True:微信原文中有插入的语音消息，则删除
+            False:微信源文中有插入的语音消息，则保留
+        unlock_callback : callable
+            处理 文章明细 的时候出现验证码的函数，参见 unlock_callback_example
+        identify_image_callback : callable
+            处理 文章明细 的时候处理验证码函数，输入验证码二进制数据，输出文字，参见 identify_image_callback_example
+        hosting_callback: callable
+            将微信采集的文章托管到7牛或者阿里云回调函数，输入微信图片源地址，返回托管后地址
+
+        Returns
+        -------
+        content_html
+            原文内容
+        content_img_list
+            文章中图片列表
+
+        Raises
+        ------
+        WechatSogouRequestsException
         """
-        pass  # TODO 获取文章原文，避免临时链接失效
+
+        resp = self.__get_by_unlock(url,
+                                    unlock_platform=self.__unlock_wechat,
+                                    unlock_callback=unlock_callback,
+                                    identify_image_callback=identify_image_callback)
+
+        resp.encoding = 'utf-8'
+        if '链接已过期' in resp.text:
+            raise WechatSogouException('get_article_content 链接 [{}] 已过期'.format(url))
+        content_info = WechatSogouStructuring.get_article_detail(resp.text, del_qqmusic=del_qqmusic,
+                                                                 del_voice=del_mpvoice)
+        if hosting_callback:
+            content_info = self.__hosting_wechat_img(content_info, hosting_callback)
+        return content_info
 
     def get_sugg(self, keyword):
         """获取微信搜狗搜索关键词联想

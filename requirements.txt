@@ -5,3 +5,4 @@ requests==2.18.2
 six==1.10.0
 Werkzeug==0.12.2
 xlrd==1.0.0
+bs4==0.0.1
