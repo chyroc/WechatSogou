@@ -389,7 +389,6 @@ class TestStructuringGzh(unittest.TestCase):
         for img in imgs:
             assert_is_none(img.attrs.get('data-src'))
 
-
         file_name = os.path.join(fake_data_path, 'article_detail_mpvoice.html')
         with io.open(file_name, encoding='utf-8') as f:
             text = f.read()
@@ -416,7 +415,7 @@ class TestStructuringGzh(unittest.TestCase):
 
         article_detail = WechatSogouStructuring.get_article_detail(text)
         assert_equal(len(article_detail['content_img_list']), 6, article_detail)
-        assert_true('data-wxurl' not in article_detail['content_html'], article_detail['content_html'])
+        assert_not_in('data-wxurl', article_detail['content_html'], article_detail['content_html'])
         assert_not_in('qqmusic', article_detail['content_html'], article_detail['content_html'])
         assert_not_in('mpvoice', article_detail['content_html'], article_detail['content_html'])
 
