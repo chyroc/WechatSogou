@@ -31,7 +31,7 @@ __all__ = [
     'WechatSogouRequestsException']
 
 __title__ = 'wechatsogou'
-__version__ = "4.2.0"
+__version__ = "4.2.1"
 __author__ = 'Chyroc'
 
 """doc string
