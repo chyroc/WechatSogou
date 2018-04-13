@@ -1,5 +1,25 @@
 # Change Log
 
+## [v4.2.1](https://github.com/Chyroc/WechatSogou/tree/v4.2.1) (2018-04-13)
+[Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v4.2.0...v4.2.1)
+
+## [v4.2.0](https://github.com/Chyroc/WechatSogou/tree/v4.2.0) (2018-04-13)
+[Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v4.1.0...v4.2.0)
+
+**Closed issues:**
+
+- 怎么样才不用输入验证码 [\#192](https://github.com/Chyroc/WechatSogou/issues/192)
+- 请问为何出现input code? [\#191](https://github.com/Chyroc/WechatSogou/issues/191)
+- 为什么每次都会打开Photoshop？ [\#189](https://github.com/Chyroc/WechatSogou/issues/189)
+- 非常奇怪的错误, 说是wechartsogou没有"WechatSougouAPI"这个属性 [\#187](https://github.com/Chyroc/WechatSogou/issues/187)
+- 关于在linux上输入验证码的思路 [\#186](https://github.com/Chyroc/WechatSogou/issues/186)
+- 爬下来的链接,过一段时间就不能访问了,提示链接已经过期 [\#185](https://github.com/Chyroc/WechatSogou/issues/185)
+
+**Merged pull requests:**
+
+- 增加微信文章明细获取 [\#190](https://github.com/Chyroc/WechatSogou/pull/190) ([mx472756841](https://github.com/mx472756841))
+- release/v4.1.0 [\#184](https://github.com/Chyroc/WechatSogou/pull/184) ([Chyroc](https://github.com/Chyroc))
+
 ## [v4.1.0](https://github.com/Chyroc/WechatSogou/tree/v4.1.0) (2018-03-01)
 [Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v4.0.3...v4.1.0)
 

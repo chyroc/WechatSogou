@@ -22,7 +22,7 @@ setup(
         'setuptools>=20.6.8',
     ],
     install_requires=[
-        'future', 'lxml', 'Pillow', 'requests', 'six', 'Werkzeug', 'xlrd'
+        'future', 'lxml', 'Pillow', 'requests', 'six', 'Werkzeug', 'xlrd', 'bs4'
     ],
     include_package_data=True,
     license='MIT License',
