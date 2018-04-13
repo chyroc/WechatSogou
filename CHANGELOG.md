@@ -1,5 +1,8 @@
 # Change Log
 
+## [v4.2.1](https://github.com/Chyroc/WechatSogou/tree/v4.2.1) (2018-04-13)
+[Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v4.2.0...v4.2.1)
+
 ## [v4.2.0](https://github.com/Chyroc/WechatSogou/tree/v4.2.0) (2018-04-13)
 [Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v4.1.0...v4.2.0)
 
