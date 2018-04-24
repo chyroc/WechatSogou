@@ -14,7 +14,7 @@ from wechatsogou.exceptions import WechatSogouException
 from wechatsogou.five import str_to_bytes
 from wechatsogou.tools import get_elem_text, list_or_empty, replace_html, get_first_of_element
 
-backgroud_image_p = re.compile('background-image:[ ]+url\(\"([\w\W]+?)\"\)')
+backgroud_image_p = re.compile('background-image:[ ]+url\(\"?([\w\W]+?)\"?\)')
 js_content = re.compile('js_content.*?>((\s|\S)+)</div>')
 find_article_json_re = re.compile('var msgList = (.*?)}}]};')
 get_post_view_perm = re.compile('<script>var account_anti_url = "(.*?)";</script>')
@@ -507,6 +507,9 @@ class WechatSogouStructuring(object):
                 del ele.attrs['data-wxurl']
             img_url = re.findall(backgroud_image_p, str(ele))
             if not img_url:
+                continue
+            if not img_url[0].startswith('http'):
+                # 如果背景图没有则不需要处理
                 continue
             all_img_set.add(img_url[0])
 
