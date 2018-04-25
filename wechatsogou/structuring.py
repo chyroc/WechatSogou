@@ -30,7 +30,7 @@ class WechatSogouStructuring(object):
     @staticmethod
     def __get_post_view_perm(text):
         result = get_post_view_perm.findall(text)
-        if not result or len(result) < 1:
+        if not result or len(result) < 1 or not result[0]:
             return None
 
         r = requests.get('http://weixin.sogou.com{}'.format(result[0]))
