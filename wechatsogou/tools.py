@@ -37,7 +37,10 @@ def get_elem_text(elem):
     Returns:
         elem中文字
     """
-    return ''.join([node.strip() for node in elem.itertext()])
+    if elem != '':
+        return ''.join([node.strip() for node in elem.itertext()])
+    else:
+        return ''
 
 
 def get_first_of_element(element, sub, contype=None):
