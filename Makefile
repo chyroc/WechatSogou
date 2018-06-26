@@ -25,7 +25,7 @@ tox:
 gendoc:
 	echo '---\nname: Change Log\n---\n' > docs/src/CHANGELOG.mdx
 	cat CHANGELOG.md >> docs/src/CHANGELOG.mdx
-	cd docs/src/ && yarn build && mv .docz/dist/* ../
+	cd docs/src/ && yarn build && rm -rf ../static && mv .docz/dist/* ../
 
 clean:
 	@rm -rf build/ wechatsogou.egg-info/ dist/
