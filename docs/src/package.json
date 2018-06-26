@@ -1,0 +1,10 @@
+{
+  "name": "docs",
+  "scripts": {
+    "dev": "docz dev",
+    "build": "docz build"
+  },
+  "devDependencies": {
+    "docz": "latest"
+  }
+}
