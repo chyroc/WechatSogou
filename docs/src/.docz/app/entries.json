@@ -1,7 +1,7 @@
 {
   "CHANGELOG.mdx": {
     "name": "Change Log",
-    "id": "01CGXZPZB84RAXJVMGW1NJJ4C4",
+    "id": "01CGY069JHFHHDK9V1JZYJNEFF",
     "filepath": "CHANGELOG.mdx",
     "slug": "changelog",
     "route": "/changelog",
@@ -86,7 +86,7 @@
   },
   "FAQ.mdx": {
     "name": "FAQ",
-    "id": "01CGXZPZBBBC5MF28J584649GP",
+    "id": "01CGY069JK9DCT474JH09N3WZ3",
     "filepath": "FAQ.mdx",
     "slug": "faq",
     "route": "/faq",
