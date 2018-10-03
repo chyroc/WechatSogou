@@ -6,12 +6,12 @@ import os
 import time
 import unittest
 
-from nose.tools import assert_equal, assert_true, assert_in, assert_greater_equal
+from nose.tools import assert_equal, assert_true, assert_in, assert_greater_equal, raises
 
 from wechatsogou.const import WechatSogouConst
 from wechatsogou.api import WechatSogouAPI
 from wechatsogou.identify_image import identify_image_callback_by_hand
-from test import gaokao_keyword
+from test import gaokao_keyword, empty_search_result_keyword
 from test.rk import identify_image_callback_ruokuai_sogou, identify_image_callback_ruokuai_weixin
 
 ws_api = WechatSogouAPI(captcha_break_time=3)
@@ -70,6 +70,12 @@ class TestAPIReal(unittest.TestCase):
 
         assert_in('content_html', article_info)
         assert_in('content_img_list', article_info)
+
+    @raises(Exception)
+    def test_gzh_by_history_profile_none(self):
+        gzh_article = ws_api.get_gzh_article_by_history(empty_search_result_keyword,
+                                                        identify_image_callback_sogou=self.identify_image_callback_sogou,
+                                                        identify_image_callback_weixin=self.identify_image_callback_ruokuai_weixin)
 
 
 if __name__ == '__main__':
