@@ -360,7 +360,9 @@ class WechatSogouAPI(object):
         """
         if url is None:
             gzh_list = self.get_gzh_info(keyword, unlock_callback_sogou, identify_image_callback_sogou)
-            if gzh_list is None or 'profile_url' not in gzh_list:
+            if gzh_list is None:
+                return {}
+            if 'profile_url' not in gzh_list:
                 raise Exception()  # todo use ws exception
             url = gzh_list['profile_url']
 
