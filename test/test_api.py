@@ -6,7 +6,7 @@ import os
 import time
 import unittest
 
-from nose.tools import assert_equal, assert_true, assert_in, assert_greater_equal 
+from nose.tools import assert_equal, assert_true, assert_in, assert_greater_equal
 
 from wechatsogou.const import WechatSogouConst
 from wechatsogou.api import WechatSogouAPI
