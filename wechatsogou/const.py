@@ -38,26 +38,27 @@ class _WechatSogouSearchArticleTimeConst(object):
 
 @Const
 class _WechatSogouHotIndexConst(object):
-    hot = 'hot'
-    recommendation = 'recommendation'
-    duanzi = 'duanzi'
-    health = 'health'
-    sifanghua = 'sifanghua'
-    gossip = 'gossip'
-    life = 'life'
-    finance = 'finance'
-    car = 'car'
-    technology = 'technology'
-    fashion = 'fashion'
-    mummy = 'mummy'
-    dianzan = 'dianzan'
-    travel = 'travel'
-    job = 'job'
-    food = 'food'
-    history = 'history'
-    study = 'study'
-    constellation = 'constellation'
-    sport = 'sport'
+    hot = 'hot'  # 热门
+    gaoxiao = 'gaoxiao'  # 搞笑
+    health = 'health'  # 养生
+    sifanghua = 'sifanghua'  # 私房话
+    gossip = 'gossip'  # 八卦
+    technology = 'technology'  # 科技
+    finance = 'finance'  # 财经
+    car = 'car'  # 汽车
+    life = 'life'  # 生活
+    fashion = 'fashion'  # 时尚
+    mummy = 'mummy'  # 辣妈 / 育儿
+    travel = 'travel'  # 旅行
+    job = 'job'  # 职场
+    food = 'food'  # 美食
+    history = 'history'  # 历史
+    study = 'study'  # 学霸 / 教育
+    constellation = 'constellation'  # 星座
+    sport = 'sport'  # 体育
+    military = 'military'  # 军事
+    game = 'game'  # 游戏
+    pet = 'pet'  # 萌宠
 
 
 @Const

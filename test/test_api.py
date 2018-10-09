@@ -41,7 +41,7 @@ class TestAPIReal(unittest.TestCase):
         assert_greater_equal(len(gzh_article['article']), 1)
 
     def test_get_gzh_article_by_hot_real(self):
-        gzh_articles = ws_api.get_gzh_article_by_hot(WechatSogouConst.hot_index.recommendation,
+        gzh_articles = ws_api.get_gzh_article_by_hot(WechatSogouConst.hot_index.gaoxiao,
                                                      identify_image_callback=self.identify_image_callback_sogou)
         for gzh_article in gzh_articles:
             assert_in('gzh', gzh_article)
