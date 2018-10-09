@@ -5,8 +5,8 @@ from __future__ import absolute_import, unicode_literals, print_function
 import datetime
 from collections import OrderedDict
 
-from wechatsogou.five import urlencode
 from wechatsogou.const import WechatSogouConst
+from wechatsogou.five import urlencode
 
 _search_type_gzh = 1  # 公众号
 _search_type_article = 2  # 文章
@@ -133,24 +133,26 @@ class WechatSogouRequest(object):
 
         index_urls = {
             WechatSogouConst.hot_index.hot: 0,  # 热门
-            WechatSogouConst.hot_index.recommendation: 1,  # 推荐
-            WechatSogouConst.hot_index.duanzi: 2,  # 段子手
-            WechatSogouConst.hot_index.health: 3,  # 养生
-            WechatSogouConst.hot_index.sifanghua: 4,  # 私房话
-            WechatSogouConst.hot_index.gossip: 5,  # 八卦
-            WechatSogouConst.hot_index.life: 6,  # 生活
-            WechatSogouConst.hot_index.finance: 7,  # 财经
-            WechatSogouConst.hot_index.car: 8,  # 汽车
-            WechatSogouConst.hot_index.technology: 9,  # 科技
-            WechatSogouConst.hot_index.fashion: 10,  # 时尚
-            WechatSogouConst.hot_index.mummy: 11,  # 辣妈
-            WechatSogouConst.hot_index.dianzan: 12,  # 点赞
-            WechatSogouConst.hot_index.travel: 13,  # 旅行
-            WechatSogouConst.hot_index.job: 14,  # 职场
-            WechatSogouConst.hot_index.food: 15,  # 美食
-            WechatSogouConst.hot_index.history: 16,  # 历史
-            WechatSogouConst.hot_index.study: 17,  # 学霸
-            WechatSogouConst.hot_index.constellation: 18,  # 星座
-            WechatSogouConst.hot_index.sport: 19,  # 体育
+            WechatSogouConst.hot_index.gaoxiao: 1,  # 搞笑
+            WechatSogouConst.hot_index.health: 2,  # 养生
+            WechatSogouConst.hot_index.sifanghua: 3,  # 私房话
+            WechatSogouConst.hot_index.gossip: 4,  # 八卦
+            WechatSogouConst.hot_index.technology: 5,  # 科技
+            WechatSogouConst.hot_index.finance: 6,  # 财经
+            WechatSogouConst.hot_index.car: 7,  # 汽车
+            WechatSogouConst.hot_index.life: 8,  # 生活
+            WechatSogouConst.hot_index.fashion: 9,  # 时尚
+            WechatSogouConst.hot_index.mummy: 10,  # 辣妈 / 育儿
+            WechatSogouConst.hot_index.travel: 11,  # 旅行
+            WechatSogouConst.hot_index.job: 12,  # 职场
+            WechatSogouConst.hot_index.food: 13,  # 美食
+            WechatSogouConst.hot_index.history: 14,  # 历史
+            WechatSogouConst.hot_index.study: 15,  # 学霸 / 教育
+            WechatSogouConst.hot_index.constellation: 16,  # 星座
+            WechatSogouConst.hot_index.sport: 17,  # 体育
+            WechatSogouConst.hot_index.military: 18,  # 军事
+            WechatSogouConst.hot_index.game: 19,  # 游戏
+            WechatSogouConst.hot_index.pet: 20,  # 萌宠
+
         }
         return 'http://weixin.sogou.com/wapindex/wap/0612/wap_{}/{}.html'.format(index_urls[hot_index], page - 1)

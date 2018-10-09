@@ -12,7 +12,7 @@ class TestConst(unittest.TestCase):
         assert_true(hasattr(WechatSogouConst, 'hot_index'))
 
         assert_equal(WechatSogouConst.hot_index.hot, 'hot')
-        assert_equal(WechatSogouConst.hot_index.recommendation, 'recommendation')
+        assert_equal(WechatSogouConst.hot_index.gaoxiao, 'gaoxiao')
         assert_equal(WechatSogouConst.hot_index.duanzi, 'duanzi')
         assert_equal(WechatSogouConst.hot_index.health, 'health')
         assert_equal(WechatSogouConst.hot_index.sifanghua, 'sifanghua')
