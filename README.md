@@ -27,9 +27,9 @@
 
 # 交流分享
 
-- QQ群
-
-<a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=2c888d2a84978b1fe863482166b9fe5e6418ae72eb2bf727905734d6af654fa5"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Github搜狗微信爬虫交流" title="Github搜狗微信爬虫交流">132955136</a>
+- QQ群（只需加一个）
+  - 一群 132955136（已满）
+  - 二群 819084985
 
 - 微信群
 
