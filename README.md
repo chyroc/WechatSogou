@@ -33,16 +33,19 @@
 
 - 微信群
 
-添加好友邀请加入，添加请备注：WechatSogou
-
-<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/wechat.jpg" width="250" />
 
 # 赞助作者
 甲鱼说，咖啡是灵魂的饮料，买点咖啡
 
 [谢谢这些人的☕️](./coffee.md)
 
-<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/xiaomiquan.jpeg" width="250" /><img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/pay_wechat.jpg" width="250" /><img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/pay_ali.jpg" width="250" />
+支付宝扫码大家一起领红包：
+
+<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/alipay_hongbao.png" width="250" />
+
+或者直接转账：
+
+<img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/pay_wechat.jpg" width="250" /><img src="https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/pay_ali.jpg" width="250" />
 
 
 # 问题集锦
