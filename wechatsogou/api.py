@@ -423,13 +423,16 @@ class WechatSogouAPI(object):
         return WechatSogouStructuring.get_gzh_article_by_hot(resp.text)
 
     def get_article_content(self, url, del_qqmusic=True, del_mpvoice=True, unlock_callback=None,
-                            identify_image_callback=None, hosting_callback=None):
+                            identify_image_callback=None, hosting_callback=None, raw=False):
         """获取文章原文，避免临时链接失效
 
         Parameters
         ----------
         url : str or unicode
             原文链接，临时链接
+        raw : bool
+            True: 返回原始html
+            False: 返回处理后的html
         del_qqmusic: bool
             True:微信原文中有插入的qq音乐，则删除
             False:微信源文中有插入的qq音乐，则保留
@@ -463,6 +466,8 @@ class WechatSogouAPI(object):
         resp.encoding = 'utf-8'
         if '链接已过期' in resp.text:
             raise WechatSogouException('get_article_content 链接 [{}] 已过期'.format(url))
+        if raw:
+            return resp.text
         content_info = WechatSogouStructuring.get_article_detail(resp.text, del_qqmusic=del_qqmusic,
                                                                  del_voice=del_mpvoice)
         if hosting_callback:
