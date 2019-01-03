@@ -470,19 +470,19 @@ class WechatSogouStructuring(object):
 
         # 2. 删除部分标签
         if del_qqmusic:
-            qqmusic = content_text.find_all('qqmusic')
+            qqmusic = content_text.find_all('qqmusic') or []
             for music in qqmusic:
                 music.parent.decompose()
 
         if del_voice:
             # voice是一个p标签下的mpvoice标签以及class为'js_audio_frame db'的span构成，所以将父标签删除
-            voices = content_text.find_all('mpvoice')
+            voices = content_text.find_all('mpvoice') or []
             for voice in voices:
                 voice.parent.decompose()
 
         # 3. 获取所有的图片 [img标签，和style中的background-image]
         all_img_set = set()
-        all_img_element = content_text.find_all('img')
+        all_img_element = content_text.find_all('img') or []
         for ele in all_img_element:
             # 删除部分属性
             img_url = ele.attrs['data-src']
@@ -497,7 +497,7 @@ class WechatSogouStructuring(object):
                 raise WechatSogouException('img_url [{}] 不合法'.format(img_url))
             all_img_set.add(img_url)
 
-        backgroud_image = content_text.find_all(style=re.compile("background-image"))
+        backgroud_image = content_text.find_all(style=re.compile("background-image")) or []
         for ele in backgroud_image:
             # 删除部分属性
             if ele.attrs.get('data-src'):
@@ -511,7 +511,7 @@ class WechatSogouStructuring(object):
             all_img_set.add(img_url[0])
 
         # 4. 处理iframe
-        all_img_element = content_text.find_all('iframe')
+        all_img_element = content_text.find_all('iframe') or []
         for ele in all_img_element:
             # 删除部分属性
             img_url = ele.attrs['data-src']
