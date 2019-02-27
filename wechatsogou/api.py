@@ -241,6 +241,7 @@ class WechatSogouAPI(object):
 
     def search_article(self, keyword, page=1, timesn=WechatSogouConst.search_article_time.anytime,
                        article_type=WechatSogouConst.search_article_type.all, ft=None, et=None,
+                       get_resultnum=False,
                        unlock_callback=None,
                        identify_image_callback=None):
         """搜索 文章
@@ -265,6 +266,8 @@ class WechatSogouAPI(object):
         ft, et : datetime.date or None
             当 tsn 是 specific 时，ft 代表开始时间，如： 2017-07-01
             当 tsn 是 specific 时，et 代表结束时间，如： 2017-07-15
+        get_resultnum：False or True
+            是否获取搜索结果数
         unlock_callback : callable
             处理出现验证码页面的函数，参见 unlock_callback_example
         identify_image_callback : callable
@@ -288,6 +291,8 @@ class WechatSogouAPI(object):
                     'isv': '',  # 是否加v
                 }
             }
+        int
+            搜索结果数，当get_resultnum=True时返回
 
         Raises
         ------
@@ -300,7 +305,7 @@ class WechatSogouAPI(object):
                                     unlock_callback=unlock_callback,
                                     identify_image_callback=identify_image_callback)
 
-        return WechatSogouStructuring.get_article_by_search(resp.text)
+        return WechatSogouStructuring.get_article_by_search(resp.text,get_resultnum)
 
     def get_gzh_article_by_history(self, keyword=None, url=None,
                                    unlock_callback_sogou=None,
