@@ -132,13 +132,15 @@ class WechatSogouStructuring(object):
         return datas
 
     @staticmethod
-    def get_article_by_search(text):
+    def get_article_by_search(text,get_resultnum=False):
         """从搜索文章获得的文本 提取章列表信息
 
         Parameters
         ----------
         text : str or unicode
             搜索文章获得的文本
+        get_resultnum : False or True
+            是否获取搜索结果总数
 
         Returns
         -------
@@ -158,10 +160,24 @@ class WechatSogouStructuring(object):
                     'isv': '',  # 是否加v
                 }
             }
+        int
+            搜索结果数，当get_resultnum=True时返回
         """
         page = etree.HTML(text)
         lis = page.xpath('//ul[@class="news-list"]/li')
 
+        # 获取搜索结果数
+        if get_resultnum:
+            resultnum_elem=get_first_of_element(page,'//div[@id="pagebar_container"]/div[@class="mun"]/node()')
+            if resultnum_elem:
+                resultnum=re.search('[0-9,]+', str(resultnum_elem)).group()
+                if resultnum:
+                    resultnum=int(resultnum.replace(',',''))
+                else:
+                    resultnum=0
+            else:
+                resultnum=len(lis)
+        
         articles = []
         for li in lis:
             url = get_first_of_element(li, 'div[1]/a/@href')
@@ -211,6 +227,9 @@ class WechatSogouStructuring(object):
                     'isv': gzh_isv,
                 }
             })
+        
+        if get_resultnum:
+            return articles,resultnum
         return articles
 
     @staticmethod
