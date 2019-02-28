@@ -168,15 +168,12 @@ class WechatSogouStructuring(object):
 
         # 获取搜索结果数
         if get_resultnum:
-            resultnum_elem=get_first_of_element(page,'//div[@id="pagebar_container"]/div[@class="mun"]/node()')
+            resultnum_elem = get_first_of_element(page,'//div[@id="pagebar_container"]/div[@class="mun"]/node()')
             if resultnum_elem:
-                resultnum=re.search('[0-9,]+', str(resultnum_elem)).group()
-                if resultnum:
-                    resultnum=int(resultnum.replace(',',''))
-                else:
-                    resultnum=0
+                resultnum = re.search('[0-9,]+', str(resultnum_elem)).group()
+                resultnum = int(resultnum.replace(',','')) if resultnum else 0
             else:
-                resultnum=len(lis)
+                resultnum = len(lis)
         
         articles = []
         for li in lis:
@@ -229,7 +226,7 @@ class WechatSogouStructuring(object):
             })
         
         if get_resultnum:
-            return articles,resultnum
+            return articles, resultnum
         return articles
 
     @staticmethod
