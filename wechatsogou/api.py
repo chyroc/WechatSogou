@@ -121,7 +121,9 @@ class WechatSogouAPI(object):
             if '请输入验证码' in resp.text:
                 resp = session.get(url)
             else:
-                resp = self.__get(url, session, headers=self.__set_cookie(referer=referer))
+                headers = self.__set_cookie(referer=referer)
+                headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 6.1; WOW64)'
+                resp = self.__get(url, session, headers)
 
         return resp
 
