@@ -80,6 +80,10 @@ class WechatSogouStructuring(object):
             qrcode = get_first_of_element(li, 'div/div[3]/span/img[1]/@src')
             introduction = get_elem_text(get_first_of_element(li, 'dl[1]/dd'))
             authentication = get_first_of_element(li, 'dl[2]/dd/text()')
+            if headimage.startswith('//'):
+                headimage = 'https:{}'.format(headimage)
+            if url.startswith('/link?url='):
+                url = 'http://weixin.sogou.com{}'.format(url)
             relist.append({
                 'open_id': headimage.split('/')[-1],
                 'profile_url': url,
