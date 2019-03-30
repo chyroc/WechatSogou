@@ -98,8 +98,7 @@ class WechatSogouAPI(object):
                 '[WechatSogouAPI identify image] code: {ret}, msg: {errmsg}, cookie_count: {cookie_count}'.format(
                     ret=r_unlock.get('ret'), errmsg=r_unlock.get('errmsg'), cookie_count=r_unlock.get('cookie_count')))
 
-    def __get_by_unlock(self, url, referer=None, unlock_platform=None, unlock_callback=None,
-                        identify_image_callback=None):
+    def __get_by_unlock(self, url, referer=None, unlock_platform=None, unlock_callback=None, identify_image_callback=None):
         assert unlock_platform is None or callable(unlock_platform)
 
         if identify_image_callback is None:
