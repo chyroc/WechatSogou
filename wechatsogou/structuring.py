@@ -12,7 +12,7 @@ from lxml.etree import XML
 
 from wechatsogou.exceptions import WechatSogouException
 from wechatsogou.five import str_to_bytes
-from wechatsogou.tools import get_elem_text, list_or_empty, replace_html, get_first_of_element
+from wechatsogou.tools import get_elem_text, list_or_empty, replace_html, get_first_of_element, format_sogou_url, format_image_url
 
 backgroud_image_p = re.compile('background-image:[ ]+url\(\"([\w\W]+?)\"\)')
 js_content = re.compile('js_content.*?>((\s|\S)+)</div>')
@@ -73,17 +73,14 @@ class WechatSogouStructuring(object):
         lis = page.xpath('//ul[@class="news-list2"]/li')
         relist = []
         for li in lis:
-            url = get_first_of_element(li, 'div/div[1]/a/@href')
-            headimage = get_first_of_element(li, 'div/div[1]/a/img/@src')
+            url = format_sogou_url(get_first_of_element(li, 'div/div[1]/a/@href'))
+            headimage = format_image_url(get_first_of_element(li, 'div/div[1]/a/img/@src'))
             wechat_name = get_elem_text(get_first_of_element(li, 'div/div[2]/p[1]'))
             info = get_elem_text(get_first_of_element(li, 'div/div[2]/p[2]'))
             qrcode = get_first_of_element(li, 'div/div[3]/span/img[1]/@src')
             introduction = get_elem_text(get_first_of_element(li, 'dl[1]/dd'))
             authentication = get_first_of_element(li, 'dl[2]/dd/text()')
-            if headimage.startswith('//'):
-                headimage = 'https:{}'.format(headimage)
-            if url.startswith('/link?url='):
-                url = 'http://weixin.sogou.com{}'.format(url)
+
             relist.append({
                 'open_id': headimage.split('/')[-1],
                 'profile_url': url,
@@ -203,13 +200,13 @@ class WechatSogouStructuring(object):
             articles.append({
                 'article': {
                     'title': title,
-                    'url': url,
-                    'imgs': imgs,
+                    'url': format_sogou_url(url),
+                    'imgs': format_image_url(imgs),
                     'abstract': abstract,
                     'time': time
                 },
                 'gzh': {
-                    'profile_url': profile_url,
+                    'profile_url': format_sogou_url(profile_url),
                     'headimage': headimage,
                     'wechat_name': wechat_name,
                     'isv': gzh_isv,
@@ -489,11 +486,8 @@ class WechatSogouStructuring(object):
         all_img_element = content_text.find_all('img') or []
         for ele in all_img_element:
             # 删除部分属性
-            img_url = ele.attrs['data-src']
+            img_url = format_image_url(ele.attrs['data-src'])
             del ele.attrs['data-src']
-
-            if img_url.startswith('//'):
-                img_url = 'http:{}'.format(img_url)
 
             ele.attrs['src'] = img_url
 
