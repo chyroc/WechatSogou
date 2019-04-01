@@ -12,7 +12,7 @@ from lxml.etree import XML
 
 from wechatsogou.exceptions import WechatSogouException
 from wechatsogou.five import str_to_bytes
-from wechatsogou.tools import get_elem_text, list_or_empty, replace_html, get_first_of_element, format_sogou_url, format_image_url
+from wechatsogou.tools import get_elem_text, list_or_empty, replace_html, get_first_of_element, format_image_url
 
 backgroud_image_p = re.compile('background-image:[ ]+url\(\"([\w\W]+?)\"\)')
 js_content = re.compile('js_content.*?>((\s|\S)+)</div>')
@@ -73,7 +73,7 @@ class WechatSogouStructuring(object):
         lis = page.xpath('//ul[@class="news-list2"]/li')
         relist = []
         for li in lis:
-            url = format_sogou_url(get_first_of_element(li, 'div/div[1]/a/@href'))
+            url = get_first_of_element(li, 'div/div[1]/a/@href')
             headimage = format_image_url(get_first_of_element(li, 'div/div[1]/a/img/@src'))
             wechat_name = get_elem_text(get_first_of_element(li, 'div/div[2]/p[1]'))
             info = get_elem_text(get_first_of_element(li, 'div/div[2]/p[2]'))
@@ -200,13 +200,13 @@ class WechatSogouStructuring(object):
             articles.append({
                 'article': {
                     'title': title,
-                    'url': format_sogou_url(url),
+                    'url': url,
                     'imgs': format_image_url(imgs),
                     'abstract': abstract,
                     'time': time
                 },
                 'gzh': {
-                    'profile_url': format_sogou_url(profile_url),
+                    'profile_url': profile_url,
                     'headimage': headimage,
                     'wechat_name': wechat_name,
                     'isv': gzh_isv,

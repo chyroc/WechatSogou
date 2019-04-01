@@ -120,12 +120,6 @@ def get_url_param(url):
     return url_parse.parse_qs(result.query, True)
 
 
-def format_sogou_url(url):
-    if url.startswith('/link?url='):
-        url = 'http://weixin.sogou.com{}'.format(url)
-    return url
-
-
 def format_image_url(url):
     if isinstance(url, list):
         return [format_image_url(i) for i in url]
