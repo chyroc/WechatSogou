@@ -10,7 +10,7 @@ import time
 
 import requests
 
-from wechatsogou.const import WechatSogouConst
+from wechatsogou.const import WechatSogouConst, agents
 from wechatsogou.exceptions import WechatSogouRequestsException, WechatSogouVcodeOcrException, WechatSogouException
 from wechatsogou.five import quote
 from wechatsogou.identify_image import (
@@ -40,6 +40,10 @@ class WechatSogouAPI(object):
         self.captcha_break_times = captcha_break_time
         self.requests_kwargs = kwargs
         self.headers = headers
+        if self.headers:
+            self.headers['User-Agent'] = random.choice(agents)
+        else:
+            self.headers = {'User-Agent': random.choice(agents)}
 
     def __set_cookie(self, suv=None, snuid=None, referer=None):
         suv = ws_cache.get('suv') if suv is None else suv
