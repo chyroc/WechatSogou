@@ -1,5 +1,36 @@
 # Change Log
 
+## [v4.5.3](https://github.com/Chyroc/WechatSogou/tree/v4.5.3) (2019-04-02)
+[Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v4.5.2...v4.5.3)
+
+**Merged pull requests:**
+
+- fix: 修复py3兼容 [\#248](https://github.com/Chyroc/WechatSogou/pull/248) ([Chyroc](https://github.com/Chyroc))
+- 修改空返回值是空generator的处理，避免出现StopIteration错误 [\#247](https://github.com/Chyroc/WechatSogou/pull/247) ([MiderWong](https://github.com/MiderWong))
+- release/v4.5.2 [\#246](https://github.com/Chyroc/WechatSogou/pull/246) ([Chyroc](https://github.com/Chyroc))
+
+## [v4.5.2](https://github.com/Chyroc/WechatSogou/tree/v4.5.2) (2019-04-02)
+[Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v4.5.1...v4.5.2)
+
+**Merged pull requests:**
+
+- fix: yield return in py33 [\#245](https://github.com/Chyroc/WechatSogou/pull/245) ([Chyroc](https://github.com/Chyroc))
+- release/v4.5.1 [\#244](https://github.com/Chyroc/WechatSogou/pull/244) ([Chyroc](https://github.com/Chyroc))
+
+## [v4.5.1](https://github.com/Chyroc/WechatSogou/tree/v4.5.1) (2019-04-02)
+[Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v4.5.0...v4.5.1)
+
+**Closed issues:**
+
+- 爬取出来的结果是none [\#242](https://github.com/Chyroc/WechatSogou/issues/242)
+- 多了一层 /link?url= 跳转 [\#235](https://github.com/Chyroc/WechatSogou/issues/235)
+
+**Merged pull requests:**
+
+- fix: search\_article [\#243](https://github.com/Chyroc/WechatSogou/pull/243) ([Chyroc](https://github.com/Chyroc))
+- fix: unlock request encoding [\#241](https://github.com/Chyroc/WechatSogou/pull/241) ([Chyroc](https://github.com/Chyroc))
+- Release/v4.5.0 [\#240](https://github.com/Chyroc/WechatSogou/pull/240) ([Chyroc](https://github.com/Chyroc))
+
 ## [v4.5.0](https://github.com/Chyroc/WechatSogou/tree/v4.5.0) (2019-04-01)
 [Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v4.4.0...v4.5.0)
 
