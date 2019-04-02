@@ -11,10 +11,11 @@ import time
 import requests
 from wechatsogou.const import agents, WechatSogouConst
 from wechatsogou.exceptions import WechatSogouException, WechatSogouRequestsException, WechatSogouVcodeOcrException
-from wechatsogou.five import quote
+from wechatsogou.five import must_str, quote
 from wechatsogou.identify_image import (identify_image_callback_by_hand, unlock_sogou_callback_example, unlock_weixin_callback_example, ws_cache)
 from wechatsogou.request import WechatSogouRequest
 from wechatsogou.structuring import WechatSogouStructuring
+from wechatsogou.tools import may_int
 
 
 class WechatSogouAPI(object):
@@ -110,10 +111,11 @@ class WechatSogouAPI(object):
         if not session:
             session = requests.session()
         resp = self.__get(url, session, headers=self.__set_cookie(referer=referer))
+        resp.encoding = 'utf-8'
         if 'antispider' in resp.url or '请输入验证码' in resp.text:
             for i in range(self.captcha_break_times):
                 try:
-                    unlock_platform(url, resp, session, unlock_callback, identify_image_callback)
+                    unlock_platform(url=url, resp=resp, session=session, unlock_callback=unlock_callback, identify_image_callback=identify_image_callback)
                     break
                 except WechatSogouVcodeOcrException as e:
                     if i == self.captcha_break_times - 1:
@@ -121,10 +123,12 @@ class WechatSogouAPI(object):
 
             if '请输入验证码' in resp.text:
                 resp = session.get(url)
+                resp.encoding = 'utf-8'
             else:
                 headers = self.__set_cookie(referer=referer)
                 headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 6.1; WOW64)'
                 resp = self.__get(url, session, headers)
+                resp.encoding = 'utf-8'
 
         return resp
 
@@ -169,9 +173,12 @@ class WechatSogouAPI(object):
             a = url.find("url=")
             c = url.find("&k=")
             if a != -1 and c == -1:
-                a = url[a + sum([int(i) for i in pads]) + b]
+                sum = 0
+                for i in list(pads) + [a, b]:
+                    sum += int(must_str(i))
+                a = url[sum]
 
-            return '{}&k={}&h={}'.format(url, b, a)
+            return '{}&k={}&h={}'.format(url, may_int(b), may_int(a))
 
         if url.startswith('/link?url='):
             url = 'https://weixin.sogou.com{}'.format(url)

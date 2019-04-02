@@ -18,6 +18,10 @@ if six.PY2:
     sys.setdefaultencoding('utf-8')
     input = raw_input
     str_to_bytes = bytes
+    def must_str(s):
+        if isinstance(s,unicode):
+            s = s.encode('utf-8')
+        return s
 else:
     import urllib.parse as url_parse
     import urllib.parse
@@ -33,3 +37,6 @@ else:
     urlencode = urllib.parse.urlencode
     input = input
     str_to_bytes = lambda x: bytes(x, encoding='utf-8')
+    def must_str(s):
+        return s
+

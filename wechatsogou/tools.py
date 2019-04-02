@@ -127,3 +127,10 @@ def format_image_url(url):
     if url.startswith('//'):
         url = 'https:{}'.format(url)
     return url
+
+
+def may_int(i):
+    try:
+        return int(i)
+    except Exception:
+        return i
