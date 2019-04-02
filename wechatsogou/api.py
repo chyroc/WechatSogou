@@ -224,13 +224,11 @@ class WechatSogouAPI(object):
                 'authentication': ''  # 认证
             }
         """
-        info = self.search_gzh(wecgat_id_or_name, 1, unlock_callback, identify_image_callback)
-        if not info:
-            return None
-        if decode_url:
+        info = self.search_gzh(wecgat_id_or_name, 1, unlock_callback, identify_image_callback, decode_url)
+        try:
             return next(info)
-
-        return info
+        except StopIteration:
+            return None
 
     def search_gzh(self, keyword, page=1, unlock_callback=None, identify_image_callback=None, decode_url=True):
         """搜索 公众号
