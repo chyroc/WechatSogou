@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import, unicode_literals, print_function
+from __future__ import absolute_import, print_function, unicode_literals
 
 import json
 import math
@@ -9,15 +9,10 @@ import re
 import time
 
 import requests
-
-from wechatsogou.const import WechatSogouConst, agents
-from wechatsogou.exceptions import WechatSogouRequestsException, WechatSogouVcodeOcrException, WechatSogouException
+from wechatsogou.const import agents, WechatSogouConst
+from wechatsogou.exceptions import WechatSogouException, WechatSogouRequestsException, WechatSogouVcodeOcrException
 from wechatsogou.five import quote
-from wechatsogou.identify_image import (
-    ws_cache,
-    identify_image_callback_by_hand,
-    unlock_sogou_callback_example,
-    unlock_weixin_callback_example)
+from wechatsogou.identify_image import (identify_image_callback_by_hand, unlock_sogou_callback_example, unlock_weixin_callback_example, ws_cache)
 from wechatsogou.request import WechatSogouRequest
 from wechatsogou.structuring import WechatSogouStructuring
 
@@ -287,13 +282,9 @@ class WechatSogouAPI(object):
                                     identify_image_callback=identify_image_callback,
                                     session=session)
         gzh_list = WechatSogouStructuring.get_gzh_by_search(resp.text)
-        if not decode_url:
-            return gzh_list
-
         for i in gzh_list:
-            if not i.get('profile_url'):
-                continue
-            i['profile_url'] = self.__format_url(i['profile_url'], url, resp.text, unlock_callback=unlock_callback, identify_image_callback=identify_image_callback, session=session)
+            if decode_url:
+                i['profile_url'] = self.__format_url(i['profile_url'], url, resp.text, unlock_callback=unlock_callback, identify_image_callback=identify_image_callback, session=session)
             yield i
 
     def search_article(self, keyword, page=1, timesn=WechatSogouConst.search_article_time.anytime,
@@ -363,11 +354,10 @@ class WechatSogouAPI(object):
                                     session=session)
 
         article_list = WechatSogouStructuring.get_article_by_search(resp.text)
-        if not decode_url:
-            return article_list
         for i in article_list:
-            i['article']['url'] = self.__format_url(i['article']['url'], url, resp.text, unlock_callback=unlock_callback, identify_image_callback=identify_image_callback, session=session)
-            i['gzh']['profile_url'] = self.__format_url(i['gzh']['profile_url'], url, resp.text, unlock_callback=unlock_callback, identify_image_callback=identify_image_callback, session=session)
+            if decode_url:
+                i['article']['url'] = self.__format_url(i['article']['url'], url, resp.text, unlock_callback=unlock_callback, identify_image_callback=identify_image_callback, session=session)
+                i['gzh']['profile_url'] = self.__format_url(i['gzh']['profile_url'], url, resp.text, unlock_callback=unlock_callback, identify_image_callback=identify_image_callback, session=session)
             yield i
 
     def get_gzh_article_by_history(self, keyword=None, url=None,
