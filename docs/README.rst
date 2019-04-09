@@ -1,11 +1,7 @@
 基于搜狗微信搜索的微信公众号爬虫接口
 ====================================
 
-`Build Status <https://github.com/Chyroc/WechatSogou>`__ `PyPI
-version <https://github.com/Chyroc/WechatSogou>`__
-`PyPI <https://github.com/Chyroc/WechatSogou>`__
-`py27,py35,py36 <https://github.com/Chyroc/WechatSogou>`__
-`PyPI <https://github.com/Chyroc/WechatSogou>`__
+|Build Status| |PyPI version| |PyPI| |py27,py35,py36| |PyPI|
 
 .. figure:: https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_info.png
    :alt: ws_api.get_gzh_info(‘南航青年志愿者’)
@@ -33,13 +29,12 @@ version <https://github.com/Chyroc/WechatSogou>`__
 交流分享
 ========
 
--  QQ群
+-  QQ群（只需加一个）
 
-132955136
+   -  一群 132955136（已满）
+   -  二群 819084985
 
 -  微信群
-
-添加好友邀请加入，添加请备注：WechatSogou
 
 赞助作者
 ========
@@ -47,6 +42,10 @@ version <https://github.com/Chyroc/WechatSogou>`__
 甲鱼说，咖啡是灵魂的饮料，买点咖啡
 
 `谢谢这些人的☕️ <./coffee.md>`__
+
+支付宝扫码大家一起领红包：
+
+或者直接转账：
 
 问题集锦
 ========
@@ -447,12 +446,23 @@ list of dict, dict:
 TODO
 ====
 
--  [x] [STRIKEOUT:相似文章的公众号获取]
--  [ ] 主页热门公众号获取
--  [ ] 文章详情页信息
--  [x] [STRIKEOUT:所有类型的解析]
--  [ ] 验证码识别
--  [ ] 接入爬虫框架
--  [x] 兼容py2
+-  ☒ [STRIKEOUT:相似文章的公众号获取]
+-  ☐ 主页热门公众号获取
+-  ☐ 文章详情页信息
+-  ☒ [STRIKEOUT:所有类型的解析]
+-  ☐ 验证码识别
+-  ☐ 接入爬虫框架
+-  ☒ 兼容py2
 
 --------------
+
+.. |Build Status| image:: https://travis-ci.org/Chyroc/WechatSogou.svg?branch=master
+   :target: https://github.com/Chyroc/WechatSogou
+.. |PyPI version| image:: https://badge.fury.io/py/wechatsogou.svg
+   :target: https://github.com/Chyroc/WechatSogou
+.. |PyPI| image:: https://img.shields.io/pypi/wheel/wechatsogou.svg
+   :target: https://github.com/Chyroc/WechatSogou
+.. |py27,py35,py36| image:: https://img.shields.io/pypi/pyversions/wechatsogou.svg
+   :target: https://github.com/Chyroc/WechatSogou
+.. |PyPI| image:: https://img.shields.io/pypi/l/wechatsogou.svg
+   :target: https://github.com/Chyroc/WechatSogou

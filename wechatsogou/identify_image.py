@@ -68,6 +68,7 @@ def unlock_sogou_callback_example(url, req, resp, img, identify_image_callback):
         'Referer': 'http://weixin.sogou.com/antispider/?from=%2f' + url_quote
     }
     r_unlock = req.post(unlock_url, data, headers=headers)
+    r_unlock.encoding = 'utf-8'
     if not r_unlock.ok:
         raise WechatSogouVcodeOcrException(
             'unlock[{}] failed: {}'.format(unlock_url, r_unlock.text, r_unlock.status_code))
