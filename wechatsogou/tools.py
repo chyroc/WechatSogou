@@ -118,3 +118,19 @@ def replace_space(s):
 def get_url_param(url):
     result = url_parse.urlparse(url)
     return url_parse.parse_qs(result.query, True)
+
+
+def format_image_url(url):
+    if isinstance(url, list):
+        return [format_image_url(i) for i in url]
+
+    if url.startswith('//'):
+        url = 'https:{}'.format(url)
+    return url
+
+
+def may_int(i):
+    try:
+        return int(i)
+    except Exception:
+        return i

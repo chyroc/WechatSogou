@@ -1,6 +1,125 @@
 Change Log
 ==========
 
+`v4.5.0 <https://github.com/Chyroc/WechatSogou/tree/v4.5.0>`__ (2019-04-01)
+---------------------------------------------------------------------------
+
+`Full
+Changelog <https://github.com/Chyroc/WechatSogou/compare/v4.4.0...v4.5.0>`__
+
+**Closed issues:**
+
+-  发现几个问题
+   `#234 <https://github.com/Chyroc/WechatSogou/issues/234>`__
+-  类型错误！NoneType object is not iterable
+   `#233 <https://github.com/Chyroc/WechatSogou/issues/233>`__
+-  是接口失效了还是IP被封了
+   `#231 <https://github.com/Chyroc/WechatSogou/issues/231>`__
+-  这是啥问题 大神看下
+   `#230 <https://github.com/Chyroc/WechatSogou/issues/230>`__
+-  微信的验证码只认ip吗? 请求正常微信的时候是没有cookies返回
+   `#228 <https://github.com/Chyroc/WechatSogou/issues/228>`__
+-  输入验证码后程序出错
+   `#227 <https://github.com/Chyroc/WechatSogou/issues/227>`__
+
+**Merged pull requests:**
+
+-  fix: user-agent
+   `#239 <https://github.com/Chyroc/WechatSogou/pull/239>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  fix: 修复 /link 跳转链接
+   `#238 <https://github.com/Chyroc/WechatSogou/pull/238>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  fix: search_article
+   `#237 <https://github.com/Chyroc/WechatSogou/pull/237>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  fix: search_gzh
+   `#236 <https://github.com/Chyroc/WechatSogou/pull/236>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  修复缺陷#231，搜狗反爬增加UA判断
+   `#232 <https://github.com/Chyroc/WechatSogou/pull/232>`__
+   (`Ahaaaaaa <https://github.com/Ahaaaaaa>`__)
+-  MOD : 修改文章详情页的接口，以便获取原始文章内容, 修复文章获取的bug
+   `#224 <https://github.com/Chyroc/WechatSogou/pull/224>`__
+   (`czlhs <https://github.com/czlhs>`__)
+
+`v4.4.0 <https://github.com/Chyroc/WechatSogou/tree/v4.4.0>`__ (2018-12-15)
+---------------------------------------------------------------------------
+
+`Full
+Changelog <https://github.com/Chyroc/WechatSogou/compare/v4.3.1...v4.4.0>`__
+
+**Closed issues:**
+
+-  怎么接入打码平台呢，找不到验证码的url
+   `#206 <https://github.com/Chyroc/WechatSogou/issues/206>`__
+-  WechatSogouVcodeOcrException code -6 的问题
+   `#196 <https://github.com/Chyroc/WechatSogou/issues/196>`__
+
+`v4.3.1 <https://github.com/Chyroc/WechatSogou/tree/v4.3.1>`__ (2018-10-30)
+---------------------------------------------------------------------------
+
+`Full
+Changelog <https://github.com/Chyroc/WechatSogou/compare/v4.3.0...v4.3.1>`__
+
+**Closed issues:**
+
+-  部分热门品类贴无法获取
+   `#218 <https://github.com/Chyroc/WechatSogou/issues/218>`__
+
+**Merged pull requests:**
+
+-  Release/v4.3.0
+   `#215 <https://github.com/Chyroc/WechatSogou/pull/215>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+
+`v4.3.0 <https://github.com/Chyroc/WechatSogou/tree/v4.3.0>`__ (2018-10-09)
+---------------------------------------------------------------------------
+
+`Full
+Changelog <https://github.com/Chyroc/WechatSogou/compare/v4.2.2...v4.3.0>`__
+
+**Closed issues:**
+
+-  热门贴的类别错误
+   `#213 <https://github.com/Chyroc/WechatSogou/issues/213>`__
+-  ws_api.search_article()如何翻页？目前默认显示第一页的内容
+   `#203 <https://github.com/Chyroc/WechatSogou/issues/203>`__
+-  1、有关于验证码的问题想要请教
+   `#198 <https://github.com/Chyroc/WechatSogou/issues/198>`__
+
+**Merged pull requests:**
+
+-  fix hot-page index
+   `#214 <https://github.com/Chyroc/WechatSogou/pull/214>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+-  fix: 如果sogou搜索的公众号结果为空时异常的问题
+   `#212 <https://github.com/Chyroc/WechatSogou/pull/212>`__
+   (`Edison-Hsu <https://github.com/Edison-Hsu>`__)
+-  use docz to generate docs
+   `#201 <https://github.com/Chyroc/WechatSogou/pull/201>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+
+`v4.2.2 <https://github.com/Chyroc/WechatSogou/tree/v4.2.2>`__ (2018-05-05)
+---------------------------------------------------------------------------
+
+`Full
+Changelog <https://github.com/Chyroc/WechatSogou/compare/v4.2.1...v4.2.2>`__
+
+**Closed issues:**
+
+-  希望作者添加文章详情页内容的获取功能
+   `#194 <https://github.com/Chyroc/WechatSogou/issues/194>`__
+
+**Merged pull requests:**
+
+-  fix empty elem in get_elem_text
+   `#197 <https://github.com/Chyroc/WechatSogou/pull/197>`__
+   (`calmzealA <https://github.com/calmzealA>`__)
+-  Release/v4.2.1
+   `#193 <https://github.com/Chyroc/WechatSogou/pull/193>`__
+   (`Chyroc <https://github.com/Chyroc>`__)
+
 `v4.2.1 <https://github.com/Chyroc/WechatSogou/tree/v4.2.1>`__ (2018-04-13)
 ---------------------------------------------------------------------------
 
