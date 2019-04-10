@@ -18,11 +18,11 @@ class FateadmAPI():
 
     def calc_sign(self, usr_id, passwd, timestamp):
         md5 = hashlib.md5()
-        md5.update(timestamp + passwd)
+        md5.update((timestamp + passwd).encode())
         csign = md5.hexdigest()
 
         md5 = hashlib.md5()
-        md5.update(usr_id + timestamp + csign)
+        md5.update((usr_id + timestamp + csign).encode())
         csign = md5.hexdigest()
         return csign
 
