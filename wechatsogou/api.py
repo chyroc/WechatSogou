@@ -9,6 +9,7 @@ import re
 import time
 
 import requests
+
 from wechatsogou.const import agents, WechatSogouConst
 from wechatsogou.exceptions import WechatSogouException, WechatSogouRequestsException, WechatSogouVcodeOcrException
 from wechatsogou.five import must_str, quote
@@ -72,9 +73,11 @@ class WechatSogouAPI(object):
         if unlock_callback is None:
             unlock_callback = unlock_sogou_callback_example
         millis = int(round(time.time() * 1000))
-        r_captcha = session.get('http://weixin.sogou.com/antispider/util/seccode.php?tc={}'.format(millis))
+        r_captcha = session.get('http://weixin.sogou.com/antispider/util/seccode.php?tc={}'.format(millis), headers={
+            'Referer': url,
+        })
         if not r_captcha.ok:
-            raise WechatSogouRequestsException('WechatSogouAPI get img', resp)
+            raise WechatSogouRequestsException('WechatSogouAPI get img', r_captcha)
 
         r_unlock = unlock_callback(url, session, resp, r_captcha.content, identify_image_callback)
 
