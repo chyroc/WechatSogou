@@ -1,5 +1,23 @@
 # Change Log
 
+## [v4.5.4](https://github.com/Chyroc/WechatSogou/tree/v4.5.4) (2019-04-10)
+[Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v4.5.3...v4.5.4)
+
+**Fixed bugs:**
+
+- 有时候测试会出这个问题 [\#122](https://github.com/Chyroc/WechatSogou/issues/122)
+
+**Closed issues:**
+
+- 获取文章的纯文本内容 是有哪个方法，还是需要自己去解析 [\#252](https://github.com/Chyroc/WechatSogou/issues/252)
+- \[已经失效\]关于获得文章永久URL的思路 [\#55](https://github.com/Chyroc/WechatSogou/issues/55)
+
+**Merged pull requests:**
+
+- fix: fetch captcha [\#254](https://github.com/Chyroc/WechatSogou/pull/254) ([Chyroc](https://github.com/Chyroc))
+- remove unused docs code [\#250](https://github.com/Chyroc/WechatSogou/pull/250) ([Chyroc](https://github.com/Chyroc))
+- Release/v4.5.3 [\#249](https://github.com/Chyroc/WechatSogou/pull/249) ([Chyroc](https://github.com/Chyroc))
+
 ## [v4.5.3](https://github.com/Chyroc/WechatSogou/tree/v4.5.3) (2019-04-02)
 [Full Changelog](https://github.com/Chyroc/WechatSogou/compare/v4.5.2...v4.5.3)
 
