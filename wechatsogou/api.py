@@ -20,7 +20,7 @@ from wechatsogou.tools import may_int
 
 
 class WechatSogouAPI(object):
-    def __init__(self, captcha_break_time=1, headers=None, **kwargs):
+    def __init__(self, captcha_break_time=1, headers=None, limit_seconds=None, **kwargs):
         """初始化参数
 
         Parameters
@@ -31,10 +31,14 @@ class WechatSogouAPI(object):
             代理
         timeout : float
             超时时间
+        limit_seconds : int
+            每个请求的间隔(format url using)
         """
         assert isinstance(captcha_break_time, int) and 0 < captcha_break_time < 20
+        assert isinstance(limit_seconds, int) and 0 < limit_seconds < 20
 
         self.captcha_break_times = captcha_break_time
+        self.limit_seconds = limit_seconds
         self.requests_kwargs = kwargs
         self.headers = headers
         if self.headers:
@@ -113,7 +117,10 @@ class WechatSogouAPI(object):
 
         if not session:
             session = requests.session()
-        resp = self.__get(url, session, headers=self.__set_cookie(referer=referer))
+        try:
+            resp = self.__get(url, session, headers=self.__set_cookie(referer=referer))
+        except WechatSogouRequestsException as e:
+            raise e
         resp.encoding = 'utf-8'
         if 'antispider' in resp.url or '请输入验证码' in resp.text:
             for i in range(self.captcha_break_times):
@@ -188,12 +195,15 @@ class WechatSogouAPI(object):
 
             pads = re.findall(r'href\.substr\(a\+(\d+)\+parseInt\("(\d+)"\)\+b,1\)', text)
             url = _parse_url(url, pads[0] if pads else [])
-            resp = self.__get_by_unlock(url,
-                                        referer=referer,
-                                        unlock_platform=self.__unlock_sogou,
-                                        unlock_callback=unlock_callback,
-                                        identify_image_callback=identify_image_callback,
-                                        session=session)
+            try:
+                resp = self.__get_by_unlock(url,
+                                            referer=referer,
+                                            unlock_platform=self.__unlock_sogou,
+                                            unlock_callback=unlock_callback,
+                                            identify_image_callback=identify_image_callback,
+                                            session=session)
+            except WechatSogouRequestsException as e:
+                raise e
             uri = ''
             base_url = re.findall(r'var url = \'(.*?)\';', resp.text)
             if base_url and len(base_url) > 0:
@@ -353,20 +363,32 @@ class WechatSogouAPI(object):
         WechatSogouRequestsException
             requests error
         """
+        def limit_sleep():
+            """
+            根据limit_seconds参数延迟一段时间
+            """
+            seconds = self.limit_seconds
+            if seconds: time.sleep(seconds)
         url = WechatSogouRequest.gen_search_article_url(keyword, page, timesn, article_type, ft, et)
         session = requests.session()
-        resp = self.__get_by_unlock(url, WechatSogouRequest.gen_search_article_url(keyword),
-                                    unlock_platform=self.__unlock_sogou,
-                                    unlock_callback=unlock_callback,
-                                    identify_image_callback=identify_image_callback,
-                                    session=session)
+        try:
+            resp = self.__get_by_unlock(url, WechatSogouRequest.gen_search_article_url(keyword),
+                                        unlock_platform=self.__unlock_sogou,
+                                        unlock_callback=unlock_callback,
+                                        identify_image_callback=identify_image_callback,
+                                        session=session)
 
-        article_list = WechatSogouStructuring.get_article_by_search(resp.text)
-        for i in article_list:
-            if decode_url:
-                i['article']['url'] = self.__format_url(i['article']['url'], url, resp.text, unlock_callback=unlock_callback, identify_image_callback=identify_image_callback, session=session)
-                i['gzh']['profile_url'] = self.__format_url(i['gzh']['profile_url'], url, resp.text, unlock_callback=unlock_callback, identify_image_callback=identify_image_callback, session=session)
-            yield i
+            article_list = WechatSogouStructuring.get_article_by_search(resp.text)
+
+            limit_sleep()
+            for i in article_list:
+                if decode_url:
+                    i['article']['url'] = self.__format_url(i['article']['url'], url, resp.text, unlock_callback=unlock_callback, identify_image_callback=identify_image_callback, session=session)
+                    limit_sleep()
+                    i['gzh']['profile_url'] = self.__format_url(i['gzh']['profile_url'], url, resp.text, unlock_callback=unlock_callback, identify_image_callback=identify_image_callback, session=session)
+                yield i
+        except WechatSogouRequestsException as e:
+            raise e
 
     def get_gzh_article_by_history(self, keyword=None, url=None,
                                    unlock_callback_sogou=None,
