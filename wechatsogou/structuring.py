@@ -378,7 +378,8 @@ class WechatSogouStructuring(object):
         }
 
     @staticmethod
-    def get_gzh_article_by_hot(text):
+    def 
+    (text):
         """从 首页热门搜索 提取公众号信息 和 文章列表信息
 
         Parameters
@@ -415,7 +416,7 @@ class WechatSogouStructuring(object):
             open_id = get_first_of_element(xpath_time, 'span/@data-openid')
             headimage = get_first_of_element(xpath_time, 'span/@data-headimage')
             gzh_name = get_first_of_element(xpath_time, 'span/text()')
-            send_time = xpath_time.xpath('a/span/@data-lastmodified')
+            send_time = xpath_time.xpath('span/@data-lastmodified')
             main_img = get_first_of_element(li, 'div[2]/a/img/@src')
 
             try:
