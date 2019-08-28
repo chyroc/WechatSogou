@@ -1,14 +1,16 @@
 import codecs
-from setuptools import setup
+import re
 
-import wechatsogou
+from setuptools import setup
 
 readme = codecs.open('docs/README.rst', encoding='utf-8').read()
 history = codecs.open('docs/HISTORY.rst', encoding='utf-8').read()
+with codecs.open("wechatsogou/__init__.py", encoding="utf8") as f:
+    version = re.search(r'__version__ = "(.*?)"', f.read()).group(1)
 
 setup(
     name='wechatsogou',
-    version=wechatsogou.__version__,
+    version=version,
     description='Api for wechat mp with sogou',
     long_description=u'\n\n'.join([readme, history]),
     author='Chyroc',
