@@ -1,6 +1,6 @@
 future==0.16.0
 lxml==3.7.3
-Pillow==4.1.1
+Pillow==6.2.0
 requests>=2.20.0
 six==1.10.0
 Werkzeug==0.15.3
