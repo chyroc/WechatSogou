@@ -1,5 +1,5 @@
 future==0.16.0
-lxml==4.6.2
+lxml==4.6.3
 Pillow==6.2.0
 requests>=2.20.0
 six==1.10.0
