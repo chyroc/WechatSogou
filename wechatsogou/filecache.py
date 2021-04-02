@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from werkzeug.contrib.cache import FileSystemCache
+try:
+    from werkzeug.contrib.cache import FileSystemCache
+except ImportError:
+    from cachelib import FileSystemCache
 
 
 class WechatCache(FileSystemCache):
