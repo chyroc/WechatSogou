@@ -79,7 +79,7 @@ class WechatSogouStructuring(object):
             info = get_elem_text(get_first_of_element(li, 'div/div[2]/p[2]'))
             qrcode = get_first_of_element(li, 'div/div[3]/span/img[1]/@src')
             introduction = get_elem_text(get_first_of_element(li, 'dl[1]/dd'))
-            authentication = get_first_of_element(li, 'dl[2]/dd/text()')
+            authentication = get_elem_text(get_first_of_element(li, 'dl[2]/dd'))
 
             relist.append({
                 'open_id': headimage.split('/')[-1],
