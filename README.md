@@ -7,6 +7,8 @@
 [![py27,py35,py36](https://img.shields.io/pypi/pyversions/wechatsogou.svg)](https://github.com/Chyroc/WechatSogou)
 [![PyPI](https://img.shields.io/pypi/l/wechatsogou.svg)](https://github.com/Chyroc/WechatSogou)
 
+我的另外一个作品: https://github.com/chyroc/lark ，基于代码生成的 Lark/飞书 Go SDK，欢迎 star 。
+
 ![ws_api.get_gzh_info('南航青年志愿者')](https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_info.png)
 
 ```
