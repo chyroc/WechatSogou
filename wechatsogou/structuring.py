@@ -171,7 +171,7 @@ class WechatSogouStructuring(object):
                 imgs = li.xpath('div[1]/a/img/@src')
                 abstract = get_first_of_element(li, 'div[2]/p')
                 time = get_first_of_element(li, 'div[2]/div/span/script/text()')
-                gzh_info = li.xpath('div[2]/div/a')[0]
+                gzh_info = li.xpath('div[2]/h3/a')[0]
             else:
                 url = get_first_of_element(li, 'div/h3/a/@href')
                 title = get_first_of_element(li, 'div/h3/a')
@@ -183,7 +183,7 @@ class WechatSogouStructuring(object):
                         imgs.append(img)
                 abstract = get_first_of_element(li, 'div/p')
                 time = get_first_of_element(li, 'div/div[2]/span/script/text()')
-                gzh_info = li.xpath('div/div[2]/a')[0]
+                gzh_info = li.xpath('div/h3/a')[0]
 
             if title is not None:
                 title = get_elem_text(title).replace("red_beg", "").replace("red_end", "")
