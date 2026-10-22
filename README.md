@@ -9,6 +9,12 @@
 
 我的另外一个作品: https://github.com/chyroc/lark ，基于代码生成的 Lark/飞书 Go SDK，欢迎 star 。
 
+**Sponsored by**
+
+<a href="https://rapidproxy.io/"><img src="./screenshot/sponsor-rapidproxy.png" alt="RapidProxy" height="36"></a>
+
+[RapidProxy](https://rapidproxy.io/)：高性能住宅代理，9000 万+ 轮换住宅 IP，覆盖全球 220+ 个国家和地区，帮你的爬虫和自动化任务减少 IP 封禁，采集更稳定。
+
 ![ws_api.get_gzh_info('南航青年志愿者')](https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_info.png)
 
 ```
