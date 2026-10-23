@@ -8,9 +8,12 @@
 
 **Sponsored by**
 
-<a href="https://rapidproxy.io/"><img src="./screenshot/sponsor-rapidproxy.png" alt="RapidProxy" height="36"></a>
+<a href="https://www.rapidproxy.io/?ref=sogou"><img src="./screenshot/sponsor-rapidproxy.png" alt="RapidProxy 高性能住宅代理IP，助力微信公众号数据采集"></a>
 
-[RapidProxy](https://rapidproxy.io/)：高性能住宅代理，9000 万+ 轮换住宅 IP，覆盖全球 220+ 个国家和地区，帮你的爬虫和自动化任务减少 IP 封禁，采集更稳定。
+[RapidProxy](https://www.rapidproxy.io/?ref=sogou) 提供高速、稳定的全球住宅代理与 ISP 代理，适用于微信公众号数据采集、搜狗微信搜索爬虫及 Python 自动化任务。拥有 9000万+ 全球住宅 IP，支持智能 IP 轮换、高并发连接和流量永不过期，帮助开发者降低 IP 封禁风险，提升网页采集的稳定性与效率。
+
+🌍 9000万+ 住宅 IP · 智能 IP 轮换 · 流量永不过期<br>
+💰 低至 $0.55/GB | 🎁 免费试用 | 优惠码 RAPID10 享 9 折优惠
 
 ![ws_api.get_gzh_info('南航青年志愿者')](https://raw.githubusercontent.com/chyroc/wechatsogou/master/screenshot/get_gzh_info.png)
 
